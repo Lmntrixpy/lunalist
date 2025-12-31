@@ -1,0 +1,42 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_web_auth_2 (3.0.0):
+    - Flutter
+  - mobile_scanner (7.0.0):
+    - Flutter
+    - FlutterMacOS
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - url_launcher_ios (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
+  - mobile_scanner (from `.symlinks/plugins/mobile_scanner/darwin`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_web_auth_2:
+    :path: ".symlinks/plugins/flutter_web_auth_2/ios"
+  mobile_scanner:
+    :path: ".symlinks/plugins/mobile_scanner/darwin"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
+
+SPEC CHECKSUMS:
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_web_auth_2: 06d500582775790a0d4c323222fcb6d7990f9603
+  mobile_scanner: 77265f3dc8d580810e91849d4a0811a90467ed5e
+  path_provider_foundation: 0b743cbb62d8e47eab856f09262bb8c1ddcfe6ba
+  url_launcher_ios: bb13df5870e8c4234ca12609d04010a21be43dfa
+
+PODFILE CHECKSUM: 3848e90fd4a51b5e534c771eb89266a378ffdee3
+
+COCOAPODS: 1.16.2
