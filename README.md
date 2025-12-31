@@ -5,7 +5,7 @@ Flutter App die das Spielprinzip von Hitster nutzt und mehr Spielmöglichkeiten 
 ## App Building
 
 ```
-git clone https://github.com/Lmntrixpy/hitster_final.git # pull repo
+gh repo clone Lmntrixpy/hitster_final # pull repo via github-cli
 cd hitster-final
 
 flutter pub get # get dependencies
@@ -13,3 +13,4 @@ flutter pub get # get dependencies
 flutter clean # clena build cache
 flutter build apk --relase # build apk for android
 ``` 
+
