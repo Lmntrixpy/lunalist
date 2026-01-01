@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:hitster_2/api/spotify-auth.dart';
 import 'package:hitster_2/config.dart';
 
-
-
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+    backgroundColor: Colors.white,
+    extendBody: true,
+    appBar: AppBar(
         title: Text("Einstellungen & Spielregeln",
         style: TextStyle(
           color: Colors.black,
@@ -19,11 +19,13 @@ class SettingsPage extends StatelessWidget {
           ),
         centerTitle: true,
         backgroundColor: Colors.white,
-      ),
-
-      body: Column(
+        ),
+    
+    body: SafeArea(
+      top: false,
+      bottom: true,
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-
         children: [
           Text(
             "Spielregeln",
@@ -60,13 +62,16 @@ class SettingsPage extends StatelessWidget {
             },
             secondary: const Icon(Icons.settings),
           ),
+
           Spacer(),
+          
           Text(
             "Version: ${AppConfig.version}",
             style: TextStyle(color: Colors.black),
             )
-        ],
-      ),  
+          ],
+        ),  
+      ),
     );
   }
 }

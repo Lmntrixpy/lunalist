@@ -5,9 +5,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'config.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: '.env');
   AppConfig.load();
 
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  
   runApp(const MyApp());
 }
 
@@ -18,13 +22,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder: (context, child) {
-        return SafeArea(
-          top: false,
-          bottom: true,
-          child: child!,
-        );
-      },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Roboto'),
       home: const HomePage()
