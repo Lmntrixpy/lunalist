@@ -93,7 +93,7 @@ class _playlistInputState extends State<playlistInput> {
                     var id = getPlaylistDetails(urlToId(url));
                   }
                 },
-                icon: Icon(Icons.check_rounded, color: Colors.black),
+                icon: Icon(Icons.add_rounded, color: Colors.black),
               ),
             ],
           ),

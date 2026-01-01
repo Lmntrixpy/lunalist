@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hitster_2/api/spotify-auth.dart';
+import 'package:hitster_2/config.dart';
+
+
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -56,9 +59,14 @@ class SettingsPage extends StatelessWidget {
               // TODO: Handle Setting
             },
             secondary: const Icon(Icons.settings),
-          )
+          ),
+          Spacer(),
+          Text(
+            "Version: ${AppConfig.version}",
+            style: TextStyle(color: Colors.black),
+            )
         ],
-      ),
+      ),  
     );
   }
 }

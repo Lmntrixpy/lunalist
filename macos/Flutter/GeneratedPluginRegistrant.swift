@@ -10,6 +10,7 @@ import desktop_webview_window
 import file_picker
 import flutter_web_auth_2
 import mobile_scanner
+import package_info_plus
 import path_provider_foundation
 import url_launcher_macos
 import window_to_front
@@ -20,6 +21,7 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FilePickerPlugin.register(with: registry.registrar(forPlugin: "FilePickerPlugin"))
   FlutterWebAuth2Plugin.register(with: registry.registrar(forPlugin: "FlutterWebAuth2Plugin"))
   MobileScannerPlugin.register(with: registry.registrar(forPlugin: "MobileScannerPlugin"))
+  FPPPackageInfoPlusPlugin.register(with: registry.registrar(forPlugin: "FPPPackageInfoPlusPlugin"))
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
   UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
   WindowToFrontPlugin.register(with: registry.registrar(forPlugin: "WindowToFrontPlugin"))
