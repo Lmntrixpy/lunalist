@@ -61,7 +61,6 @@ class _playlistInputState extends State<playlistInput> {
               ),
             ),
 
-            
             Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -73,12 +72,17 @@ class _playlistInputState extends State<playlistInput> {
                   }
                 },
               ),
+
               Text(
                 "$playerCount Playlist/en",
                 style: TextStyle(fontSize: 18),
               ),
+
               IconButton(
                 onPressed: () {
+                  if (playerCount < 10) {
+                    setState(() => playerCount++);
+                  }
                   playlists
                     ..clear()
                     ..addAll(
