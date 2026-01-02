@@ -74,7 +74,7 @@ class _playlistInputState extends State<playlistInput> {
               ),
 
               Text(
-                "$playerCount Playlist/en",
+                "$playerCount ${playerCount == 1 ? 'Playlist' : 'Playlists'}",
                 style: TextStyle(fontSize: 18),
               ),
 
