@@ -12,8 +12,18 @@ class ScannerPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Scanne eine Karte"),
-        centerTitle: true,
-      ),
+        centerTitle: true,),
+
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // TODO: Alert Dialog
+        },
+        label: Text("Nummer eingeben"),
+        icon: Icon(Icons.keyboard_alt_outlined),
+        
+        ),
+        
+
       body: Stack(
         children: [
           MobileScanner(
@@ -43,9 +53,20 @@ class ScannerPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(0),
               ),
             ),
-          ),
+          ),        
         ],
       ),
     );
   }
 }
+
+/*
+Future openDialog() => showDialog(
+            context: ,
+            builder: (context) => AlertDialog(
+              title: Text("Gebe die Nummer von der Karte ein"),
+              content: TextField(
+                decoration: InputDecoration(),
+              ),
+            )
+*/
