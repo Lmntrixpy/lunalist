@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hitster_2/pages/local_music_configurator.dart';
 import 'package:hitster_2/services/local_music.dart';
 import 'package:hitster_2/pages/spotify_playlist_input.dart';
 import 'dart:io';
@@ -49,7 +50,10 @@ class ModeSelector extends StatelessWidget {
             foregroundColor: Colors.black
             ),
           onPressed: () {
-            playMusic();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LocalMusicConfigurator()),
+              );
             },
           ),
         ],
