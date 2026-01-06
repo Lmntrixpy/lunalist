@@ -8,6 +8,8 @@ class ScannerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double boxSize = 250;
+    final textController = TextEditingController();
+    int? cardNumber = 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -15,15 +17,41 @@ class ScannerPage extends StatelessWidget {
         centerTitle: true,),
 
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: Alert Dialog
+        onPressed: () async {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("Kartennummer"),
+              content: TextField(
+                controller: textController,
+                autocorrect: false,
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: "Gib den Code auf der Karte ein",
+                  suffix: IconButton(
+                    onPressed: () {
+                      textController.clear();
+                    },
+                    icon: Icon(Icons.clear_rounded))
+                  )
+                ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    cardNumber = int.parse(textController.text);
+                    Navigator.pop(context);
+                  },
+                  child: Text("Weiter"))
+              ],
+              )
+          );
         },
         label: Text("Nummer eingeben"),
         icon: Icon(Icons.keyboard_alt_outlined),
         
         ),
         
-
       body: Stack(
         children: [
           MobileScanner(
@@ -33,8 +61,10 @@ class ScannerPage extends StatelessWidget {
             onDetect: (capture) {
               final List<Barcode> barcodes = capture.barcodes;
               for (final barcode in barcodes) {
-                debugPrint('Barcode found! ${barcode.rawValue}');
-                debugPrint('Going to Control Music State');
+                  cardNumber = int.tryParse(barcode.rawValue ?? "");
+                
+                debugPrint("Barcode found! ${barcode.rawValue}");
+                debugPrint("Going to Control Music State");
                 Navigator.pop(context);
                 Navigator.push(
                   context,
@@ -43,7 +73,7 @@ class ScannerPage extends StatelessWidget {
               }
             }
            ),
-
+        
           Center(
             child: Container(
               width: boxSize,
@@ -53,20 +83,9 @@ class ScannerPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(0),
               ),
             ),
-          ),        
+          ),
         ],
       ),
     );
   }
 }
-
-/*
-Future openDialog() => showDialog(
-            context: ,
-            builder: (context) => AlertDialog(
-              title: Text("Gebe die Nummer von der Karte ein"),
-              content: TextField(
-                decoration: InputDecoration(),
-              ),
-            )
-*/
