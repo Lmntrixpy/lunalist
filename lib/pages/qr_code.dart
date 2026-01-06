@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io' show Platform;
 import 'package:hitster_2/pages/music_player.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -68,20 +69,26 @@ class ScannerPage extends StatelessWidget {
           MobileScanner(
             controller: MobileScannerController(
             detectionSpeed: DetectionSpeed.noDuplicates,
+            facing: CameraFacing.back,
+            initialZoom: Platform.isIOS ? 0.5 : null, // for iPhones to use the main camera (autoswitching)
             ),
             onDetect: (capture) {
               final List<Barcode> barcodes = capture.barcodes;
               for (final barcode in barcodes) {
-                  cardNumber = int.tryParse(barcode.rawValue ?? "");
-                
-                debugPrint("Barcode found! ${barcode.rawValue}");
-                debugPrint("Going to Control Music State");
+                final value = barcode.rawValue;
+                if (value != null) { // check if barcode value is != to null
+                  final parsed = int.tryParse(value);
+                  if (parsed != null) { // check if parsed value to int is != to null
+                    cardNumber = parsed;
 
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ControlMusicState()),
-                );
+                    debugPrint("-------- QR cardNumber: $cardNumber ----------");
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ControlMusicState()),
+                      );
+                    }
+                } 
               }
             }
            ),
