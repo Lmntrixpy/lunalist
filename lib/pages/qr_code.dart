@@ -39,12 +39,23 @@ class ScannerPage extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () {
-                    cardNumber = int.parse(textController.text);
-                    Navigator.pop(context);
+                    if (int.tryParse(textController.text) != null) {
+                      cardNumber = int.parse(textController.text);
+
+                      debugPrint("-------- cardNumber: $cardNumber ----------");
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ControlMusicState()),
+                        );
+                    } else {
+                      debugPrint("---------- no cardnumber input ---------");
+                    }
                   },
-                  child: Text("Weiter"))
+                  child: Text("Weiter"),
+                )
               ],
-              )
+            )
           );
         },
         label: Text("Nummer eingeben"),
@@ -65,6 +76,7 @@ class ScannerPage extends StatelessWidget {
                 
                 debugPrint("Barcode found! ${barcode.rawValue}");
                 debugPrint("Going to Control Music State");
+
                 Navigator.pop(context);
                 Navigator.push(
                   context,
