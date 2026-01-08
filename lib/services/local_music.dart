@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+
 
 class LocalMusic {
 
@@ -27,4 +30,19 @@ Future<void> playMusic() async {
   final player = AudioPlayer();
   await player.setSourceDeviceFile(files.first);
   await player.resume();
+}
+
+
+class GetMetadata {
+  static late final String? trackName;
+  static late final int? releaseYear;
+  static late final List<String>? trackArtistNames;
+
+  static void load(songPath) async {
+    var retriever = await MetadataRetriever.fromFile(File(songPath));
+
+    String? trackName = retriever.trackName;
+    int? releaseYear = retriever.year;
+    List<String>? trackArtistNames = retriever.trackArtistNames;
+  }
 }
