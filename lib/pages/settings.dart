@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hitster_2/api/spotify-auth.dart';
 import 'package:hitster_2/config.dart';
+import 'package:hitster_2/pages/about.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -65,6 +66,18 @@ class SettingsPage extends StatelessWidget {
 
           Spacer(),
           
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AboutPage()),
+                );
+            },
+            label: Text("Über diese App"),
+            icon: Icon(Icons.info_rounded),
+          ),
+
           Text(
             "Version: ${AppConfig.version}",
             style: TextStyle(color: Colors.black),
