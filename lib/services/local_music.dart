@@ -40,6 +40,7 @@ class GetMetadata {
   static String trackName = "";
   static int releaseYear = 0;
   static List<String> trackArtistNames = [];
+  static Uint8List albumArt = Uint8List(0);
 
   static Future<void> load(String songPath) async {
     var retriever = await MetadataRetriever.fromFile(File(songPath));
@@ -47,5 +48,6 @@ class GetMetadata {
     trackName = retriever.trackName ?? "";
     releaseYear = retriever.year ?? 0;
     trackArtistNames = retriever.trackArtistNames ?? [];
+    albumArt = retriever.albumArt ?? Uint8List(0);
   }
 }
