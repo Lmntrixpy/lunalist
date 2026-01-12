@@ -42,6 +42,7 @@ dependencies:
   spotify: ^0.14.0
   flutter_dotenv: ^6.0.0
   package_info_plus: ^9.0.0
+  audiotagger: ^2.2.1
 
   flutter_media_metadata:
     git:
