@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hitster_2/pages/mode_selector.dart';
 import 'package:hitster_2/pages/qr_code.dart';
 import 'package:hitster_2/pages/music_player.dart';
 import 'package:hitster_2/pages/settings.dart';
-import 'dart:io';
+import 'package:hitster_2/pages/testsonginfo.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -43,7 +44,16 @@ class HomePage extends StatelessWidget {
                 color: Colors.deepPurple[300]
                 ),
               )
-          ) 
+          ),
+
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Testsonginfo())
+              );
+            },
+            child: Text("TemSongInfo"))
         ],
         
       ),

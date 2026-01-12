@@ -10,31 +10,45 @@ class Testsonginfo extends StatefulWidget {
 }
 
 class _TestsonginfoState extends State<Testsonginfo> {
-  String songName = "";
   GetMetadata songData = GetMetadata();
   String song = "";
-
+  String songName = "";
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          TextButton(
-            onPressed: () async {
-              final result = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.audio);
-              if (result == null) {
-                song = "";
-              } else {
-                song = result.paths.whereType<String>().toList().first;
-              }
-              debugPrint(song);  
-            },
-            child: Text("Datei wählen")
-          ),
+      appBar: AppBar(
+        title: Text("TestSongInfo"),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () async {
+                final result = await FilePicker.platform.pickFiles(
+                  allowMultiple: true,
+                  type: FileType.custom,
+                  allowedExtensions: ["mp3"]
+                  );
 
-          Text("LiedName: $songName")
+                if (result == null) return;
+                
+                final song = result.paths.whereType<String>().toList().first;
+                await GetMetadata.load(song);
 
-        ],
+                debugPrint("---------- $song");
+                setState(() {
+                  songName = GetMetadata.trackName;  
+                });
+              },
+              child: Text("Datei wählen")
+            ),
+        
+            Text("LiedName: $songName")
+        
+          ],
+        ),
       ),
     );
   }

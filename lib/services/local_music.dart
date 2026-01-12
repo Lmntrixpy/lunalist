@@ -9,7 +9,10 @@ import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 class LocalMusic {
 
   Future<List<String>> load() async {
-    final result = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.audio);
+    final result = await FilePicker.platform.pickFiles(
+    allowMultiple: true,
+    type: FileType.custom,
+    allowedExtensions: ["mp3"]);
 
     if (result == null) {
       return <String>[];
@@ -34,15 +37,15 @@ Future<void> playMusic() async {
 
 
 class GetMetadata {
-  static late final String? trackName;
-  static late final int? releaseYear;
-  static late final List<String>? trackArtistNames;
+  static String trackName = "";
+  static int releaseYear = 0;
+  static List<String> trackArtistNames = [];
 
-  static void load(songPath) async {
+  static Future<void> load(String songPath) async {
     var retriever = await MetadataRetriever.fromFile(File(songPath));
 
-    String? trackName = retriever.trackName;
-    int? releaseYear = retriever.year;
-    List<String>? trackArtistNames = retriever.trackArtistNames;
+    trackName = retriever.trackName ?? "";
+    releaseYear = retriever.year ?? 0;
+    trackArtistNames = retriever.trackArtistNames ?? [];
   }
 }
