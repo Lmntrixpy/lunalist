@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/services/local_music.dart';
+import 'package:hitster_2/services/metadata_handler/get_metadata.dart';
 
 class LocalMusicConfigurator extends StatelessWidget {
   const LocalMusicConfigurator({super.key});
@@ -49,8 +49,8 @@ class LocalMusicConfigurator extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () async {
                 // TODO: Fix get Music
-                final music = LocalMusic();
-                await music.load();
+                //final music = LocalMusic();
+                // await music.load();
               },
               label: Text("Lieder auswählen"))
           ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hitster_2/pages/local_music_configurator.dart';
-import 'package:hitster_2/services/local_music.dart';
+import 'package:hitster_2/services/metadata_handler/get_metadata.dart';
 import 'package:hitster_2/pages/spotify_playlist_input.dart';
 import 'dart:io';
 

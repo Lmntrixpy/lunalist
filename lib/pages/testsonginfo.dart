@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hitster_2/services/local_music.dart';
+import 'package:hitster_2/services/metadata_handler/get_metadata.dart';
 
 class Testsonginfo extends StatefulWidget {
   const Testsonginfo({super.key});
@@ -11,7 +11,6 @@ class Testsonginfo extends StatefulWidget {
 }
 
 class _TestsonginfoState extends State<Testsonginfo> {
-  GetMetadata songData = GetMetadata();
   String song = "";
   String songName = "";
   List<String> artist = [];
