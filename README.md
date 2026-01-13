@@ -10,7 +10,8 @@ cd hitster-final
 
 flutter pub get # get dependencies
 
-flutter clean # clena build cache
+flutter clean # clea build cache
 flutter build apk --relase # build apk for android
 ``` 
+
 
