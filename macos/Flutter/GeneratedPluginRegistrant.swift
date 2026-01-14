@@ -6,7 +6,6 @@ import FlutterMacOS
 import Foundation
 
 import audioplayers_darwin
-import audiotags
 import desktop_webview_window
 import file_picker
 import flutter_media_metadata
@@ -19,7 +18,6 @@ import window_to_front
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   AudioplayersDarwinPlugin.register(with: registry.registrar(forPlugin: "AudioplayersDarwinPlugin"))
-  AudiotagsPlugin.register(with: registry.registrar(forPlugin: "AudiotagsPlugin"))
   DesktopWebviewWindowPlugin.register(with: registry.registrar(forPlugin: "DesktopWebviewWindowPlugin"))
   FilePickerPlugin.register(with: registry.registrar(forPlugin: "FilePickerPlugin"))
   FlutterMediaMetadataPlugin.register(with: registry.registrar(forPlugin: "FlutterMediaMetadataPlugin"))

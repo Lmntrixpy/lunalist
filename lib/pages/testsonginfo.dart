@@ -47,6 +47,8 @@ class _TestsonginfoState extends State<Testsonginfo> {
                   artist = GetMetadata.trackArtistNames;
                   albumArt = GetMetadata.albumArt;
                   releaseYear = GetMetadata.releaseYear;
+
+                  print("--------- $releaseYear");
                 });
               },
               child: Text("Datei wählen")

@@ -6,6 +6,8 @@ PODS:
     - FlutterMacOS
   - file_picker (0.0.1):
     - FlutterMacOS
+  - flutter_media_metadata (0.0.1):
+    - FlutterMacOS
   - flutter_web_auth_2 (3.0.0):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
@@ -26,6 +28,7 @@ DEPENDENCIES:
   - audioplayers_darwin (from `Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/darwin`)
   - desktop_webview_window (from `Flutter/ephemeral/.symlinks/plugins/desktop_webview_window/macos`)
   - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
+  - flutter_media_metadata (from `Flutter/ephemeral/.symlinks/plugins/flutter_media_metadata/macos`)
   - flutter_web_auth_2 (from `Flutter/ephemeral/.symlinks/plugins/flutter_web_auth_2/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - mobile_scanner (from `Flutter/ephemeral/.symlinks/plugins/mobile_scanner/darwin`)
@@ -41,6 +44,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/desktop_webview_window/macos
   file_picker:
     :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
+  flutter_media_metadata:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_media_metadata/macos
   flutter_web_auth_2:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_web_auth_2/macos
   FlutterMacOS:
@@ -60,6 +65,7 @@ SPEC CHECKSUMS:
   audioplayers_darwin: 4027b33a8f471d996c13f71cb77f0b1583b5d923
   desktop_webview_window: d4365e71bcd4e1aa0c14cf0377aa24db0c16a7e2
   file_picker: e716a70a9fe5fd9e09ebc922d7541464289443af
+  flutter_media_metadata: 00f65949432e3e92b101a5d606c73428bd923057
   flutter_web_auth_2: 2e1dc2d2139973e4723c5286ce247dd590390d70
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   mobile_scanner: 77265f3dc8d580810e91849d4a0811a90467ed5e
