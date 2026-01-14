@@ -49,11 +49,13 @@ class SettingsPage extends StatelessWidget {
 
           FilledButton.icon(
             onPressed: () async {
-              bool auth_sucess = await spotifyAuth(); 
+              bool authSucess = await spotifyAuth(); 
             }, 
             icon: Icon(Icons.private_connectivity_rounded),
             label: Text("Teste Verbindung zu Spotify"),
           ),
+
+          Text("Verbindung war: authSuccess"),
           
           SwitchListTile(
             title: Text("TEMP: Beispieleinstellung"),

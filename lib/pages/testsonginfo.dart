@@ -67,7 +67,6 @@ class _TestsonginfoState extends State<Testsonginfo> {
 
             Text("Realease Year: $releaseYear")
 
-
           ],
         ),
       ),
