@@ -5,6 +5,7 @@ import 'package:hitster_2/pages/qr_code.dart';
 import 'package:hitster_2/pages/music_player.dart';
 import 'package:hitster_2/pages/settings.dart';
 import 'package:hitster_2/pages/testsonginfo.dart';
+import 'package:hitster_2/pages/test_spotify_sdk.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -53,7 +54,18 @@ class HomePage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const Testsonginfo())
               );
             },
-            child: Text("TemSongInfo"))
+            child: Text("TempSongInfo")
+          ),
+
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TestSpotifySdkPage())
+                );
+            }, 
+            child: Text("SDK"))
+
         ],
         
       ),
