@@ -12,8 +12,8 @@ Future<bool> spotifyAuth() async {
 
   final artist = await spotify.artists.get('0OdUWJ0sBjDrqHygGUXeCF');
   print(artist.name);
-
-  return artist.name == "Band of Horses";
+  if (artist.name == "Band of Horses") {return true;}
+  else {return false;}
 }
 
 String urlToId(String url) {

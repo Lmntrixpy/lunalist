@@ -50,6 +50,5 @@ class GetMetadata {
     releaseYear = newRetriever.year?.year.toInt() ?? 0;
     trackArtistNames = retriever.trackArtistNames ?? [];
     albumArt = retriever.albumArt ?? Uint8List(0);
-
   }
 }

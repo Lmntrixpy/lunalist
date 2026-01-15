@@ -3,15 +3,22 @@ import 'package:hitster_2/api/spotify-auth.dart';
 import 'package:hitster_2/config.dart';
 import 'package:hitster_2/pages/about.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool authSuccess = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    backgroundColor: Colors.white,
-    extendBody: true,
-    appBar: AppBar(
+      backgroundColor: Colors.white,
+      extendBody: true,
+      appBar: AppBar(
         title: Text("Einstellungen & Spielregeln",
         style: TextStyle(
           color: Colors.black,
@@ -20,72 +27,75 @@ class SettingsPage extends StatelessWidget {
           ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        ),
-    
-    body: SafeArea(
-      top: false,
-      bottom: true,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            "Spielregeln",
-            style: TextStyle(fontSize: 24),
-          ),
-          
-          FilledButton.icon(
-            onPressed: () {
-              // TODO: Spielregeln;
-            }, 
-            icon: Icon(Icons.link, size: 24,),
-            label: Text("Spielregeln anzeigen", style: TextStyle(fontSize: 18),),
+      ),
+
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              "Spielregeln",
+              style: TextStyle(fontSize: 24),
+            ),
             
-          ),
+            FilledButton.icon(
+              onPressed: () {
+                // TODO: Spielregeln;
+              }, 
+              icon: Icon(Icons.link, size: 24,),
+              label: Text("Spielregeln anzeigen", style: TextStyle(fontSize: 18),),
+              
+            ),
 
-          Text(
-            "Einstellungen",
-            style: TextStyle(fontSize: 24),
-          ),
+            Text(
+              "Einstellungen",
+              style: TextStyle(fontSize: 24),
+            ),
 
-          FilledButton.icon(
-            onPressed: () async {
-              bool authSucess = await spotifyAuth(); 
-            }, 
-            icon: Icon(Icons.private_connectivity_rounded),
-            label: Text("Teste Verbindung zu Spotify"),
-          ),
+            FilledButton.icon(
+              onPressed: () async {
+                bool result = await spotifyAuth();
+                setState(()  {
+                  authSuccess = result;
+                  // print(authSucess);   
+                });
+                
+              }, 
+              icon: Icon(Icons.private_connectivity_rounded),
+              label: Text("Teste Verbindung zu Spotify"),
+            ),
 
-          Text("Verbindung war: authSuccess"),
-          
-          SwitchListTile(
-            title: Text("TEMP: Beispieleinstellung"),
-            value: true,
-            onChanged: (value) {
-              // TODO: Handle Setting
-            },
-            secondary: const Icon(Icons.settings),
-          ),
+            Text("Verbindung war: $authSuccess"),
+            
+            SwitchListTile(
+              title: Text("TEMP: Beispieleinstellung"),
+              value: true,
+              onChanged: (value) {
+                // TODO: Handle Setting
+              },
+              secondary: const Icon(Icons.settings),
+            ),
 
-          Spacer(),
-          
-          TextButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AboutPage()),
-                );
-            },
-            label: Text("Über diese App"),
-            icon: Icon(Icons.info_rounded),
-          ),
+            Spacer(),
+            
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AboutPage()),
+                  );
+              },
+              label: Text("Über diese App"),
+              icon: Icon(Icons.info_rounded),
+            ),
 
-          Text(
-            "Version: ${AppConfig.version}",
-            style: TextStyle(color: Colors.black),
+            Text(
+              "Version: ${AppConfig.version}",
+              style: TextStyle(color: Colors.black),
             )
           ],
-        ),  
+        )
       ),
     );
   }
