@@ -44,6 +44,8 @@ dependencies:
   package_info_plus: ^9.0.0
   audio_metadata_reader: ^1.4.2
   spotify_sdk: ^3.0.2
+  qr_flutter: ^4.1.0
+  qr: ^3.0.2
 
   flutter_media_metadata:
     git:
