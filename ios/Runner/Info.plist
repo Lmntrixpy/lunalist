@@ -62,5 +62,9 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Wir benötigen Zugriff auf deine Fotos, um PDFs zu speichern</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Wir benötigen Zugriff auf deine Fotos, um PDFs zu speichern</string>
 </dict>
 </plist>

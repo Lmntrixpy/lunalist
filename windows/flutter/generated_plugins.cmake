@@ -6,6 +6,8 @@ list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
   desktop_webview_window
   flutter_media_metadata
+  printing
+  share_plus
   url_launcher_windows
   window_to_front
 )

@@ -44,8 +44,10 @@ dependencies:
   package_info_plus: ^9.0.0
   audio_metadata_reader: ^1.4.2
   spotify_sdk: ^3.0.2
-  qr_flutter: ^4.1.0
   qr: ^3.0.2
+  pdf: ^3.11.3
+  printing: ^5.14.2
+  share_plus: ^12.0.1
 
   flutter_media_metadata:
     git:
@@ -80,6 +82,9 @@ flutter:
   assets:
     - assets/icons/
     - .env
+    - assets/fonts/
+    - assets/templates/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
