@@ -40,7 +40,7 @@ class _playlistInputState extends State<playlistInput> {
           IconButton(
             onPressed: () {
               for (var i = 0; i < playlists.length; i++) {
-                getPlaylistDetails(urlToId(playlists[i]));
+                //getPlaylistDetails(urlToId(playlists[i]));
               }
               
             },
@@ -94,7 +94,7 @@ class _playlistInputState extends State<playlistInput> {
 
                   for (final url in playlists) {
                     // TODO: Fix Typerror
-                    var id = getPlaylistDetails(urlToId(url));
+                    //var id = getPlaylistDetails(urlToId(url));
                   }
                 },
                 icon: Icon(Icons.add_rounded, color: Colors.black),

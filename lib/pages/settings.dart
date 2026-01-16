@@ -56,7 +56,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
             FilledButton.icon(
               onPressed: () async {
-                bool result = await spotifyAuth();
+                // bool result = await spotifyAuth();
+                bool result = false;
                 setState(()  {
                   authSuccess = result;
                   // print(authSucess);   

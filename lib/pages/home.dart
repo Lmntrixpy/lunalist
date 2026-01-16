@@ -4,6 +4,7 @@ import 'package:hitster_2/pages/mode_selector.dart';
 import 'package:hitster_2/pages/qr_code.dart';
 import 'package:hitster_2/pages/music_player.dart';
 import 'package:hitster_2/pages/settings.dart';
+import 'package:hitster_2/pages/temp_spotify_api.dart';
 import 'package:hitster_2/pages/testsonginfo.dart';
 import 'package:hitster_2/pages/test_spotify_sdk.dart';
 
@@ -64,7 +65,18 @@ class HomePage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => TestSpotifySdkPage())
                 );
             }, 
-            child: Text("SDK"))
+            child: Text("SDK")
+          ),
+
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TempSpotifyApiPage())
+                );
+            },
+            child: Text("API")
+          )
 
         ],
         

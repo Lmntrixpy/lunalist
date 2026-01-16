@@ -70,8 +70,9 @@ class ScannerPage extends StatelessWidget {
             controller: MobileScannerController(
             detectionSpeed: DetectionSpeed.noDuplicates,
             facing: CameraFacing.back,
-            initialZoom: Platform.isIOS ? 0.5 : null, // for iPhones to use the main camera (autoswitching)
+            initialZoom: Platform.isIOS ? 0.5 : null, // for iPhones to fake using the main camera (using .5x but looks like 1x)
             ),
+            
             onDetect: (capture) {
               final List<Barcode> barcodes = capture.barcodes;
               for (final barcode in barcodes) {
