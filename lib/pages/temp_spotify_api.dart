@@ -12,8 +12,9 @@ class _TempSpotifyApiPageState extends State<TempSpotifyApiPage> {
   int trackYear = 0;
   String artwork = "";
   String artist = "";
+  String trackName = "";
   
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,13 +36,15 @@ class _TempSpotifyApiPageState extends State<TempSpotifyApiPage> {
                   trackYear = meta.year;
                   artwork = meta.artwork;
                   artist = meta.artist;
+                  trackName = meta.name;
                 });
               },
               child: Text("auth")
             ),
 
             Text("year: $trackYear"),
-            Text("year: $artist"),
+            Text("artist: $artist"),
+            Text("track: $trackName"),
 
             Image.network(artwork)
 
