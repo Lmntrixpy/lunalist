@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hitster_2/pages/mode_selector.dart';
+import 'package:hitster_2/pages/music_player_spotify.dart';
 import 'package:hitster_2/pages/qr_code.dart';
 import 'package:hitster_2/pages/music_player.dart';
 import 'package:hitster_2/pages/settings.dart';
@@ -76,7 +77,16 @@ class HomePage extends StatelessWidget {
                 );
             },
             child: Text("API")
-          )
+          ),
+
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PlayerSpotify())
+              );
+            },
+            child: Text("SpotPlayer"))
 
         ],
         

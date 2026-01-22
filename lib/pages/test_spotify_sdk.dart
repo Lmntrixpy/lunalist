@@ -19,7 +19,7 @@ class _TestSpotifySdkPageState extends State<TestSpotifySdkPage> {
           children: [
             TextButton(
               onPressed: () async {
-                // SpotifySdk.getAccessToken(clientId: AppConfig.clientId, redirectUrl: "spotify-ios-quick-start://spotify-login-callback"); // for android???
+                await SpotifySdk.getAccessToken(clientId: AppConfig.clientId, redirectUrl: "spotify-ios-quick-start://spotify-login-callback"); // for android???
                 await SpotifySdk.connectToSpotifyRemote(clientId: AppConfig.clientId, redirectUrl: "spotify-ios-quick-start://spotify-login-callback");
                 SpotifySdk.play(spotifyUri: "spotify:track:1O28S9MYZONNh5PNG1bYeC");
 
