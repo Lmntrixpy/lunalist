@@ -13,6 +13,8 @@ class ScannerPage extends StatelessWidget {
     const double boxSize = 250;
     final textController = TextEditingController();
     int? cardNumber = 0;
+    bool singularSong = tracks.length == 1;
+    print(singularSong);
 
     debugPrint("----------- Count Songs ${tracks.length.toString()}");
 
@@ -93,8 +95,8 @@ class ScannerPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const ControlMusicState()),
-                      );
-                    }
+                    );
+                  }
                 } 
               }
             }
@@ -110,6 +112,18 @@ class ScannerPage extends StatelessWidget {
               ),
             ),
           ),
+
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Text(
+                singularSong ? "Noch ${tracks.length.toString()} Lied übrig." : "Noch ${tracks.length.toString()} Lieder übrig.",
+                style: TextStyle(fontSize: 16, color: Colors.white),
+                textAlign: TextAlign.justify,
+              ),
+            ),
+          )
         ],
       ),
     );
