@@ -4,13 +4,19 @@ import 'package:hitster_2/pages/music_player.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerPage extends StatelessWidget {
-  const ScannerPage({super.key});
+  final List<String> tracks;
+
+  const ScannerPage({super.key, required this.tracks});
 
   @override
   Widget build(BuildContext context) {
     const double boxSize = 250;
     final textController = TextEditingController();
     int? cardNumber = 0;
+
+    debugPrint("----------- Count Songs ${tracks.length.toString()}");
+
+    // TODO: implement tracks count on top of screen (e.g. Noch N Songs übrig)
 
     return Scaffold(
       appBar: AppBar(

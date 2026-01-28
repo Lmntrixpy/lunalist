@@ -109,7 +109,7 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ScannerPage()),
+              MaterialPageRoute(builder: (context) => const ScannerPage(tracks: [],)),
             );
           },
           icon: Icon(Icons.qr_code_scanner),
