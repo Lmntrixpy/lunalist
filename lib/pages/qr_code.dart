@@ -55,7 +55,7 @@ class ScannerPage extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ControlMusicState()),
+                        MaterialPageRoute(builder: (context) => const ControlMusicState(tracks: [])),
                         );
                     } else {
                       debugPrint("---------- no cardnumber input ---------");
@@ -70,7 +70,7 @@ class ScannerPage extends StatelessWidget {
         label: Text("Nummer eingeben"),
         icon: Icon(Icons.keyboard_alt_outlined),
         
-        ),
+      ),
         
       body: Stack(
         children: [
@@ -94,7 +94,7 @@ class ScannerPage extends StatelessWidget {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ControlMusicState()),
+                      MaterialPageRoute(builder: (context) => const ControlMusicState(tracks: [])),
                     );
                   }
                 } 

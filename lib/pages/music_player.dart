@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:hitster_2/services/card_mapper.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:hitster_2/pages/song_info.dart';
 
-class AudioStatus {
-  static const platform = MethodChannel('audio_status');
-
-  static Future<bool> isMusicActive() async {
-    final result = await platform.invokeMethod('isMusicActive');
-    return result as bool;
-  }
-}
-
 class ControlMusicState extends StatefulWidget {
-  const ControlMusicState({super.key});
+  final List<String> tracks;
+  
+  const ControlMusicState({super.key, required this.tracks});
 
   @override
   State<ControlMusicState> createState() => _ControlMusicStateState();
@@ -40,10 +34,8 @@ class _ControlMusicStateState extends State<ControlMusicState> {
       body: Center(
         child: IconButton(
           onPressed: () async{
-            final status = await AudioStatus.isMusicActive();
-            setState(() {
-              isPlaying = status;
-            });
+            // mapper = CardSongMapper(tracks)
+            // TODO: implement Play / Pause
           },
           icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled),
           iconSize: 64,

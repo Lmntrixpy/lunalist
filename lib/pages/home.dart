@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ControlMusicState()),
+              MaterialPageRoute(builder: (context) => const ControlMusicState(tracks: [],)),
             );
           },
           child: Text(

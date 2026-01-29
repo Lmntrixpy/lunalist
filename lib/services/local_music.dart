@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 
@@ -21,20 +20,6 @@ class LocalMusic {
   }
   // TODO: add play functionality
 }
-
-Future<void> playMusic() async {
-  debugPrint("----- in playMusic");
-
-  final music = LocalMusic();
-  final files = await music.load();
-
-  if (files.isEmpty) return;
-
-  final player = AudioPlayer();
-  await player.setSourceDeviceFile(files.first);
-  await player.resume();
-}
-
 
 class GetMetadata {
   static String trackName = "";
