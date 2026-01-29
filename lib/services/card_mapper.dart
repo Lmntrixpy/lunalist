@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 
 class CardSongMapper {
@@ -30,15 +29,15 @@ class CardSongMapper {
     return song;
   }
 
-  Map<int, String> getAllMappings() => Map.from(_cardToSong); // all songs and their mapping
-}
+  List<String> get remainingSongs => List.unmodifiable(_availableSongs);
 
-void main() {
-  final playlist = ['Song A', 'Song B', 'Song C', 'Song D']; // playlist
-  final mapper = CardSongMapper(playlist, 123); // optional seed for real rng
+  // get count of remaining tracks
+  int get remainingSongCount => _availableSongs.length;
 
-  print(mapper.scanCard(132)); 
-  print(mapper.scanCard(9783));
+  List<String> get _availableSongs =>
+      playlist.where((s) => !_cardToSong.containsValue(s)).toList();
 
-  print(mapper.getAllMappings());
+
+
+  Map<int, String> getAllMappings() => Map.from(_cardToSong); // all songs and their mappings
 }

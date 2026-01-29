@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hitster_2/pages/end_screen.dart';
+import 'package:hitster_2/pages/qr_code.dart';
+import 'package:hitster_2/services/card_mapper.dart';
 import 'package:hitster_2/services/local_music.dart';
 
 class SongInfoLocal extends StatefulWidget {
-  final String track;
+  final String currentTrack;
+  final CardSongMapper mapper;
 
-  const SongInfoLocal({super.key, required this.track});
+  const SongInfoLocal({super.key, required this.currentTrack, required this.mapper});
 
   @override
   State<SongInfoLocal> createState() => _SongInfoLocalState();
@@ -13,7 +17,6 @@ class SongInfoLocal extends StatefulWidget {
 
 class _SongInfoLocalState extends State<SongInfoLocal> {
   GetMetadata trackData = GetMetadata();
-  String song = "";
   String songName = "";
   List<String> artist = [];
   Uint8List albumArt = Uint8List(0);
@@ -29,17 +32,36 @@ class _SongInfoLocalState extends State<SongInfoLocal> {
   }
 
   Future<void> _getTrackData() async {
-    await GetMetadata.load(widget.track);
-    song = GetMetadata.trackName;
-    artist = GetMetadata.trackArtistNames;
-    albumArt = GetMetadata.albumArt;
-    releaseYear = GetMetadata.releaseYear;
-    debugPrint("--------- $song");
+    await GetMetadata.load(widget.currentTrack);
+    
+    setState(() {
+      songName = GetMetadata.trackName;
+      artist = GetMetadata.trackArtistNames;
+      albumArt = GetMetadata.albumArt;
+      releaseYear = GetMetadata.releaseYear;  
+    });
+    
+    debugPrint("--------- $songName");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => widget.mapper.remainingSongCount == 0
+                  ? EndScreen()
+                  : ScannerPage(mapper: widget.mapper),
+            ),
+          );
+        },
+        label: widget.mapper.remainingSongCount == 0 ? Text("Spiel beenden") : Text("Nächste Karte"),
+        icon: widget.mapper.remainingSongCount == 0 ? Icon(Icons.flag_rounded) : Icon(Icons.qr_code_rounded),
+      ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

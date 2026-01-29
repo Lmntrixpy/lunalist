@@ -5,11 +5,10 @@ import 'package:just_audio/just_audio.dart';
 import 'package:hitster_2/pages/song_info.dart';
 
 class ControlMusicState extends StatefulWidget {
-  final List<String> tracks;
   final CardSongMapper mapper;
   final int cardNumber;
   
-  const ControlMusicState({super.key, required this.tracks, required this.mapper, required this.cardNumber});
+  const ControlMusicState({super.key, required this.mapper, required this.cardNumber});
 
   @override
   State<ControlMusicState> createState() => _ControlMusicStateState();
@@ -66,9 +65,10 @@ class _ControlMusicStateState extends State<ControlMusicState> {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+          Navigator.pop(context);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => SongInfoLocal(track: currentTrack,))
+            MaterialPageRoute(builder: (context) => SongInfoLocal(currentTrack: currentTrack, mapper: widget.mapper))
             );
         },
         

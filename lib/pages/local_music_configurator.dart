@@ -39,9 +39,10 @@ class _LocalMusicConfiguratorState extends State<LocalMusicConfigurator> {
             });
           } else {
             final mapper = CardSongMapper(tracks);
+            Navigator.pop(context);
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ScannerPage(tracks: tracks, mapper: mapper))
+              MaterialPageRoute(builder: (context) => ScannerPage(mapper: mapper))
             );
           } 
         },

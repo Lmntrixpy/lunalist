@@ -4,20 +4,19 @@ import 'package:hitster_2/pages/music_player.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerPage extends StatelessWidget {
-  final List<String> tracks;
   final dynamic mapper; // CardSongMapper
 
-  const ScannerPage({super.key, required this.tracks, required this.mapper});
+  const ScannerPage({super.key, required this.mapper});
 
   @override
   Widget build(BuildContext context) {
     const double boxSize = 250;
     final textController = TextEditingController();
     int cardNumber = 0;
-    bool singularSong = tracks.length == 1;
-    print(singularSong);
+    bool singularSong = mapper.remainingSongCount == 1;
+    print("-------- is only one song left? $singularSong");
 
-    debugPrint("----------- Count Songs ${tracks.length.toString()}");
+    debugPrint("----------- Count Songs ${mapper.remainingSongCount.toString()}");
 
     // TODO: implement tracks count on top of screen (e.g. Noch N Songs übrig)
 
@@ -56,7 +55,7 @@ class ScannerPage extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ControlMusicState(tracks: tracks, mapper: mapper, cardNumber: cardNumber)),
+                        MaterialPageRoute(builder: (context) => ControlMusicState(mapper: mapper, cardNumber: cardNumber)),
                         );
                     } else {
                       debugPrint("---------- no cardnumber input ---------");
@@ -95,7 +94,7 @@ class ScannerPage extends StatelessWidget {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ControlMusicState(tracks: tracks, mapper: mapper, cardNumber: cardNumber)),
+                      MaterialPageRoute(builder: (context) => ControlMusicState(mapper: mapper, cardNumber: cardNumber)),
                     );
                   }
                 } 
@@ -119,7 +118,7 @@ class ScannerPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.topCenter,
               child: Text(
-                singularSong ? "Noch ${tracks.length.toString()} Lied übrig." : "Noch ${tracks.length.toString()} Lieder übrig.",
+                singularSong ? "Noch ${mapper.remainingSongCount.toString()} Lied übrig." : "Noch ${mapper.remainingSongCount.toString()} Lieder übrig.",
                 style: TextStyle(fontSize: 16, color: Colors.white),
                 textAlign: TextAlign.justify,
               ),
