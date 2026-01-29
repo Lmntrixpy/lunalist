@@ -5,14 +5,15 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerPage extends StatelessWidget {
   final List<String> tracks;
+  final dynamic mapper; // CardSongMapper
 
-  const ScannerPage({super.key, required this.tracks});
+  const ScannerPage({super.key, required this.tracks, required this.mapper});
 
   @override
   Widget build(BuildContext context) {
     const double boxSize = 250;
     final textController = TextEditingController();
-    int? cardNumber = 0;
+    int cardNumber = 0;
     bool singularSong = tracks.length == 1;
     print(singularSong);
 
@@ -55,7 +56,7 @@ class ScannerPage extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ControlMusicState(tracks: [])),
+                        MaterialPageRoute(builder: (context) => ControlMusicState(tracks: tracks, mapper: mapper, cardNumber: cardNumber)),
                         );
                     } else {
                       debugPrint("---------- no cardnumber input ---------");
@@ -94,7 +95,7 @@ class ScannerPage extends StatelessWidget {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ControlMusicState(tracks: [])),
+                      MaterialPageRoute(builder: (context) => ControlMusicState(tracks: tracks, mapper: mapper, cardNumber: cardNumber)),
                     );
                   }
                 } 

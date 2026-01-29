@@ -6,7 +6,7 @@ import 'package:hitster_2/pages/qr_code.dart';
 import 'package:hitster_2/pages/music_player.dart';
 import 'package:hitster_2/pages/settings.dart';
 import 'package:hitster_2/pages/temp_spotify_api.dart';
-import 'package:hitster_2/pages/testsonginfo.dart';
+import 'package:hitster_2/pages/test_song_info_local.dart';
 import 'package:hitster_2/pages/test_spotify_sdk.dart';
 
 class HomePage extends StatelessWidget {
@@ -18,13 +18,13 @@ class HomePage extends StatelessWidget {
       appBar: appBar(context),
       body: Column(
         children: [
-          TextButton(
+          /* TextButton(
           onPressed: () {
-            Navigator.push(
+            fNavigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ControlMusicState(tracks: [],)),
             );
-          },
+          }, 
           child: Text(
             "TEMP: Start!", 
             style: TextStyle(
@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
               color: Colors.deepPurple[300]
               ),
             )
-          ),
+          ), */
           TextButton(
             onPressed: () {
               Navigator.push(
@@ -104,7 +104,7 @@ class HomePage extends StatelessWidget {
         ),
       centerTitle: true,
       backgroundColor: Colors.white,
-      leading: (Platform.isAndroid || Platform.isIOS)
+      /* leading: (Platform.isAndroid || Platform.isIOS)
       ? IconButton(
           onPressed: () {
             Navigator.push(
@@ -116,6 +116,7 @@ class HomePage extends StatelessWidget {
           iconSize: 20,
         )
       : null,
+      */
 
       actions: [
         IconButton(

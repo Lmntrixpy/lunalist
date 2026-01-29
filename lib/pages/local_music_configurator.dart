@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hitster_2/pages/qr_code.dart';
+import 'package:hitster_2/services/card_mapper.dart';
 import 'package:hitster_2/services/local_music.dart';
 
 
@@ -37,10 +38,10 @@ class _LocalMusicConfiguratorState extends State<LocalMusicConfigurator> {
               }
             });
           } else {
-            // TODO: push to play Page with tracks
+            final mapper = CardSongMapper(tracks);
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ScannerPage(tracks: tracks))
+              MaterialPageRoute(builder: (context) => ScannerPage(tracks: tracks, mapper: mapper))
             );
           } 
         },

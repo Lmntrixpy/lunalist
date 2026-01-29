@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 class CardSongMapper {
@@ -9,9 +10,8 @@ class CardSongMapper {
       : _rng = seed != null ? Random(seed) : Random();
 
 
-  String scanCard(String cardInput) {
-    final cardNumber = int.parse(cardInput); // parse input to int (e.g.: "0123" -> 123)
-
+  String scanCard(int cardNumber) {
+    
     // check if card was scanned previously
     if (_cardToSong.containsKey(cardNumber)) {
       return _cardToSong[cardNumber]!;
@@ -37,9 +37,8 @@ void main() {
   final playlist = ['Song A', 'Song B', 'Song C', 'Song D']; // playlist
   final mapper = CardSongMapper(playlist, 123); // optional seed for real rng
 
-  print(mapper.scanCard("0132"));
-  print(mapper.scanCard("132")); 
-  print(mapper.scanCard("9783"));
+  print(mapper.scanCard(132)); 
+  print(mapper.scanCard(9783));
 
   print(mapper.getAllMappings());
 }
