@@ -77,17 +77,47 @@ class _ControlMusicStateState extends State<ControlMusicState> {
         ),
         
         
-      body: Center(
-        child: IconButton(
-          icon: Icon(isPlaying ? Icons.pause_circle_rounded : Icons.play_circle_fill_rounded),
-          iconSize: 64,
-          onPressed: () async {
-            if (player.playing) {
-              await player.pause();
-            } else {
-              await player.play();
-            }
-          },
+      body: SafeArea(
+        child: Column(
+          children: [
+            Text(
+              "Spielmodus: ${widget.gameMode}",
+              style: TextStyle(
+                color: Colors.black38,
+                fontSize: 12
+              ),
+            ),
+
+            Spacer(flex: 1),
+            
+            Center(
+              child: Text(
+                textAlign: TextAlign.center,
+                "Errate den Song\nund den Artist!",
+                style: TextStyle(
+                  color: Colors.deepPurple[400],
+                  fontSize: 28
+                ),
+              ),
+            ),
+
+            Padding(padding: const EdgeInsetsGeometry.symmetric(vertical: 50),
+            child: IconButton(
+                icon: Icon(isPlaying ? Icons.pause_circle_rounded : Icons.play_circle_fill_rounded),
+                iconSize: 96,
+                onPressed: () async {
+                  if (player.playing) {
+                    await player.pause();
+                  } else {
+                    await player.play();
+                  }
+                },
+              ),
+            ),
+
+            Spacer(flex: 2),
+            
+          ],
         ),
       ),
     );

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hitster_2/pages/scanner.dart';
-import 'package:hitster_2/pages/song_info.dart';
+import 'package:hitster_2/pages/song_info_spotify.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:hitster_2/config.dart';
@@ -60,10 +60,6 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("SpotPlayerPgae"),
-        centerTitle: true,
-      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           SpotifySdk.pause();
@@ -77,20 +73,50 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
         icon: Icon(Icons.arrow_right_alt_rounded),
       ),
 
-      body: Center(
-        child: IconButton(
-          iconSize: 128,
-          onPressed: () {
-            setState(() {
-              if (isPlaying) {
-                SpotifySdk.pause();
-                isPlaying = false;
-              } else {
-                SpotifySdk.resume();
-                isPlaying = true;
-              }  
-            });
-          }, icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled)),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Text(
+              "Spielmodus: ${widget.gameMode}",
+              style: TextStyle(
+                color: Colors.black38,
+                fontSize: 12
+              ),
+            ),
+            
+            Spacer(flex: 1),
+            Center(
+              child: Text(
+                textAlign: TextAlign.center,
+                "Errate den Song\nund den Artist!",
+                style: TextStyle(
+                  color: Colors.deepPurple[400],
+                  fontSize: 28
+                ),
+              ),
+            ),
+        
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50),
+              child: IconButton(
+                iconSize: 96,
+                onPressed: () {
+                  setState(() {
+                    if (isPlaying) {
+                      SpotifySdk.pause();
+                      isPlaying = false;
+                    } else {
+                      SpotifySdk.resume();
+                      isPlaying = true;
+                    }  
+                  });
+                }, icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled)),
+            ),
+        
+            Spacer(flex: 2),
+        
+          ],
+        ),
       ),
     );
   }

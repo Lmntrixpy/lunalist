@@ -40,41 +40,55 @@ class _SongInfoState extends State<SongInfo> {
         icon: widget.mapper.remainingSongCount == 0 ? Icon(Icons.flag_rounded) : Icon(Icons.qr_code_rounded),
       ),
       
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              trackYear.toString(),
-              style: TextStyle(
-                color: Colors.deepPurple[300],
-                fontSize: 30,
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Spielmodus: ${widget.gameMode}",
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 12
                 ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
-              child: Image.network(artwork),
-            ),
-
-            Text(
-              name,
-              style: TextStyle(
-                color: Colors.deepPurple[400],
-                fontSize: 30
               ),
-            ),
 
-            Text(
-              artist,
-              style: TextStyle(
-                color: Colors.deepPurple[200],
-                fontSize: 24
+              Spacer(flex: 1,),
+
+              Text(
+                trackYear.toString(),
+                style: TextStyle(
+                  color: Colors.deepPurple[300],
+                  fontSize: 30,
+                  ),
               ),
-            )
+        
+              Padding(
+                padding: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
+                child: Image.network(artwork),
+              ),
+        
+              Text(
+                name,
+                style: TextStyle(
+                  color: Colors.deepPurple[400],
+                  fontSize: 30
+                ),
+              ),
+        
+              Text(
+                artist,
+                style: TextStyle(
+                  color: Colors.deepPurple[200],
+                  fontSize: 24
+                ),
+              ),
 
-          ],
+              Spacer(flex: 2,)
+        
+            ],
+          ),
         ),
       ),
     );

@@ -63,25 +63,58 @@ class _SongInfoLocalState extends State<SongInfoLocal> {
         icon: widget.mapper.remainingSongCount == 0 ? Icon(Icons.flag_rounded) : Icon(Icons.qr_code_rounded),
       ),
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Spielmodus: ${widget.gameMode}",
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 12
+                ),
+              ),
+
+              Spacer(flex: 1,),
+
+              Text(
+                releaseYear.toString(),
+                style: TextStyle(
+                  color: Colors.deepPurple[300],
+                  fontSize: 30,
+                  ),
+              ),
         
-            Text("Liedname: $songName"),
-
-            Text("Artist: $artist"),
-
-            Padding(
+              Padding(
               padding: const EdgeInsets.all(50.0),
               child: albumArt.isNotEmpty
                 ? Image.memory(albumArt)
                 : const Text("Kein AlbumArt")
-            ),
+              ),
+        
+              Text(
+                songName,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.deepPurple[400],
+                  fontSize: 30
+                ),
+              ),
+        
+              Text(
+                artist.first,
+                style: TextStyle(
+                  color: Colors.deepPurple[200],
+                  fontSize: 24
+                ),
+              ),
 
-            Text("Realease Year: $releaseYear")
-
-          ],
+              Spacer(flex: 2,)
+        
+            ],
+          ),
         ),
       ),
     );
