@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
-import 'package:hitster_2/pages/music_player.dart';
+import 'package:hitster_2/pages/music_player_local.dart';
+import 'package:hitster_2/pages/music_player_spotify.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerPage extends StatelessWidget {
   final dynamic mapper; // CardSongMapper
+  final String gameMode;
 
-  const ScannerPage({super.key, required this.mapper});
+  const ScannerPage({super.key, required this.mapper, required this.gameMode});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +19,6 @@ class ScannerPage extends StatelessWidget {
     print("-------- is only one song left? $singularSong");
 
     debugPrint("----------- Count Songs ${mapper.remainingSongCount.toString()}");
-
-    // TODO: implement tracks count on top of screen (e.g. Noch N Songs übrig)
 
     return Scaffold(
       appBar: AppBar(
@@ -52,11 +52,22 @@ class ScannerPage extends StatelessWidget {
                       cardNumber = int.parse(textController.text);
 
                       debugPrint("-------- cardNumber: $cardNumber ----------");
+                      debugPrint(gameMode);
+                      
                       Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ControlMusicState(mapper: mapper, cardNumber: cardNumber)),
+                      if (gameMode == "local") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ControlMusicState(mapper: mapper, cardNumber: cardNumber, gameMode: gameMode,)),
                         );
+                      } if (gameMode == "spotify") {
+                        debugPrint("---- push to spotify");
+                        // push to correct spotify page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PlayerSpotify(mapper: mapper, cardNumber: cardNumber, gameMode: gameMode,)),
+                        );
+                      }
                     } else {
                       debugPrint("---------- no cardnumber input ---------");
                     }
@@ -92,10 +103,21 @@ class ScannerPage extends StatelessWidget {
 
                     debugPrint("-------- QR cardNumber: $cardNumber ----------");
                     Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ControlMusicState(mapper: mapper, cardNumber: cardNumber)),
-                    );
+                    if (gameMode == "local") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ControlMusicState(mapper: mapper, cardNumber: cardNumber, gameMode: gameMode,)),
+                      );
+                    } if (gameMode == "spotify") {
+                      debugPrint("---- push to spotify");
+                      // push to correct spotify page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PlayerSpotify(mapper: mapper, cardNumber: cardNumber, gameMode: gameMode,)),
+                      );
+                    }
+
+                    
                   }
                 } 
               }

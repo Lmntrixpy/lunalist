@@ -1,43 +1,53 @@
 import 'dart:math';
 
+typedef HitsterTrack = ({
+  String id,
+  String name,
+  String artist,
+  String artwork,
+  int year,
+});
+
 class CardSongMapper {
-  final List<String> playlist;       // Playlist from Spotify
-  final Map<int, String> _cardToSong = {}; // scanned card numbers
+  final List<HitsterTrack> _playlist;
+  final Map<int, HitsterTrack> _cardToSong = {}; // scanned cards
   final Random _rng;
 
-  CardSongMapper(this.playlist, [int? seed])
-      : _rng = seed != null ? Random(seed) : Random();
+  CardSongMapper(List<HitsterTrack> playlist, [int? seed])
+      : _playlist = List.from(playlist),
+        _rng = seed != null ? Random(seed) : Random();
 
+  // convert List<String> to List<Hitstertrack>
+  factory CardSongMapper.fromStringList(List<String> songs, [int? seed]) {
+    final tracks = songs
+        .map((s) => (id: s, name: "", artist: "", artwork: "", year: 0))
+        .toList();
+    return CardSongMapper(tracks, seed);
+  }
 
-  String scanCard(int cardNumber) {
-    
-    // check if card was scanned previously
+  // scanCard
+  HitsterTrack scanCard(int cardNumber) {
     if (_cardToSong.containsKey(cardNumber)) {
       return _cardToSong[cardNumber]!;
     }
 
-    // get available songs
-    final available = playlist.where((s) => !_cardToSong.containsValue(s)).toList();
+    // check if already scanned
+    final available = _playlist.where((t) => !_cardToSong.containsValue(t)).toList();
 
     if (available.isEmpty) {
       throw Exception("Alle Songs vergeben!");
     }
 
-    // get random available song
     final song = available[_rng.nextInt(available.length)];
     _cardToSong[cardNumber] = song;
     return song;
   }
 
-  List<String> get remainingSongs => List.unmodifiable(_availableSongs);
+  // get remainingSongs
+  List<HitsterTrack> get remainingSongs =>
+      List.unmodifiable(_playlist.where((t) => !_cardToSong.containsValue(t)));
 
-  // get count of remaining tracks
-  int get remainingSongCount => _availableSongs.length;
+  int get remainingSongCount => remainingSongs.length;
 
-  List<String> get _availableSongs =>
-      playlist.where((s) => !_cardToSong.containsValue(s)).toList();
-
-
-
-  Map<int, String> getAllMappings() => Map.from(_cardToSong); // all songs and their mappings
+  Map<int, HitsterTrack> getAllMappings() => Map.from(_cardToSong);
 }

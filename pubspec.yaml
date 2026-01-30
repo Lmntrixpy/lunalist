@@ -39,7 +39,7 @@ dependencies:
   flutter_web_auth_2: ^4.1.0
   file_picker: ^10.3.7
   just_audio: ^0.10.5
-  spotify: ^0.14.0
+  spotify: ^0.15.0
   flutter_dotenv: ^6.0.0
   package_info_plus: ^9.0.0
   audio_metadata_reader: ^1.4.2

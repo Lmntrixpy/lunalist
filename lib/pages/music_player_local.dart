@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hitster_2/pages/song_info_local.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:hitster_2/pages/song_info.dart';
 
 class ControlMusicState extends StatefulWidget {
   final CardSongMapper mapper;
   final int cardNumber;
+  final String gameMode;
   
-  const ControlMusicState({super.key, required this.mapper, required this.cardNumber});
+  const ControlMusicState({super.key, required this.mapper, required this.cardNumber, required this.gameMode});
 
   @override
   State<ControlMusicState> createState() => _ControlMusicStateState();
@@ -33,7 +33,7 @@ class _ControlMusicStateState extends State<ControlMusicState> {
   }
 
   Future<void> _playTrack() async {
-    currentTrack = widget.mapper.scanCard(widget.cardNumber);
+    currentTrack = widget.mapper.scanCard(widget.cardNumber).id;
     await player.setFilePath(
       currentTrack,
     );
@@ -68,7 +68,7 @@ class _ControlMusicStateState extends State<ControlMusicState> {
           Navigator.pop(context);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => SongInfoLocal(currentTrack: currentTrack, mapper: widget.mapper))
+            MaterialPageRoute(builder: (context) => SongInfoLocal(currentTrack: currentTrack, mapper: widget.mapper, gameMode: widget.gameMode,))
             );
         },
         

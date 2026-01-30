@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hitster_2/pages/end_screen.dart';
-import 'package:hitster_2/pages/qr_code.dart';
+import 'package:hitster_2/pages/scanner.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:hitster_2/services/local_music.dart';
 
 class SongInfoLocal extends StatefulWidget {
   final String currentTrack;
   final CardSongMapper mapper;
+  final String gameMode;
 
-  const SongInfoLocal({super.key, required this.currentTrack, required this.mapper});
+  const SongInfoLocal({super.key, required this.currentTrack, required this.mapper, required this.gameMode});
 
   @override
   State<SongInfoLocal> createState() => _SongInfoLocalState();
@@ -54,7 +55,7 @@ class _SongInfoLocalState extends State<SongInfoLocal> {
             MaterialPageRoute(
               builder: (context) => widget.mapper.remainingSongCount == 0
                   ? EndScreen()
-                  : ScannerPage(mapper: widget.mapper),
+                  : ScannerPage(mapper: widget.mapper, gameMode: widget.gameMode,),
             ),
           );
         },

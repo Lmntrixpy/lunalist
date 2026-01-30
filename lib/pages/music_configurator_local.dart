@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/qr_code.dart';
+import 'package:hitster_2/pages/scanner.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:hitster_2/services/local_music.dart';
 
@@ -14,6 +14,7 @@ class LocalMusicConfigurator extends StatefulWidget {
 class _LocalMusicConfiguratorState extends State<LocalMusicConfigurator> {
   List<String> tracks = [];
   bool musicLoadstatus = false;
+  final gameMode = "local";
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +39,11 @@ class _LocalMusicConfiguratorState extends State<LocalMusicConfigurator> {
               }
             });
           } else {
-            final mapper = CardSongMapper(tracks);
+            final mapper = CardSongMapper.fromStringList(tracks);
             Navigator.pop(context);
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ScannerPage(mapper: mapper))
+              MaterialPageRoute(builder: (context) => ScannerPage(mapper: mapper, gameMode: gameMode))
             );
           } 
         },

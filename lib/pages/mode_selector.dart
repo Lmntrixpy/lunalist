@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/local_music_configurator.dart';
+import 'package:hitster_2/pages/music_configurator_local.dart';
 import 'package:hitster_2/services/local_music.dart';
-import 'package:hitster_2/pages/spotify_playlist_input.dart';
+import 'package:hitster_2/pages/music_configurator_spotify.dart';
 import 'dart:io';
 
 class ModeSelector extends StatelessWidget {

@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hitster_2/api/spotify-auth.dart';
+import 'package:hitster_2/pages/scanner.dart';
+import 'package:hitster_2/services/card_mapper.dart';
+
+typedef HitsterTrack = ({
+  String id,
+  String name,
+  String artist,
+  String artwork,
+  int year,
+});
 
 // ignore: camel_case_types
 class playlistInput extends StatefulWidget {
@@ -11,10 +21,13 @@ class playlistInput extends StatefulWidget {
 
 // ignore: camel_case_types
 class _playlistInputState extends State<playlistInput> {
-  int playerCount = 2;
+  int playlistCount = 1;
 
   final List<TextEditingController> controllers = [];
   final List<String> playlists = [];
+  final gameMode = "spotify";
+
+  
 
   @override
   void dispose() {
@@ -36,24 +49,47 @@ class _playlistInputState extends State<playlistInput> {
           ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            onPressed: () {
-              for (var i = 0; i < playlists.length; i++) {
-                //getPlaylistDetails(urlToId(playlists[i]));
-              }
-              
-            },
-            icon: Icon(Icons.check_rounded, color: Colors.black,))
-            
-        ],
+      ),
+
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          SpotifyInterface().authorize();
+
+          final Map<String, HitsterTrack> allTracks = {};
+
+          for (var i = 0; i < playlistCount; i++) {
+            final url = controllers[i].text.trim();
+            print("Controller: $i -> $url");
+            if (url.isEmpty) continue;
+
+            final tracks = await SpotifyInterface.getPlaylistTracks(url);
+
+            for (final track in tracks) {
+              allTracks[track.id] = track;
+              print(track.name);
+            }
+          }
+
+          final List<HitsterTrack> uniqueTracks = allTracks.values.toList();
+          print("Tracks ges: ${uniqueTracks.length}");
+          print(uniqueTracks.toString());
+
+          final mapper = CardSongMapper(uniqueTracks);
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ScannerPage(mapper: mapper, gameMode: gameMode))
+            );
+        },
+        label: Text("Weiter"),
+        icon: Icon(Icons.arrow_right_alt_rounded)
       ),
 
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
             Text(
-              "Gebe deine Playlisten ein.",
+              "Gib deine Playlisten ein.",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -67,35 +103,30 @@ class _playlistInputState extends State<playlistInput> {
               IconButton(
                 icon: Icon(Icons.remove),
                 onPressed: () {
-                  if (playerCount > 1) {
-                    setState(() => playerCount--);
+                  if (playlistCount > 1) {
+                    setState(() => playlistCount--);
                   }
                 },
               ),
 
               Text(
-                "$playerCount ${playerCount == 1 ? 'Playlist' : 'Playlists'}",
+                "$playlistCount ${playlistCount == 1 ? 'Playlist' : 'Playlists'}",
                 style: TextStyle(fontSize: 18),
               ),
 
               IconButton(
                 onPressed: () {
-                  if (playerCount < 10) {
-                    setState(() => playerCount++);
+                  if (playlistCount < 10) {
+                    setState(() => playlistCount++);
                   }
                   playlists
                     ..clear()
                     ..addAll(
                       controllers
-                        .take(playerCount)
+                        .take(playlistCount)
                         .map((c) => c.text)
                         .where((t) => t.isNotEmpty),
                     );
-
-                  for (final url in playlists) {
-                    // TODO: Fix Typerror
-                    //var id = getPlaylistDetails(urlToId(url));
-                  }
                 },
                 icon: Icon(Icons.add_rounded, color: Colors.black),
               ),
@@ -105,7 +136,7 @@ class _playlistInputState extends State<playlistInput> {
           Expanded(
             child: ListView(
               children: List.generate(
-                playerCount,
+                playlistCount,
                 (i) {
                   if (controllers.length <= i) {
                     controllers.add(TextEditingController());
