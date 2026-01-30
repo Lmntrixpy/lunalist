@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/scanner.dart';
 import 'package:hitster_2/pages/song_info_spotify.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
@@ -38,14 +37,14 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
     if (Platform.isAndroid) {
       await SpotifySdk.getAccessToken(
         clientId: AppConfig.clientId,
-        redirectUrl: 'hitster://callback',
+        redirectUrl: 'hitster://android-callback',
         scope: 'app-remote-control streaming',
       );
     }
 
     await SpotifySdk.connectToSpotifyRemote(
       clientId: AppConfig.clientId,
-      redirectUrl: "spotify-ios-quick-start://spotify-login-callback",
+      redirectUrl: Platform.isAndroid ? "hitster://android-callback" : "hitster://ios-callback",
     );
     }
 

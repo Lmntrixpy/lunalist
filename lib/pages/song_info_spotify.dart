@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/api/spotify-auth.dart';
 import 'package:hitster_2/pages/end_screen.dart';
 import 'package:hitster_2/pages/scanner.dart';
 import 'package:hitster_2/services/card_mapper.dart';
@@ -71,6 +70,7 @@ class _SongInfoState extends State<SongInfo> {
         
               Text(
                 name,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.deepPurple[400],
                   fontSize: 30
