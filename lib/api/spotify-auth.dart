@@ -30,7 +30,7 @@ class SpotifyInterface {
     return match.group(1)!;
   }
   
-static Future<List<({int year, String name, String artist, String artwork, String id})>>
+  static Future<List<({int year, String name, String artist, String artwork, String id})>>
     getPlaylistTracks(String url) async {
 
       Iterable<PlaylistTrack> playlistTracks = [];
@@ -70,7 +70,7 @@ static Future<List<({int year, String name, String artist, String artwork, Strin
   }
 
   // Deprecated: will be removed on next release
-  Future<({int year, String name, String artist, String artwork})> getTrackMetadata(String id) async {
+  static Future<({int year, String name, String artist, String artwork})> getTrackMetadata(String id) async {
   final track = await spotify.tracks.get(id);
 
   return (

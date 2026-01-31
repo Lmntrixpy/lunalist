@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hitster_2/api/spotify-auth.dart';
 import 'package:hitster_2/config.dart';
 import 'package:hitster_2/pages/about.dart';
-import 'package:hitster_2/services/qr_code_creator.dart';
+import 'package:hitster_2/pages/game_instructions.dart';
+// import 'package:hitster_2/services/qr_code_creator.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -12,7 +13,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool authSuccess = false;
+  late final ({String artist, String artwork, String name, int year}) metadata;
+  late String cover = "";
+  late String infoText = "";
   List<int> cardNumbers = [];
 
   @override
@@ -33,16 +36,21 @@ class _SettingsPageState extends State<SettingsPage> {
 
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Spielregeln",
-              style: TextStyle(fontSize: 24),
+            Center(
+              child: Text(
+                "Spielregeln",
+                style: TextStyle(fontSize: 24),
+              ),
             ),
             
-            FilledButton.icon(
+            FilledButton.tonalIcon(
               onPressed: () {
-                // TODO: Spielregeln;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GameInstructions())
+                );
               }, 
               icon: Icon(Icons.link, size: 24,),
               label: Text("Spielregeln anzeigen", style: TextStyle(fontSize: 18),),
@@ -54,13 +62,15 @@ class _SettingsPageState extends State<SettingsPage> {
               style: TextStyle(fontSize: 24),
             ),
 
-            FilledButton.icon(
+            FilledButton.tonalIcon(
               onPressed: () async {
-                // bool result = await spotifyAuth();
-                bool result = false;
+                SpotifyInterface().authorize();
+                metadata = await SpotifyInterface.getTrackMetadata("1x19UqLfi99ISgtBwfXb0m");
+                cover = metadata.artwork;
+                
                 setState(()  {
-                  authSuccess = result;
-                  // print(authSucess);   
+                  infoText = "Wenn du ein Capybara siehst,\ndann war die Verbindung erfolgreich";
+                  cover = metadata.artwork;
                 });
                 
               }, 
@@ -68,23 +78,30 @@ class _SettingsPageState extends State<SettingsPage> {
               label: Text("Teste Verbindung zu Spotify"),
             ),
 
-            Text("Verbindung war: $authSuccess"),
-            
-            SwitchListTile(
-              title: Text("TEMP: Beispieleinstellung"),
-              value: true,
-              onChanged: (value) {
-                // TODO: Handle Setting
-              },
-              secondary: const Icon(Icons.settings),
-            ),
+            cover.isNotEmpty
+            ? Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: Center(child: Text(infoText, textAlign: TextAlign.center,)),
+            )
+            : SizedBox(width: 0, height: 0),
 
+            cover.isNotEmpty 
+            ? Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: Image.network(cover),
+              )
+            : SizedBox(width: 0, height: 0,),
+            
+
+
+            /*
             TextButton(
               onPressed: () {
                 QrPdfGenerator.generate(5);
               },
               child: Text("number_gen")
-            ),
+            ), 
+            */
 
             Spacer(),
             

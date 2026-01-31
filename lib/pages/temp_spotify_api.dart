@@ -37,9 +37,9 @@ class _TempSpotifyApiPageState extends State<TempSpotifyApiPage> {
               child: Text("playlistgetter")),
             TextButton(
               onPressed: () async {
-                final spotifyInterface = SpotifyInterface();
-                spotifyInterface.authorize();
-                final meta = await spotifyInterface.getTrackMetadata("2IODVe96sL1fkhcfRgqQ0s");
+                
+                await SpotifyInterface().authorize();
+                final meta = await SpotifyInterface.getTrackMetadata("2IODVe96sL1fkhcfRgqQ0s");
 
                 setState(() {
                   trackYear = meta.year;
