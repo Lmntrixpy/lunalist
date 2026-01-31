@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hitster_2/pages/music_configurator_local.dart';
-import 'package:hitster_2/services/local_music.dart';
 import 'package:hitster_2/pages/music_configurator_spotify.dart';
 import 'dart:io';
 
@@ -43,10 +42,10 @@ class ModeSelector extends StatelessWidget {
             ),
 
           FilledButton.icon(
-          label: Text("Offline - lokale Musik", style: TextStyle(color: Colors.black, fontSize: 24),),
+          label: Text("Offline - Lokale Musik", style: TextStyle(color: Colors.black, fontSize: 24),),
           icon: Icon(Icons.wifi_off_rounded),
           style: FilledButton.styleFrom(
-            backgroundColor: Colors.pinkAccent[100],
+            backgroundColor: Colors.blueAccent[100],
             foregroundColor: Colors.black
             ),
           onPressed: () {
