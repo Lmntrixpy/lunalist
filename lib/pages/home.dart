@@ -1,13 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hitster_2/pages/mode_selector.dart';
-import 'package:hitster_2/pages/music_player_spotify.dart';
-import 'package:hitster_2/pages/scanner.dart';
-import 'package:hitster_2/pages/music_player_local.dart';
 import 'package:hitster_2/pages/settings.dart';
-import 'package:hitster_2/pages/temp_spotify_api.dart';
-import 'package:hitster_2/pages/test_song_info_local.dart';
-import 'package:hitster_2/pages/test_spotify_sdk.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,77 +10,32 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: appBar(context),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        
         children: [
-          /* TextButton(
-          onPressed: () {
-            fNavigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ControlMusicState(tracks: [],)),
-            );
-          }, 
-          child: Text(
-            "TEMP: Start!", 
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.deepPurple[300]
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40.0),
+            child: Text(
+              "Willkommen bei APPNAME!\nFalls du noch nie gespielt hast, findest du in den Einstellungen eine Anleitung. Falls doch, drücke einfach auf Start",
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 24),
+
               ),
-            )
-          ), */
-          TextButton(
+          ),
+      
+          FilledButton.tonalIcon(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ModeSelector()),
               );
             },
-            child: Text(
-              "TEMP: Mode Selector", 
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.deepPurple[300]
-                ),
-              )
-          ),
-
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Testsonginfo())
-              );
-            },
-            child: Text("TempSongInfo")
-          ),
-
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TestSpotifySdkPage())
-                );
-            }, 
-            child: Text("SDK")
-          ),
-
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TempSpotifyApiPage())
-                );
-            },
-            child: Text("API")
-          ),
-          /*
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PlayerSpotify())
-              );
-            },
-            child: Text("SpotPlayer"))
-          */
+            label: Text(
+              "Start",
+              style: TextStyle(fontSize: 32),
+            ),
+            icon: Icon(Icons.start_rounded),
+            ),
         ],
       ),
     );
@@ -95,7 +43,7 @@ class HomePage extends StatelessWidget {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
-      title: Text("TEMP: Hitster",
+      title: Text("APPNAME",
       style: TextStyle(
         color: Colors.black,
         fontSize: 24,
@@ -103,20 +51,6 @@ class HomePage extends StatelessWidget {
         ),
       centerTitle: true,
       backgroundColor: Colors.white,
-      /* leading: (Platform.isAndroid || Platform.isIOS)
-      ? IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ScannerPage(tracks: [],)),
-            );
-          },
-          icon: Icon(Icons.qr_code_scanner),
-          iconSize: 20,
-        )
-      : null,
-      */
-
       actions: [
         IconButton(
           onPressed: () {
