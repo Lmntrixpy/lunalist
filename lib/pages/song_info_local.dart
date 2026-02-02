@@ -47,73 +47,61 @@ class _SongInfoLocalState extends State<SongInfoLocal> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => widget.mapper.remainingSongCount == 0
-                  ? EndScreen()
-                  : ScannerPage(mapper: widget.mapper, gameMode: widget.gameMode,),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => widget.mapper.remainingSongCount == 0
+                    ? EndScreen()
+                    : ScannerPage(mapper: widget.mapper, gameMode: widget.gameMode,),
+              ),
+            );
+          },
+          label: widget.mapper.remainingSongCount == 0 ? Text("Spiel beenden") : Text("Nächste Karte"),
+          icon: widget.mapper.remainingSongCount == 0 ? Icon(Icons.flag_rounded) : Icon(Icons.qr_code_rounded),
+        ),
+      
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Spielmodus: ${widget.gameMode}",
+                  style: TextStyle(fontSize: 12),
+                ),
+      
+                Spacer(flex: 1,),
+      
+                Text(
+                  releaseYear.toString(),
+                  style: TextStyle(fontSize: 30,),
+                ),
+          
+                Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: albumArt.isNotEmpty
+                  ? Image.memory(albumArt)
+                  : const Text("Kein AlbumArt")
+                ),
+          
+                Text(
+                  songName,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 30),
+                ),
+          
+                Text(artist.first),
+      
+                Spacer(flex: 2,)
+          
+              ],
             ),
-          );
-        },
-        label: widget.mapper.remainingSongCount == 0 ? Text("Spiel beenden") : Text("Nächste Karte"),
-        icon: widget.mapper.remainingSongCount == 0 ? Icon(Icons.flag_rounded) : Icon(Icons.qr_code_rounded),
-      ),
-
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Spielmodus: ${widget.gameMode}",
-                style: TextStyle(
-                  color: Colors.black38,
-                  fontSize: 12
-                ),
-              ),
-
-              Spacer(flex: 1,),
-
-              Text(
-                releaseYear.toString(),
-                style: TextStyle(
-                  color: Colors.deepPurple[300],
-                  fontSize: 30,
-                  ),
-              ),
-        
-              Padding(
-              padding: const EdgeInsets.all(50.0),
-              child: albumArt.isNotEmpty
-                ? Image.memory(albumArt)
-                : const Text("Kein AlbumArt")
-              ),
-        
-              Text(
-                songName,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.deepPurple[400],
-                  fontSize: 30
-                ),
-              ),
-        
-              Text(
-                artist.first,
-                style: TextStyle(
-                  color: Colors.deepPurple[200],
-                  fontSize: 24
-                ),
-              ),
-
-              Spacer(flex: 2,)
-        
-            ],
           ),
         ),
       ),

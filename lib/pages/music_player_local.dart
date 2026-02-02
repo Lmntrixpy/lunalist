@@ -62,64 +62,61 @@ class _ControlMusicStateState extends State<ControlMusicState> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SongInfoLocal(currentTrack: currentTrack, mapper: widget.mapper, gameMode: widget.gameMode,))
-            );
-        },
-        
-        label: Text("Karte aufdecken"),
-        icon: Icon(Icons.arrow_right_alt_rounded),
-        ),
-        
-        
-      body: SafeArea(
-        child: Column(
-          children: [
-            Text(
-              "Spielmodus: ${widget.gameMode}",
-              style: TextStyle(
-                color: Colors.black38,
-                fontSize: 12
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SongInfoLocal(currentTrack: currentTrack, mapper: widget.mapper, gameMode: widget.gameMode,))
+              );
+          },
+          
+          label: Text("Karte aufdecken"),
+          icon: Icon(Icons.arrow_right_alt_rounded),
+          ),
+          
+          
+        body: SafeArea(
+          child: Column(
+            children: [
+              Text(
+                "Spielmodus: ${widget.gameMode}",
+                style: TextStyle(fontSize: 12),
               ),
-            ),
 
-            Spacer(flex: 1),
-            
-            Center(
-              child: Text(
-                textAlign: TextAlign.center,
-                "Errate den Song\nund den Artist!",
-                style: TextStyle(
-                  color: Colors.deepPurple[400],
-                  fontSize: 28
+              Spacer(flex: 1),
+              
+              Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Errate den Song\nund den Artist!",
+                  style: TextStyle(fontSize: 28),
                 ),
               ),
-            ),
 
-            Padding(padding: const EdgeInsetsGeometry.symmetric(vertical: 50),
-            child: IconButton(
-                icon: Icon(isPlaying ? Icons.pause_circle_rounded : Icons.play_circle_fill_rounded),
-                iconSize: 96,
-                onPressed: () async {
-                  if (player.playing) {
-                    await player.pause();
-                  } else {
-                    await player.play();
-                  }
-                },
+              Padding(padding: const EdgeInsetsGeometry.symmetric(vertical: 50),
+              child: IconButton(
+                  icon: Icon(isPlaying ? Icons.pause_circle_rounded : Icons.play_circle_fill_rounded),
+                  iconSize: 96,
+                  onPressed: () async {
+                    if (player.playing) {
+                      await player.pause();
+                    } else {
+                      await player.play();
+                    }
+                  },
+                ),
               ),
-            ),
 
-            Spacer(flex: 2),
-            
-          ],
+              Spacer(flex: 2),
+              
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }

@@ -23,7 +23,9 @@ class ScannerPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Scanne eine Karte"),
-        centerTitle: true,),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
 
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {

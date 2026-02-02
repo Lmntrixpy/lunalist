@@ -88,10 +88,7 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
               child: Text(
                 textAlign: TextAlign.center,
                 "Errate den Song\nund den Artist!",
-                style: TextStyle(
-                  color: Colors.deepPurple[400],
-                  fontSize: 28
-                ),
+                style: TextStyle(fontSize: 28),
               ),
             ),
         

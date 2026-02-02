@@ -47,20 +47,14 @@ class _SongInfoState extends State<SongInfo> {
             children: [
               Text(
                 "Spielmodus: ${widget.gameMode}",
-                style: TextStyle(
-                  color: Colors.black38,
-                  fontSize: 12
-                ),
+                style: TextStyle(fontSize: 12),
               ),
 
               Spacer(flex: 1,),
 
               Text(
                 trackYear.toString(),
-                style: TextStyle(
-                  color: Colors.deepPurple[300],
-                  fontSize: 30,
-                  ),
+                style: TextStyle(fontSize: 30,),
               ),
         
               Padding(
@@ -71,18 +65,12 @@ class _SongInfoState extends State<SongInfo> {
               Text(
                 name,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.deepPurple[400],
-                  fontSize: 30
-                ),
+                style: TextStyle(fontSize: 30),
               ),
         
               Text(
                 artist,
-                style: TextStyle(
-                  color: Colors.deepPurple[200],
-                  fontSize: 24
-                ),
+                style: TextStyle(fontSize: 24),
               ),
 
               Spacer(flex: 2,)

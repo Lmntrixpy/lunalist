@@ -4,7 +4,9 @@ import 'package:hitster_2/pages/mode_selector.dart';
 import 'package:hitster_2/pages/settings.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final Function(ThemeMode)? setThemeMode;
+
+  const HomePage({super.key, this.setThemeMode});
 
   @override
   Widget build(BuildContext context) {
@@ -65,20 +67,15 @@ class HomePage extends StatelessWidget {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
-      title: Text("APPNAME",
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 24,
-        fontWeight: FontWeight.bold)
-        ),
+      automaticallyImplyLeading: false,
+      title: Text("APPNAME"),
       centerTitle: true,
-      backgroundColor: Colors.white,
       actions: [
         IconButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
+              MaterialPageRoute(builder: (context) => SettingsPage(setThemeMode: setThemeMode)),
             );
           },
           icon: Icon(Icons.settings),

@@ -14,7 +14,7 @@ class AboutPage extends StatelessWidget {
 
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
               Text(
@@ -24,35 +24,21 @@ class AboutPage extends StatelessWidget {
                 
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 32),
-                child: DecoratedBox(
-                  
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.transparent),
-                    color: Colors.purple,
-                    borderRadius: BorderRadius.circular(15)
-                    
-                  ),
-                  
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      "Danksagungen",
-                      style: TextStyle(color: Colors.white, fontSize: 24
-                      ),
-                    ),
-                  ),
+                padding: const EdgeInsets.only(top: 30, bottom: 14),
+                child: Text(
+                  "Danksagungen",
+                  style: TextStyle(fontSize: 32),
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text("Herr Hofmann: für seine tatkräftige Unterstützung bei diesem Projekt\n\nJorid Langheinrich: für ihre konstruktive Kritik und Verbesserungsvorschläge\n\ndem einen Typen auf YouTube, der immer alles wunderbar erklärt"),
+              Text(
+                "Herr Hofmann: für seine tatkräftige Unterstützung bei diesem Projekt\n\nJorid Langheinrich: für ihre konstruktive Kritik und Verbesserungsvorschläge",
+                style: TextStyle(fontSize: 20),
               ),
 
               Spacer(),
 
-              Text("Version ${AppConfig.version}")
+              Text("Version ${AppConfig.version}", style: TextStyle(fontSize: 12),)
 
             ],
           ),

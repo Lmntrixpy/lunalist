@@ -4,14 +4,19 @@ import 'package:hitster_2/config.dart';
 import 'package:hitster_2/pages/about.dart';
 import 'package:hitster_2/pages/game_instructions.dart';
 import 'package:hitster_2/services/rankings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:hitster_2/services/qr_code_creator.dart';
 
+enum BrightnessModes{light, dark, system}
+
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final Function(ThemeMode)? setThemeMode;
+  const SettingsPage({super.key, this.setThemeMode});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
+
 
 class _SettingsPageState extends State<SettingsPage> {
   late final ({String artist, String artwork, String name, int year}) metadata;
@@ -19,20 +24,42 @@ class _SettingsPageState extends State<SettingsPage> {
   late String infoText = "";
   List<int> cardNumbers = [];
 
+  Set<BrightnessModes> _selected = {BrightnessModes.system}; // Default
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBrightnessMode();
+  }
+
+  Future<void> _loadBrightnessMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getString('brightnessMode');
+    setState(() {
+      _selected = {
+        if (saved == 'light')
+          BrightnessModes.light
+        else if (saved == 'dark')
+          BrightnessModes.dark
+        else
+          BrightnessModes.system
+      };
+    });
+  }
+
+  Future<void> _saveBrightnessMode(BrightnessModes mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('brightnessMode', mode.name);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       extendBody: true,
       appBar: AppBar(
-        title: Text("Einstellungen & Spielregeln",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
-          fontWeight: FontWeight.bold)
-          ),
+        title: Text("Einstellungen & Spielregeln"),
         centerTitle: true,
-        backgroundColor: Colors.white,
       ),
 
       body: SafeArea(
@@ -117,6 +144,56 @@ class _SettingsPageState extends State<SettingsPage> {
                   )
                 ],
               ),
+              Text(
+                "Erscheinungsbild",
+                style: TextStyle(fontSize: 20),
+                ),
+
+              Center(
+                child: SegmentedButton<BrightnessModes>(
+                  segments: const <ButtonSegment<BrightnessModes>>[
+                    ButtonSegment(
+                      value: BrightnessModes.light,
+                      label: Text("Hell"),
+                      icon: Icon(Icons.light_mode_rounded)),
+                    ButtonSegment(
+                      value: BrightnessModes.dark,
+                      label: Text("Dunkel"),
+                      icon: Icon(Icons.dark_mode_rounded)),
+                    ButtonSegment(
+                      value: BrightnessModes.system,
+                      label: Text("System"),
+                      icon: Icon(Icons.settings_rounded)),
+                  ],
+                  selected: _selected,
+                  onSelectionChanged: (Set<BrightnessModes> newSelection) {
+                    final mode = newSelection.first;
+                
+                    setState(() {
+                      _selected = {mode};
+                    });
+                
+                    ThemeMode themeMode;
+                
+                    switch (mode) {
+                      case BrightnessModes.light:
+                        themeMode = ThemeMode.light;
+                        break;
+                      case BrightnessModes.dark:
+                        themeMode = ThemeMode.dark;
+                        break;
+                      case BrightnessModes.system:
+                        themeMode = ThemeMode.system;
+                        break;
+                    }
+                
+                    if (widget.setThemeMode != null) {
+                     widget.setThemeMode!(themeMode);
+                    }
+                    _saveBrightnessMode(mode);
+                  }
+                ),
+              ),
           
               cover.isNotEmpty
               ? Padding(
@@ -126,10 +203,14 @@ class _SettingsPageState extends State<SettingsPage> {
               : SizedBox(width: 0, height: 0),
           
               cover.isNotEmpty 
-              ? Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: Image.network(cover),
-                )
+              ? Center(
+                child: Padding(
+                    padding: const EdgeInsets.all(50.0),
+                    child: SizedBox(
+                      height: 150,
+                      child: Image.network(cover)),
+                  ),
+              )
               : SizedBox(width: 0, height: 0,),
               
           
@@ -162,7 +243,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Center(
                 child: Text(
                   "Version: ${AppConfig.version}",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(fontSize: 12),
                 ),
               )
             ],

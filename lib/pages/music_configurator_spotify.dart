@@ -41,14 +41,8 @@ class _playlistInputState extends State<playlistInput> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Spotify",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
-          fontWeight: FontWeight.bold)
-          ),
+        title: Text("Spotify"),
         centerTitle: true,
-        backgroundColor: Colors.white,
       ),
 
       floatingActionButton: FloatingActionButton.extended(
@@ -90,11 +84,6 @@ class _playlistInputState extends State<playlistInput> {
         children: [
             Text(
               "Gib deine Playlisten ein.",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.amber[800],
-              ),
             ),
 
             Row(
@@ -128,7 +117,7 @@ class _playlistInputState extends State<playlistInput> {
                         .where((t) => t.isNotEmpty),
                     );
                 },
-                icon: Icon(Icons.add_rounded, color: Colors.black),
+                icon: Icon(Icons.add_rounded),
               ),
             ],
           ),

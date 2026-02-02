@@ -19,7 +19,9 @@ class _LeaderboardState extends State<Leaderboard> {
       appBar: AppBar(
         title: Text("Rangliste"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
+      
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
@@ -33,7 +35,7 @@ class _LeaderboardState extends State<Leaderboard> {
       body: Center(
         child: Column(
           children: [
-            Text("Platz, Person, Anzahl an Siegen"),
+            Text("Platz, Person, Anzahl an Siegen", style: TextStyle(fontSize: 16),),
             Expanded(
               child: FutureBuilder(
                 future: RankingStorage().getAll(),
