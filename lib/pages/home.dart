@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hitster_2/pages/leaderboard.dart';
 import 'package:hitster_2/pages/mode_selector.dart';
 import 'package:hitster_2/pages/settings.dart';
 
@@ -23,19 +24,40 @@ class HomePage extends StatelessWidget {
               ),
           ),
       
-          FilledButton.tonalIcon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ModeSelector()),
-              );
-            },
-            label: Text(
-              "Start",
-              style: TextStyle(fontSize: 32),
-            ),
-            icon: Icon(Icons.start_rounded),
-            ),
+          Column(
+            children: [
+              FilledButton.tonalIcon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ModeSelector()),
+                  );
+                },
+                label: Text(
+                  "Start",
+                  style: TextStyle(fontSize: 32),
+                ),
+                icon: Icon(Icons.start_rounded),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: FilledButton.tonalIcon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Leaderboard())
+                    );
+                  },
+                  label: Text(
+                    "Rangliste",
+                    style: TextStyle(fontSize: 32),
+                  ),
+                  icon: Icon(Icons.leaderboard_rounded),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );
