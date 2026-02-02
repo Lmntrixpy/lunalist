@@ -38,7 +38,7 @@ class _TempSpotifyApiPageState extends State<TempSpotifyApiPage> {
             TextButton(
               onPressed: () async {
                 
-                await SpotifyInterface().authorize();
+                SpotifyInterface().authorize();
                 final meta = await SpotifyInterface.getTrackMetadata("2IODVe96sL1fkhcfRgqQ0s");
 
                 setState(() {

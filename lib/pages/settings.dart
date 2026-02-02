@@ -19,9 +19,8 @@ class SettingsPage extends StatefulWidget {
 
 
 class _SettingsPageState extends State<SettingsPage> {
-  late final ({String artist, String artwork, String name, int year}) metadata;
-  late String cover = "";
   late String infoText = "";
+  late bool connectionSucces = false;
   List<int> cardNumbers = [];
 
   Set<BrightnessModes> _selected = {BrightnessModes.system}; // Default
@@ -97,17 +96,26 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: FilledButton.tonalIcon(
                   onPressed: () async {
                     SpotifyInterface().authorize();
-                    metadata = await SpotifyInterface.getTrackMetadata("1x19UqLfi99ISgtBwfXb0m");
-                    cover = metadata.artwork;
+                    connectionSucces = await SpotifyInterface.testConnection();
                     
                     setState(()  {
-                      infoText = "Wenn du ein Capybara siehst,\ndann war die Verbindung erfolgreich";
-                      cover = metadata.artwork;
+                      if (connectionSucces) {
+                        infoText = "Die Verbindung war erfolgreich";
+                      } else {
+                        infoText = "Die Verbindung ist fehlgeschlagen";
+                      }
                     });
                     
                   }, 
                   icon: Icon(Icons.private_connectivity_rounded),
                   label: Text("Teste Verbindung zu Spotify"),
+                ),
+              ),
+
+              Center(
+                child: Text(
+                  infoText,
+                  style: TextStyle(fontSize: 12),
                 ),
               ),
           
@@ -194,26 +202,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 ),
               ),
-          
-              cover.isNotEmpty
-              ? Padding(
-                padding: const EdgeInsets.only(top: 50.0),
-                child: Center(child: Text(infoText, textAlign: TextAlign.center,)),
-              )
-              : SizedBox(width: 0, height: 0),
-          
-              cover.isNotEmpty 
-              ? Center(
-                child: Padding(
-                    padding: const EdgeInsets.all(50.0),
-                    child: SizedBox(
-                      height: 150,
-                      child: Image.network(cover)),
-                  ),
-              )
-              : SizedBox(width: 0, height: 0,),
-              
-          
           
               /*
               TextButton(

@@ -10,10 +10,9 @@ class SpotifyInterface {
   static Future<Track> track = Future.error("Track not loaded");
   static String year = "";
 
-  bool authorize() {
+  void authorize() {
     final credentials = SpotifyApiCredentials(AppConfig.clientId, AppConfig.clientSecret);
     spotify = SpotifyApi(credentials);
-    return true;
   }
 
   static String urlToId(String url) {
@@ -38,12 +37,8 @@ class SpotifyInterface {
       try {
         playlistTracks = await spotify.playlists.getPlaylistTracks(urlToId(url)).all();
 
-      } on SpotifyException catch (e) {
-        if (e.status == 429) {
-          print('Rate limit reached: ${e.message}');
-        } else {
-          rethrow;
-        }
+      } on ApiRateException catch (e) {
+        print('Rate limit reached: ${e.message}');
       }
 
       return playlistTracks
@@ -67,6 +62,15 @@ class SpotifyInterface {
                 artwork: t.album?.images?.first.url ?? "",
               ))
           .toList();
+  }
+
+  static Future<bool> testConnection() async {
+    try {
+      await spotify.search.get("Lady Gaga").first;
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   // Deprecated: will be removed on next release
