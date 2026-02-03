@@ -6,6 +6,9 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final isDarkMode = brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Über diese App"),
@@ -36,10 +39,19 @@ class AboutPage extends StatelessWidget {
                 style: TextStyle(fontSize: 20),
               ),
 
-              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: Expanded(
+                  child: Image.asset(
+                    isDarkMode
+                        ? "assets/images/gym-lbs_logo_light.png"
+                        : "assets/images/gym-lbs_logo_dark.png",
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
 
               Text("Version ${AppConfig.version}", style: TextStyle(fontSize: 12),)
-
             ],
           ),
         ),

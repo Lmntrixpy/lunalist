@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 40.0),
             child: Text(
               "Willkommen bei APPNAME!\nFalls du noch nie gespielt hast, findest du in den Einstellungen eine Anleitung. Falls doch, drücke einfach auf Start",
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 24),
 
               ),
