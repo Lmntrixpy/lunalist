@@ -18,7 +18,8 @@ class PlayerSpotify extends StatefulWidget {
 
 class _PlayerSpotifyState extends State<PlayerSpotify> {
   bool isPlaying = true;
-  late final ({String artist, String artwork, String id, String name, int year}) currentTrack;
+  ({String artist, String artwork, String id, String name, int year})? currentTrack;
+  bool isReady = false;
 
   @override
   void initState() {
@@ -49,69 +50,76 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
     }
 
   Future<void> _playTrack() async {
-    currentTrack = widget.mapper.scanCard(widget.cardNumber);
-    debugPrint("------ play track ----");
-    await SpotifySdk.subscribeConnectionStatus(); // waits for spotify to be connected
-    SpotifySdk.play(spotifyUri: "spotify:track:${currentTrack.id}");
-    print("Playing ${currentTrack.name} by ${currentTrack.artist}");
+    final track = widget.mapper.scanCard(widget.cardNumber);
+
+    SpotifySdk.subscribeConnectionStatus();
+    await SpotifySdk.play(spotifyUri: "spotify:track:${track.id}");
+
+    setState(() {
+      currentTrack = track;
+      isReady = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          SpotifySdk.pause();
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SongInfo(mapper: widget.mapper, currentTrack: currentTrack, gameMode: widget.gameMode))
-          );
-        }, 
-        label: Text("Karte aufdecken"),
-        icon: Icon(Icons.arrow_right_alt_rounded),
-      ),
-
-      body: SafeArea(
-        child: Column(
-          children: [
-            Text(
-              "Spielmodus: ${widget.gameMode}",
-              style: TextStyle(
-                color: Colors.black38,
-                fontSize: 12
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: !isReady ? null :() {
+            SpotifySdk.pause();
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SongInfo(mapper: widget.mapper, currentTrack: currentTrack!, gameMode: widget.gameMode))
+            );
+          }, 
+          label: Text("Karte aufdecken"),
+          icon: Icon(Icons.arrow_right_alt_rounded),
+        ),
+      
+        body: SafeArea(
+          child: Column(
+            children: [
+              Text(
+                "Spielmodus: ${widget.gameMode}",
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 12
+                ),
               ),
-            ),
-            
-            Spacer(flex: 1),
-            Center(
-              child: Text(
-                textAlign: TextAlign.center,
-                "Errate den Song\nund den Artist!",
-                style: TextStyle(fontSize: 28),
+              
+              Spacer(flex: 1),
+              Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Errate den Song\nund den Artist!",
+                  style: TextStyle(fontSize: 28),
+                ),
               ),
-            ),
-        
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50),
-              child: IconButton(
-                iconSize: 96,
-                onPressed: () {
-                  setState(() {
-                    if (isPlaying) {
-                      SpotifySdk.pause();
-                      isPlaying = false;
-                    } else {
-                      SpotifySdk.resume();
-                      isPlaying = true;
-                    }  
-                  });
-                }, icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled)),
-            ),
-        
-            Spacer(flex: 2),
-        
-          ],
+          
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 50),
+                child: IconButton(
+                  iconSize: 96,
+                  onPressed: !isReady ? null : () {
+                    setState(() {
+                      if (isPlaying) {
+                        SpotifySdk.pause();
+                        isPlaying = false;
+                      } else {
+                        SpotifySdk.resume();
+                        isPlaying = true;                        
+                      }  
+                    });
+                  }, icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled)),
+              ),
+          
+              Spacer(flex: 2),
+          
+            ],
+          ),
         ),
       ),
     );
