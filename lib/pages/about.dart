@@ -39,17 +39,18 @@ class AboutPage extends StatelessWidget {
                 style: TextStyle(fontSize: 20),
               ),
 
-              Padding(
-                padding: const EdgeInsets.all(50.0),
-                child: Expanded(
-                  child: Image.asset(
-                    isDarkMode
-                        ? "assets/images/gym-lbs_logo_light.png"
-                        : "assets/images/gym-lbs_logo_dark.png",
-                    fit: BoxFit.contain,
-                  ),
+              SizedBox(height: 50),
+
+              Expanded(
+                child: Image.asset(
+                  isDarkMode
+                      ? "assets/images/gym-lbs_logo_light.png"
+                      : "assets/images/gym-lbs_logo_dark.png",
+                  fit: BoxFit.contain,
                 ),
               ),
+              
+              SizedBox(height: 50),
 
               Text("Version ${AppConfig.version}", style: TextStyle(fontSize: 12),)
             ],
