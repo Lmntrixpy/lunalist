@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -58,37 +59,37 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "APPNAME",
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.purple,
-          brightness: Brightness.light,
-        ),
-        textTheme: TextTheme(
-          displayLarge: const TextStyle(),
-          titleLarge: GoogleFonts.roboto(fontWeight: FontWeight.bold),
-          bodyMedium: GoogleFonts.roboto(),
-          displaySmall: GoogleFonts.roboto(),
-        ),
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.greenAccent,
-          brightness: Brightness.dark,
-        ),
-        textTheme: TextTheme(
-          displayLarge: const TextStyle(),
-          titleLarge: GoogleFonts.roboto(fontWeight: FontWeight.bold),
-          bodyMedium: GoogleFonts.roboto(fontSize: 24, color: Colors.green[200]),
-          displaySmall: GoogleFonts.roboto(),
-        ),
-      ),
-      themeMode: _themeMode,
-      home: HomePage(
-        setThemeMode: setThemeMode, // Übergabe an HomePage / SettingsPage
-      ),
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        final lightScheme = lightDynamic ??
+            ColorScheme.fromSeed(seedColor: Colors.purple, brightness: Brightness.light);
+        final darkScheme = darkDynamic ??
+            ColorScheme.fromSeed(seedColor: Colors.purple, brightness: Brightness.dark);
+
+        ThemeData makeTheme(ColorScheme scheme) {
+          final base = ThemeData(
+            useMaterial3: true,
+            colorScheme: scheme,
+          );
+
+          return base.copyWith(
+            scaffoldBackgroundColor: scheme.surface,
+            canvasColor: scheme.surface,
+
+            textTheme: GoogleFonts.robotoTextTheme(base.textTheme).copyWith(
+              titleLarge: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+            ),
+          );
+        }
+
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: makeTheme(lightScheme),
+          darkTheme: makeTheme(darkScheme),
+          themeMode: _themeMode,
+          home: HomePage(setThemeMode: setThemeMode),
+        );
+      },
     );
   }
 }

@@ -8,6 +8,7 @@
 
 #include <audioplayers_windows/audioplayers_windows_plugin.h>
 #include <desktop_webview_window/desktop_webview_window_plugin.h>
+#include <dynamic_color/dynamic_color_plugin_c_api.h>
 #include <flutter_media_metadata/flutter_media_metadata_plugin.h>
 #include <printing/printing_plugin.h>
 #include <share_plus/share_plus_windows_plugin_c_api.h>
@@ -19,6 +20,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("AudioplayersWindowsPlugin"));
   DesktopWebviewWindowPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DesktopWebviewWindowPlugin"));
+  DynamicColorPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("DynamicColorPluginCApi"));
   FlutterMediaMetadataPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterMediaMetadataPlugin"));
   PrintingPluginRegisterWithRegistrar(

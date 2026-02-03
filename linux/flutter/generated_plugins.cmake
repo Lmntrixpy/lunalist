@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_linux
   desktop_webview_window
+  dynamic_color
   flutter_media_metadata
   printing
   url_launcher_linux
