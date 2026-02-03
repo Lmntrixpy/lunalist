@@ -26,14 +26,14 @@ class _SongInfoLocalState extends State<SongInfoLocal> {
    @override
   void initState() {
   super.initState();
-
-  if (!mounted) return;
    
   _getTrackData();
   }
 
   Future<void> _getTrackData() async {
     await GetMetadata.load(widget.currentTrack);
+
+    if (!mounted) return;
     
     setState(() {
       songName = GetMetadata.trackName;
@@ -47,6 +47,16 @@ class _SongInfoLocalState extends State<SongInfoLocal> {
 
   @override
   Widget build(BuildContext context) {
+    final loading = songName.isEmpty && albumArt.isEmpty && artist.isEmpty && releaseYear == 0;
+
+    if (loading) {
+      return const Scaffold(
+        body: SafeArea(
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -96,7 +106,7 @@ class _SongInfoLocalState extends State<SongInfoLocal> {
                   style: TextStyle(fontSize: 30),
                 ),
           
-                Text(artist.first),
+                Text(artist.isNotEmpty ? artist.first : "Unbekannter Interpret"),
       
                 Spacer(flex: 2,)
           
