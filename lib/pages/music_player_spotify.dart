@@ -156,7 +156,6 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
               Text(
                 "Spielmodus: ${widget.gameMode}",
                 style: TextStyle(
-                  color: Colors.black38,
                   fontSize: 12
                 ),
               ),
