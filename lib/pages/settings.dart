@@ -125,23 +125,62 @@ class _SettingsPageState extends State<SettingsPage> {
                                 TextButton(
                                   onPressed: isGeneratingDialog
                                       ? null
+                                      : () {
+                                          Navigator.of(dialogContext).pop();
+                                        },
+                                  child: Text("Abbrechen"),
+                                ),
+                                TextButton(
+                                  onPressed: isGeneratingDialog
+                                      ? null
                                       : () async {
-                                          // harte Sperre
+                                          
                                           if (isGeneratingDialog) return;
 
                                           final value = int.tryParse(textController.text);
                                           if (value == null || value <= 0) return;
 
-                                          // Dialog sofort sperren
+                                          setDialogState(() => isGeneratingDialog = true);
+                                          
+                                          setState(() => isGenerating = true);
+
+                                          try {
+                                            await QrPdfGenerator.generateQrOnly(value);
+                                            if (dialogContext.mounted) {
+                                              Navigator.of(dialogContext).pop();
+                                            }
+                                          } finally {
+                                            if (mounted) setState(() => isGenerating = false);
+                                            if (dialogContext.mounted) {
+                                              setDialogState(() => isGeneratingDialog = false);
+                                            }
+                                          }
+                                  },
+                                  child: isGeneratingDialog
+                                      ? const Text("")
+                                      : const Text("ohne Rückseite"),
+                                ),
+
+                                TextButton(
+                                  onPressed: isGeneratingDialog
+                                      ? null
+                                      : () async {
+                                          
+                                          if (isGeneratingDialog) return;
+
+                                          final value = int.tryParse(textController.text);
+                                          if (value == null || value <= 0) return;
+
+                                          
                                           setDialogState(() => isGeneratingDialog = true);
 
-                                          // optional: globaler Zustand (z.B. um außen auch zu sperren)
+                                          
                                           setState(() => isGenerating = true);
 
                                           try {
                                             await QrPdfGenerator.generate(value);
                                             if (dialogContext.mounted) {
-                                              Navigator.of(dialogContext).pop(); // Dialog schließen
+                                              Navigator.of(dialogContext).pop();
                                             }
                                           } finally {
                                             if (mounted) setState(() => isGenerating = false);
@@ -157,7 +196,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                           height: 18,
                                           child: CircularProgressIndicator(strokeWidth: 2),
                                         )
-                                      : const Text("Weiter"),
+                                      : const Text("mit Rückseite"),
                                 ),
                               ],
                             );

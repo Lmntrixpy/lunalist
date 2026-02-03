@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
@@ -108,8 +107,7 @@ class QrPdfGenerator {
         final left = (centerXcm) * PdfPageFormat.cm;
         final top = (centerYcm) * PdfPageFormat.cm;
 
-        final value =
-            (startIndex + i + 1).toString();
+        final value = (startIndex + i + 1).toString();
 
         return pw.Positioned(
           left: left,
@@ -163,44 +161,56 @@ class QrPdfGenerator {
             )
           )
 
-          
-          /*
-          pw.SizedBox(
-            width: cardSize,
-            height: qrSize,
-            child: pw.Center(
-              child: pw.SizedBox(
-                width: qrSize + 10,
-                height: qrSize + 10,
-                
-                
-                child: pw.Container(
-                  width: qrSize,
-                  height: qrSize,
-                  color: PdfColors.white,
-                  child: pw.BarcodeWidget(
-                    barcode: pw.Barcode.qrCode(),
-                    data: value,
-                    drawText: false,
-                  ),
-                ),
-              )
-            ),
-          ),
-
-          // Text unter dem QR-Code
-          pw.SizedBox(
-            height: textHeight,
-            child: pw.Center(
-              child: pw.Text(
-                value,
-                style: const pw.TextStyle(fontSize: 9),
-              ),
-            ),
-          ), */
         ],
       ),
     );
+  } 
+
+    static Future<void> generateQrOnly(int count) async {
+    final templateData = await rootBundle.load(
+      'assets/templates/Karten-Vorlage.pdf',
+    );
+    final templateBytes = templateData.buffer.asUint8List();
+
+    // immer auf 20er-Blöcke aufrunden
+    final roundedCount = ((count + 19) ~/ 20) * 20;
+    if (roundedCount <= 0) return;
+
+    final pdf = pw.Document();
+
+    int remaining = roundedCount;
+    int index = 0;
+
+    while (remaining > 0) {
+      // Nur QR-Seite (Vorlage Seite 2 -> pageNumber 1)
+      final page2 = await _raster(templateBytes, 1);
+      final codes = remaining > 20 ? 20 : remaining;
+
+      final startForThisPage = index;
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: page2.format,
+          margin: pw.EdgeInsets.zero,
+          build: (_) => pw.Stack(
+            children: [
+              pw.Positioned.fill(child: pw.Image(page2.image)),
+              _buildQrGrid(codes, startForThisPage),
+            ],
+          ),
+        ),
+      );
+
+      index += codes;
+      remaining -= codes;
+    }
+
+    final bytes = await pdf.save();
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/qr_codes_only.pdf');
+    await file.writeAsBytes(bytes);
+
+    await Share.shareXFiles([XFile(file.path)]);
   }
 
 }
