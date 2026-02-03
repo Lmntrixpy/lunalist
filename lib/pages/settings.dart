@@ -5,7 +5,7 @@ import 'package:hitster_2/pages/about.dart';
 import 'package:hitster_2/pages/game_instructions.dart';
 import 'package:hitster_2/services/rankings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:hitster_2/services/qr_code_creator.dart';
+import 'package:hitster_2/services/qr_code_creator.dart';
 
 enum BrightnessModes{light, dark, system}
 
@@ -22,6 +22,9 @@ class _SettingsPageState extends State<SettingsPage> {
   late String infoText = "";
   late bool connectionSucces = false;
   List<int> cardNumbers = [];
+  TextEditingController textController = TextEditingController();
+  int cardCount = 0;
+  bool isGenerating = false;
 
   Set<BrightnessModes> _selected = {BrightnessModes.system}; // Default
 
@@ -53,7 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
@@ -84,6 +87,85 @@ class _SettingsPageState extends State<SettingsPage> {
                   icon: Icon(Icons.link, size: 24,),
                   label: Text("Spielregeln anzeigen", style: TextStyle(fontSize: 18),),
                   
+                ),
+              ),
+
+              Center(
+                child: FilledButton.tonalIcon(
+                  label: Text("Spielkarten drucken"),
+                  icon: Icon(Icons.print_rounded),
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false, // optional
+                      builder: (dialogContext) {
+                        bool isGeneratingDialog = false;
+
+                        return StatefulBuilder(
+                          builder: (dialogContext, setDialogState) {
+                            return AlertDialog(
+                              title: const Text("Kartenanzahl"),
+                              content: TextField(
+                                controller: textController,
+                                autocorrect: false,
+                                autofocus: true,
+                                enabled: !isGeneratingDialog,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  label: const Text("Wie viele Karten brauchst du?"),
+                                  hintText: "Anzahl Karten",
+                                  suffix: IconButton(
+                                    onPressed: isGeneratingDialog ? null : () => textController.clear(),
+                                    icon: const Icon(Icons.clear_rounded),
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: isGeneratingDialog
+                                      ? null
+                                      : () async {
+                                          // harte Sperre
+                                          if (isGeneratingDialog) return;
+
+                                          final value = int.tryParse(textController.text);
+                                          if (value == null || value <= 0) return;
+
+                                          // Dialog sofort sperren
+                                          setDialogState(() => isGeneratingDialog = true);
+
+                                          // optional: globaler Zustand (z.B. um außen auch zu sperren)
+                                          setState(() => isGenerating = true);
+
+                                          try {
+                                            await QrPdfGenerator.generate(value);
+                                            if (dialogContext.mounted) {
+                                              Navigator.of(dialogContext).pop(); // Dialog schließen
+                                            }
+                                          } finally {
+                                            if (mounted) setState(() => isGenerating = false);
+                                            // falls Dialog noch offen ist:
+                                            if (dialogContext.mounted) {
+                                              setDialogState(() => isGeneratingDialog = false);
+                                            }
+                                          }
+                                        },
+                                  child: isGeneratingDialog
+                                      ? const SizedBox(
+                                          width: 18,
+                                          height: 18,
+                                          child: CircularProgressIndicator(strokeWidth: 2),
+                                        )
+                                      : const Text("Weiter"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
           
@@ -202,16 +284,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 ),
               ),
-          
-              /*
-              TextButton(
-                onPressed: () {
-                  QrPdfGenerator.generate(5);
-                },
-                child: Text("number_gen")
-              ), 
-              */
-          
+                      
               Spacer(),
               
               Center(

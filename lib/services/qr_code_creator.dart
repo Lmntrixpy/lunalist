@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
@@ -9,173 +9,205 @@ import 'package:share_plus/share_plus.dart';
 
 class QrPdfGenerator {
   static Future<void> generate(int count) async {
-    try {
-      print("------- in generate -----");
-      
-      // Font laden
-      final fontData = await rootBundle.load(
-        'assets/fonts/Roboto-Regular.ttf',
-      );
-      final ttf = pw.Font.ttf(fontData);
-      
-      // PDF-Vorlage laden
-      final templateData = await rootBundle.load(
-        'assets/templates/Karten-Vorlage.pdf',
-      );
-      final templateBytes = templateData.buffer.asUint8List();
-      
-      // Neues PDF erstellen
-      final pdf = pw.Document(
-        theme: pw.ThemeData.withFont(
-          base: ttf,
-          bold: ttf,
-          italic: ttf,
-          boldItalic: ttf,
+    final templateData = await rootBundle.load(
+      'assets/templates/Karten-Vorlage.pdf',
+    );
+
+    final pdf = pw.Document();
+    
+    if (count == 0) {count += 1;}
+    int roundedCount = ((count + 19) ~/ 20) * 20; // round to next 20
+
+    int remaining = roundedCount;
+    int index = 0;
+
+    while (remaining > 0) {
+      // Seite 1
+      final page1 = await _raster(templateData.buffer.asUint8List(), 0);
+      pdf.addPage(
+        pw.Page(
+          pageFormat: page1.format,
+          margin: pw.EdgeInsets.zero,
+          build: (_) => pw.Image(page1.image),
         ),
       );
-      
-      // QR-Codes in Gruppen von 20 aufteilen
-      int remainingCodes = count;
-      int currentIndex = 0;
-      
-      while (remainingCodes > 0) {
-        // Seite 1 (Titelseite) als Bild hinzufügen
-        final page1Image = await pdfPageToImage(templateBytes, pageNumber: 0);
-        pdf.addPage(
-          pw.Page(
-            pageFormat: PdfPageFormat.a4,
-            build: (context) => pw.FullPage(
-              ignoreMargins: true,
-              child: pw.Image(
-                page1Image,
-                fit: pw.BoxFit.fill,
-              ),
-            ),
-          ),
-        );
-        
-        // Seite 2 (QR-Codes) hinzufügen
-        final page2Image = await pdfPageToImage(templateBytes, pageNumber: 1);
-        final codesForThisPage = remainingCodes > 20 ? 20 : remainingCodes;
-        
-        pdf.addPage(
-          pw.Page(
-            pageFormat: PdfPageFormat.a4,
-            build: (context) {
-              return pw.Container(
-                width: PdfPageFormat.a4.width,
-                height: PdfPageFormat.a4.height,
-                child: pw.Stack(
-                  children: [
-                    // Hintergrund (Vorlage) - volle Seite
-                    pw.Positioned.fill(
-                      child: pw.Image(
-                        page2Image,
-                        fit: pw.BoxFit.fill,
-                      ),
-                    ),
-                    // QR-Codes darüber
-                    _buildQrGrid(codesForThisPage, currentIndex),
-                  ],
+
+      // Seite 2
+      final page2 = await _raster(templateData.buffer.asUint8List(), 1);
+      final codes = remaining > 20 ? 20 : remaining;
+      final indexSet = index;
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: page2.format,
+          build: (_) {
+            return pw.Stack(
+              children: [
+                pw.Image(page2.image),
+                _buildQrGrid(
+                  codes,
+                  indexSet,
                 ),
-              );
-            },
-          ),
-        );
-        
-        currentIndex += codesForThisPage;
-        remainingCodes -= codesForThisPage;
-      }
-      
-      final bytes = await pdf.save();
-      print("PDF generated, size: ${bytes.length} bytes");
-      
-      // Temporäre Datei erstellen und teilen
-      final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/qr_codes.pdf');
-      await file.writeAsBytes(bytes);
-      print("PDF saved to: ${file.path}");
-      
-      final result = await Share.shareXFiles(
-        [XFile(file.path)],
-        subject: 'QR Codes',
-        text: 'QR Codes PDF',
+              ],
+            );
+          },
+        ),
       );
-      
-      print("Share result: ${result.status}");
-      
-    } catch (e, stackTrace) {
-      print("Error generating PDF: $e");
-      print("Stack trace: $stackTrace");
-      rethrow;
+
+      index += codes;
+      remaining -= codes;
     }
+
+    final bytes = await pdf.save();
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/qr_codes.pdf');
+    await file.writeAsBytes(bytes);
+
+    await Share.shareXFiles([XFile(file.path)]);
   }
 
-  // Hilfsfunktion: PDF-Seite in Bild konvertieren
-  static Future<pw.ImageProvider> pdfPageToImage(
-    Uint8List pdfBytes, {
-    required int pageNumber,
-  }) async {
-    await for (final page in Printing.raster(
-      pdfBytes,
-      pages: [pageNumber],
-      dpi: 150,
+  static Future<_RasterPage> _raster(
+    Uint8List pdf,
+    int page,
+  ) async {
+    await for (final p in Printing.raster(
+      pdf,
+      pages: [page],
+      dpi: 300,
     )) {
-      final imageBytes = await page.toPng();
-      return pw.MemoryImage(imageBytes);
+      final img = pw.MemoryImage(await p.toPng());
+
+      final widthPt = p.width / 300 * PdfPageFormat.inch;
+      final heightPt = p.height / 300 * PdfPageFormat.inch;
+
+      return _RasterPage(
+        image: img,
+        format: PdfPageFormat(widthPt, heightPt),
+      );
     }
-    
-    throw Exception('Could not rasterize page $pageNumber');
+    throw Exception();
   }
 
   static pw.Widget _buildQrGrid(int count, int startIndex) {
-    // Grid-Layout: 4 Spalten x 5 Zeilen = 20 Kästchen
-    // Positionierung anpassen um in die Kästchen zu passen
-    return pw.Positioned(
-      left: 60,   // Anpassen für dein Layout
-      top: 120,   // Anpassen für dein Layout
-      right: 60,
-      bottom: 120,
-      child: pw.Container(
-        child: pw.GridView(
-          crossAxisCount: 4,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          childAspectRatio: 1.0,
-          children: List.generate(count, (i) {
-            final value = (startIndex + i + 1).toString().padLeft(4, '0');
-            return _qrCard(value);
-          }),
-        ),
-      ),
+    const double cardSizeCm = 4.5;
+    const double verticalSpacingCm = 1.0;
+
+    const double firstCenterXCm = 1.35;
+    const double firstCenterYCm = 2.0;
+
+    const int columns = 4;
+
+    return pw.Stack(
+      children: List.generate(count, (i) {
+        final row = i ~/ columns;
+        final col = i % columns;
+
+        final centerXcm = firstCenterXCm + col * cardSizeCm;
+        final centerYcm = firstCenterYCm + row * (cardSizeCm + verticalSpacingCm);
+
+        final left = (centerXcm) * PdfPageFormat.cm;
+        final top = (centerYcm) * PdfPageFormat.cm;
+
+        final value =
+            (startIndex + i + 1).toString();
+
+        return pw.Positioned(
+          left: left,
+          top: top,
+          child: pw.SizedBox(
+            width: cardSizeCm *  PdfPageFormat.cm,
+            height: cardSizeCm  * PdfPageFormat.cm,
+            child: _qrCard(value),
+          ),
+        );
+      }),
     );
   }
 
   static pw.Widget _qrCard(String value) {
+    const double cardSizeCm = 4.5;
+    const double qrFraction = 0.5;
+
+    final cardSize = cardSizeCm * PdfPageFormat.cm;
+    final qrSize = cardSize * qrFraction;
+    final textHeight = cardSize - qrSize;
+
     return pw.Container(
-      padding: const pw.EdgeInsets.all(4),
-      decoration: pw.BoxDecoration(
-        color: PdfColors.white,
-        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
-      ),
+      width: cardSize,
+      height: cardSize,
       child: pw.Column(
-        mainAxisSize: pw.MainAxisSize.min,
         mainAxisAlignment: pw.MainAxisAlignment.center,
         children: [
-          pw.Expanded(
-            child: pw.BarcodeWidget(
-              barcode: pw.Barcode.qrCode(),
-              data: value,
-              drawText: false,
+          pw.Container(
+            width: qrSize,
+            height: qrSize,
+            color: PdfColors.white,
+            child: pw.Center(
+              child: pw.Container(
+                padding: const pw.EdgeInsets.all(4),
+                width: qrSize,
+                height: qrSize,
+                //color: PdfColors.white,
+                child: pw.BarcodeWidget(
+                  data: value, 
+                  barcode: pw.Barcode.qrCode(),
+                )
+              )
+            )
+          ),
+
+          pw.Container(
+            height: textHeight,
+            child: pw.Center(
+              child: pw.Text(value, style: const pw.TextStyle(fontSize: 20))
+            )
+          )
+
+          
+          /*
+          pw.SizedBox(
+            width: cardSize,
+            height: qrSize,
+            child: pw.Center(
+              child: pw.SizedBox(
+                width: qrSize + 10,
+                height: qrSize + 10,
+                
+                
+                child: pw.Container(
+                  width: qrSize,
+                  height: qrSize,
+                  color: PdfColors.white,
+                  child: pw.BarcodeWidget(
+                    barcode: pw.Barcode.qrCode(),
+                    data: value,
+                    drawText: false,
+                  ),
+                ),
+              )
             ),
           ),
-          pw.SizedBox(height: 2),
-          pw.Text(
-            value,
-            style: const pw.TextStyle(fontSize: 8),
-          ),
+
+          // Text unter dem QR-Code
+          pw.SizedBox(
+            height: textHeight,
+            child: pw.Center(
+              child: pw.Text(
+                value,
+                style: const pw.TextStyle(fontSize: 9),
+              ),
+            ),
+          ), */
         ],
       ),
     );
   }
+
+}
+
+class _RasterPage {
+  final pw.ImageProvider image;
+  final PdfPageFormat format;
+
+  _RasterPage({required this.image, required this.format});
 }

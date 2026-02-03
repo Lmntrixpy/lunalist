@@ -32,6 +32,7 @@ class _LeaderboardState extends State<Leaderboard> {
         label: Text("Hauptmenü"),
         icon: Icon(Icons.home_rounded),
       ),
+      
       body: Center(
         child: Column(
           children: [
