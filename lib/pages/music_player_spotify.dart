@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hitster_2/pages/song_info_spotify.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
@@ -19,22 +21,53 @@ class PlayerSpotify extends StatefulWidget {
 class _PlayerSpotifyState extends State<PlayerSpotify> {
   bool isPlaying = true;
   ({String artist, String artwork, String id, String name, int year})? currentTrack;
+
   bool isReady = false;
+  bool _initializing = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
-    _init();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _init();
+    });
   }
 
   Future<void> _init() async {
-    await ensureSpotifyConnection();
-    await _playTrack();
+    setState(() {
+      _initializing = true;
+      _error = null;
+      isReady = false;
+    });
+
+    try {
+      await ensureSpotifyConnection().timeout(const Duration(seconds: 12));
+      await _playTrack().timeout(const Duration(seconds: 12));
+
+      if (!mounted) return;
+      setState(() => isReady = true);
+    } on PlatformException catch (e) {
+      // Nutzer hat Login abgebrochen oder Spotify nicht verfügbar
+      if (!mounted) return;
+      setState(() {
+        _error = "Spotify-Anmeldung abgebrochen oder fehlgeschlagen. Bitte erneut versuchen.";
+      });
+    } on TimeoutException {
+      if (!mounted) return;
+      setState(() {
+        _error = "Spotify Verbindung dauert zu lange. Spotify öffnen und erneut versuchen.";
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _error = e.toString());
+    } finally {
+      if (!mounted) return;
+      setState(() => _initializing = false); // ENTSPERREN, egal was passiert
+    }
   }
 
   Future<void> ensureSpotifyConnection() async {
-    print("--- auth spot");
-
     if (Platform.isAndroid) {
       await SpotifySdk.getAccessToken(
         clientId: AppConfig.clientId,
@@ -43,34 +76,72 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
       );
     }
 
-    await SpotifySdk.connectToSpotifyRemote(
+    final connected = await SpotifySdk.connectToSpotifyRemote(
       clientId: AppConfig.clientId,
-      redirectUrl: Platform.isAndroid ? "hitster://android-callback" : "hitster://ios-callback",
+      redirectUrl: "hitster://android-callback",
     );
+
+    if (connected != true) {
+      throw PlatformException(code: "CANCELED", message: "User canceled Spotify auth");
     }
+  }
 
   Future<void> _playTrack() async {
     final track = widget.mapper.scanCard(widget.cardNumber);
+    currentTrack = track;
 
-    SpotifySdk.subscribeConnectionStatus();
     await SpotifySdk.play(spotifyUri: "spotify:track:${track.id}");
-
-    setState(() {
-      currentTrack = track;
-      isReady = true;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_error != null) {
+    return PopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Spotify"),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+        ),
+        
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Fehler!\n"
+                "Versuche es durch Klicken erneut",
+                style: TextStyle(fontSize: 24),
+              ),
+              SizedBox(height: 40,),
+              
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(_error!, textAlign: TextAlign.center),
+              ),
+              
+              const SizedBox(height: 12),
+              
+              OutlinedButton.icon(
+                icon: Icon(Icons.restart_alt_rounded),
+                onPressed: _init,
+                label: const Text("Erneut versuchen")),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+
     return PopScope(
       canPop: false,
       child: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: !isReady ? null :() {
             SpotifySdk.pause();
-            Navigator.pop(context);
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => SongInfo(mapper: widget.mapper, currentTrack: currentTrack!, gameMode: widget.gameMode))
             );
@@ -125,4 +196,3 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
     );
   }
 }
-
