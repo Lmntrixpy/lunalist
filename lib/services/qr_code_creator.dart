@@ -37,21 +37,26 @@ class QrPdfGenerator {
       final indexSet = index;
 
       pdf.addPage(
-        pw.Page(
-          pageFormat: page2.format,
-          build: (_) {
-            return pw.Stack(
-              children: [
-                pw.Image(page2.image),
-                _buildQrGrid(
-                  codes,
-                  indexSet,
+      pw.Page(
+        pageFormat: page2.format,
+        margin: pw.EdgeInsets.zero,
+        build: (_) => pw.SizedBox(
+          width: page2.format.width,
+          height: page2.format.height,
+          child: pw.Stack(
+            children: [
+              pw.Positioned.fill(
+                child: pw.Image(
+                  page2.image,
+                  fit: pw.BoxFit.fill, // hier ok, weil Bildformat == pageFormat
                 ),
-              ],
-            );
-          },
+              ),
+              _buildQrGrid(codes, indexSet),
+            ],
+          ),
         ),
-      );
+      ),
+    );
 
       index += codes;
       remaining -= codes;
@@ -59,29 +64,37 @@ class QrPdfGenerator {
 
     final bytes = await pdf.save();
     final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/qr_codes.pdf');
+    final file = File('${dir.path}/APPNAME_Karten.pdf');
     await file.writeAsBytes(bytes);
+
+
+    if (Platform.isAndroid) {
+      final fileName = "APPNAME_Karten${DateTime.now().millisecondsSinceEpoch}.pdf";
+      final downloadsDir = Directory("/storage/emulated/0/Download");
+
+      if (!await downloadsDir.exists()) {
+        await downloadsDir.create(recursive: true);
+      }
+
+      final downloadFile = File("${downloadsDir.path}/$fileName");
+      print(downloadFile);
+      await downloadFile.writeAsBytes(bytes);
+      print("----- saved in Download dir");
+    }
 
     await Share.shareXFiles([XFile(file.path)]);
   }
 
-  static Future<_RasterPage> _raster(
-    Uint8List pdf,
-    int page,
-  ) async {
+  static Future<_RasterPage> _raster(Uint8List pdf, int page) async {
     await for (final p in Printing.raster(
       pdf,
       pages: [page],
       dpi: 300,
     )) {
       final img = pw.MemoryImage(await p.toPng());
-
-      final widthPt = p.width / 300 * PdfPageFormat.inch;
-      final heightPt = p.height / 300 * PdfPageFormat.inch;
-
       return _RasterPage(
         image: img,
-        format: PdfPageFormat(widthPt, heightPt),
+        format: PdfPageFormat.a4,
       );
     }
     throw Exception();
@@ -98,6 +111,8 @@ class QrPdfGenerator {
 
     return pw.Stack(
       children: List.generate(count, (i) {
+        final double yOffset = Platform.isAndroid ? (3.0 * PdfPageFormat.mm) : 0.0;
+        
         final row = i ~/ columns;
         final col = i % columns;
 
@@ -105,7 +120,7 @@ class QrPdfGenerator {
         final centerYcm = firstCenterYCm + row * (cardSizeCm + verticalSpacingCm);
 
         final left = (centerXcm) * PdfPageFormat.cm;
-        final top = (centerYcm) * PdfPageFormat.cm;
+        final top = (centerYcm * PdfPageFormat.cm) + yOffset;
 
         final value = (startIndex + i + 1).toString();
 
@@ -189,17 +204,23 @@ class QrPdfGenerator {
       final startForThisPage = index;
 
       pdf.addPage(
-        pw.Page(
-          pageFormat: page2.format,
-          margin: pw.EdgeInsets.zero,
-          build: (_) => pw.Stack(
+      pw.Page(
+        pageFormat: page2.format,
+        margin: pw.EdgeInsets.zero,
+        build: (_) => pw.SizedBox(
+          width: page2.format.width,
+          height: page2.format.height,
+          child: pw.Stack(
             children: [
-              pw.Positioned.fill(child: pw.Image(page2.image)),
+              pw.Positioned.fill(
+                child: pw.Image(page2.image, fit: pw.BoxFit.fill),
+              ),
               _buildQrGrid(codes, startForThisPage),
             ],
           ),
         ),
-      );
+      ),
+    );
 
       index += codes;
       remaining -= codes;
@@ -207,8 +228,22 @@ class QrPdfGenerator {
 
     final bytes = await pdf.save();
     final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/qr_codes_only.pdf');
+    final file = File('${dir.path}/APPNAME_Karten_nur_Vorderseite.pdf');
     await file.writeAsBytes(bytes);
+
+    if (Platform.isAndroid) {
+      final fileName = "APPNAME_Karten_nur_Vorderseite${DateTime.now().millisecondsSinceEpoch}.pdf";
+      final downloadsDir = Directory("/storage/emulated/0/Download");
+
+      if (!await downloadsDir.exists()) {
+        await downloadsDir.create(recursive: true);
+      }
+
+      final downloadFile = File("${downloadsDir.path}/$fileName");
+      print(downloadFile);
+      await downloadFile.writeAsBytes(bytes);
+      print("----- saved in Download dir");
+    }
 
     await Share.shareXFiles([XFile(file.path)]);
   }
