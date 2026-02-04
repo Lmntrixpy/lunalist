@@ -39,8 +39,7 @@ class _EndScreenState extends State<EndScreen> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.pop(context);
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Leaderboard()),
             );

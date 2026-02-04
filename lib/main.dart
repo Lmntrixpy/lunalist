@@ -40,42 +40,57 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late ThemeMode _themeMode;
+  int _dynamicKey = 0;
+
+  ColorScheme? _cachedLight;
+  ColorScheme? _cachedDark;
 
   @override
   void initState() {
     super.initState();
     _themeMode = widget.initialThemeMode;
+    WidgetsBinding.instance.addObserver(this);
   }
 
-  void setThemeMode(ThemeMode mode) async {
-    setState(() {
-      _themeMode = mode;
-    });
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("brightnessMode", mode.name);
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      setState(() => _dynamicKey++);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
+      key: ValueKey(_dynamicKey),
       builder: (lightDynamic, darkDynamic) {
-        final lightScheme = lightDynamic ??
+        // update cache of current colorscheme
+        if (lightDynamic != null) _cachedLight = lightDynamic;
+        if (darkDynamic != null) _cachedDark = darkDynamic;
+
+        final lightScheme =
+            _cachedLight ??
+            lightDynamic ??
             ColorScheme.fromSeed(seedColor: Colors.purple, brightness: Brightness.light);
-        final darkScheme = darkDynamic ??
+
+        final darkScheme =
+            _cachedDark ??
+            darkDynamic ??
             ColorScheme.fromSeed(seedColor: Colors.purple, brightness: Brightness.dark);
 
         ThemeData makeTheme(ColorScheme scheme) {
-          final base = ThemeData(
-            useMaterial3: true,
-            colorScheme: scheme,
-          );
-
+          final base = ThemeData(useMaterial3: true, colorScheme: scheme);
           return base.copyWith(
             scaffoldBackgroundColor: scheme.surface,
             canvasColor: scheme.surface,
-
             textTheme: GoogleFonts.robotoTextTheme(base.textTheme).copyWith(
               titleLarge: GoogleFonts.roboto(fontWeight: FontWeight.bold),
             ),
@@ -87,7 +102,11 @@ class _MyAppState extends State<MyApp> {
           theme: makeTheme(lightScheme),
           darkTheme: makeTheme(darkScheme),
           themeMode: _themeMode,
-          home: HomePage(setThemeMode: setThemeMode),
+          home: HomePage(setThemeMode: (mode) async {
+            setState(() => _themeMode = mode);
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString("brightnessMode", mode.name);
+          }),
         );
       },
     );
