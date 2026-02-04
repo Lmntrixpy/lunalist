@@ -15,7 +15,7 @@ Future<void> main() async {
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  // Default auf system, falls noch nichts gespeichert
+  // Default to system, if not saved
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getString("brightnessMode") == null) {
     await prefs.setString("brightnessMode", "system");
