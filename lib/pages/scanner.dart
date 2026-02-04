@@ -5,9 +5,8 @@ import 'package:hitster_2/pages/music_player_spotify.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerPage extends StatefulWidget {
-  final dynamic mapper; // CardSongwidget.mapper
+  final dynamic mapper;
   final String gameMode;
-
 
   const ScannerPage({super.key, required this.mapper, required this.gameMode});
 
@@ -17,21 +16,37 @@ class ScannerPage extends StatefulWidget {
 
 class _ScannerPageState extends State<ScannerPage> {
   bool _navigated = false;
-  late final MobileScannerController _controller;
+  MobileScannerController? _controller;
+  final TextEditingController _textController = TextEditingController();
+
+  // Camera only on iOS and android
+  bool get _isMobileDevice => Platform.isAndroid || Platform.isIOS;
+
+final _manualFocus = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _controller = MobileScannerController(
-      detectionSpeed: DetectionSpeed.noDuplicates,
-      facing: CameraFacing.back,
-      initialZoom: Platform.isIOS ? 0.5 : null,
-    );
+
+    if (_isMobileDevice) {
+      _controller = MobileScannerController(
+        detectionSpeed: DetectionSpeed.noDuplicates,
+        facing: CameraFacing.back,
+        autoStart: true,
+      );
+    } else {
+      // autofocus Textfield
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _manualFocus.requestFocus();
+      });
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _manualFocus.dispose();
+    _controller?.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
@@ -39,291 +54,226 @@ class _ScannerPageState extends State<ScannerPage> {
     if (_navigated) return;
     _navigated = true;
 
-    _controller.stop();
+    _controller?.stop();
 
     final nextPage = widget.gameMode == "local"
-        ? ControlMusicState(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode,)
-        : PlayerSpotify(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode,);
+        ? ControlMusicState(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode)
+        : PlayerSpotify(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => nextPage),
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    const double boxSize = 250;
-    final textController = TextEditingController();
-    int cardNumber = 0;
-    bool singularSong = widget.mapper.remainingSongCount == 1;
-    debugPrint("-------- is only one song left? $singularSong");
+    final singularSong = widget.mapper.remainingSongCount == 1;
+    final statusText = singularSong
+        ? "Noch ${widget.mapper.remainingSongCount} Lied übrig."
+        : "Noch ${widget.mapper.remainingSongCount} Lieder übrig.";
 
-    debugPrint("----------- Count Songs ${widget.mapper.remainingSongCount.toString()}");
+    // Desktop Ui
+    if (!_isMobileDevice) {
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Karte erfassen"),
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+          ),
+          body: _buildManualOnlyView(
+            message: "Scanner nicht verfügbar",
+            statusText: statusText,
+          ),
+        ),
+      );
+    }
+
+    // Mobile Ui
+    final controller = _controller!;
 
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Scanne eine Karte"),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
-      
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text("Kartennummer"),
-                content: TextField(
-                  controller: textController,
-                  autocorrect: false,
-                  autofocus: true,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "Gib den Code auf der Karte ein",
-                    suffix: IconButton(
-                      onPressed: () {
-                        textController.clear();
-                      },
-                      icon: Icon(Icons.clear_rounded))
-                    )
-                  ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      final parsed = int.tryParse(textController.text);
-                      if (parsed == null) return;
+      child: ValueListenableBuilder(
+        valueListenable: controller,
+        builder: (context, state, child) {
+          final showFab = state.error == null && state.isInitialized;
 
-                      Navigator.of(context).pop();
-                      _handleCard(parsed);
-                    },
-                    child: Text("Weiter"),
-                  )
-                ],
-              )
-            );
-          },
-          label: Text("Nummer eingeben"),
-          icon: Icon(Icons.keyboard_alt_outlined),
-          
-        ),
-          
-        body: Stack(
-          children: [
-            MobileScanner(
-              controller: _controller,
-              onDetect: (capture) {
-                final List<Barcode> barcodes = capture.barcodes;
-                for (final barcode in barcodes) {
-                  final value = barcode.rawValue;
-                  if (value != null) { // check if barcode value is != to null
-                    final parsed = int.tryParse(value);
-                    if (parsed != null) { // check if parsed value to int is != to null
-                      _handleCard(parsed);
-      
-                      debugPrint("-------- QR cardNumber: $cardNumber ----------");
-                      Navigator.pop(context);
-                      if (widget.gameMode == "local") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ControlMusicState(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode,)),
-                        );
-                      } if (widget.gameMode == "spotify") {
-                        debugPrint("---- push to spotify");
-                        // push to correct spotify page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PlayerSpotify(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode,)),
-                        );
-                      }
-                    }
-                  } 
-                }
-              }
-             ),
-          
-            Center(
-              child: Container(
-                width: boxSize,
-                height: boxSize,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 3),
-                  borderRadius: BorderRadius.circular(0),
-                ),
-              ),
+          return Scaffold(
+            backgroundColor: Colors.black,
+            appBar: AppBar(
+              title: const Text("Karte erfassen"),
+              centerTitle: true,
+              automaticallyImplyLeading: false,
             ),
-      
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  singularSong ? "Noch ${widget.mapper.remainingSongCount.toString()} Lied übrig." : "Noch ${widget.mapper.remainingSongCount.toString()} Lieder übrig.",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-            )
-          ],
-        ),
+            floatingActionButton: showFab ? FloatingActionButton.extended(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Kartennummer"),
+                    content: TextField(
+                      controller: _textController,
+                      autofocus: true,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(hintText: "Code eingeben"),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Abbrechen"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          final parsed = int.tryParse(_textController.text);
+                          if (parsed != null) {
+                            Navigator.pop(context);
+                            _handleCard(parsed);
+                          }
+                        },
+                        child: const Text("Weiter"),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              label: const Text("Nummer eingeben"),
+              icon: const Icon(Icons.keyboard),
+            ) : null,
+            body: _buildScannerView(statusText, state, controller),
+          );
+        },
       ),
     );
   }
-}
 
-/*
-class ScannerPage extends StatelessWidget {
-  final dynamic widget.mapper; // CardSongwidget.mapper
-  final String widget.gameMode;
+  Widget _buildScannerView(String statusText, MobileScannerState state, MobileScannerController controller) {
+    if (state.error != null) {
+      return _buildManualOnlyView(
+        message: state.error!.errorCode == MobileScannerErrorCode.permissionDenied
+            ? "Kamerazugriff wurde abgelehnt."
+            : "Kamera-Fehler: ${state.error!.errorCode}",
+        statusText: statusText,
+      );
+    }
 
-  const ScannerPage({super.key, required this.widget.mapper, required this.widget.gameMode});
-
-  @override
-  Widget build(BuildContext context) {
-    const double boxSize = 250;
-    final textController = TextEditingController();
-    int cardNumber = 0;
-    bool singularSong = widget.mapper.remainingSongCount == 1;
-    debugPrint("-------- is only one song left? $singularSong");
-
-    debugPrint("----------- Count Songs ${widget.mapper.remainingSongCount.toString()}");
-
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Scanne eine Karte"),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
-      
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text("Kartennummer"),
-                content: TextField(
-                  controller: textController,
-                  autocorrect: false,
-                  autofocus: true,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "Gib den Code auf der Karte ein",
-                    suffix: IconButton(
-                      onPressed: () {
-                        textController.clear();
-                      },
-                      icon: Icon(Icons.clear_rounded))
-                    )
-                  ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      if (int.tryParse(textController.text) != null) {
-                        cardNumber = int.parse(textController.text);
-      
-                        debugPrint("-------- cardNumber: $cardNumber ----------");
-                        debugPrint(widget.gameMode);
-                        
-                        Navigator.pop(context);
-                        if (widget.gameMode == "local") {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ControlMusicState(widget.mapper: widget.mapper, cardNumber: cardNumber, widget.gameMode: widget.gameMode,)),
-                          );
-                        } if (widget.gameMode == "spotify") {
-                          debugPrint("---- push to spotify");
-                          // push to correct spotify page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => PlayerSpotify(widget.mapper: widget.mapper, cardNumber: cardNumber, widget.gameMode: widget.gameMode,)),
-                          );
-                        }
-                      } else {
-                        debugPrint("---------- no cardnumber input ---------");
-                      }
-                    },
-                    child: Text("Weiter"),
-                  )
-                ],
-              )
-            );
+    return Stack(
+      children: [
+        MobileScanner(
+          controller: controller,
+          onDetect: (capture) {
+            for (final barcode in capture.barcodes) {
+              final value = barcode.rawValue;
+              if (value != null) {
+                final parsed = int.tryParse(value);
+                if (parsed != null) _handleCard(parsed);
+              }
+            }
           },
-          label: Text("Nummer eingeben"),
-          icon: Icon(Icons.keyboard_alt_outlined),
-          
         ),
-          
-        body: Stack(
-          children: [
-            MobileScanner(
-              controller: MobileScannerController(
-              detectionSpeed: DetectionSpeed.noDuplicates,
-              facing: CameraFacing.back,
-              initialZoom: Platform.isIOS ? 0.5 : null, // for iPhones to fake using the main camera (using .5x but looks like 1x)
+          // Statustext
+        SafeArea(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Text(
+                statusText,
+                style: const TextStyle(
+                  fontSize: 18, 
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(blurRadius: 4, color: Colors.black, offset: Offset(2, 2))
+                  ],
+                ),
+                textAlign: TextAlign.center,
               ),
+            ),
+          ),
+        ),
+        // Scan Box
+        if (state.isInitialized)
+          Center(
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+Widget _buildManualOnlyView({required String message, required String statusText}) {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // statusText
+              Text(
+                statusText,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 32),
               
-              onDetect: (capture) {
-                final List<Barcode> barcodes = capture.barcodes;
-                for (final barcode in barcodes) {
-                  final value = barcode.rawValue;
-                  if (value != null) { // check if barcode value is != to null
-                    final parsed = int.tryParse(value);
-                    if (parsed != null) { // check if parsed value to int is != to null
-                      cardNumber = parsed;
-      
-                      debugPrint("-------- QR cardNumber: $cardNumber ----------");
-                      Navigator.pop(context);
-                      if (widget.gameMode == "local") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ControlMusicState(widget.mapper: widget.mapper, cardNumber: cardNumber, widget.gameMode: widget.gameMode,)),
-                        );
-                      } if (widget.gameMode == "spotify") {
-                        debugPrint("---- push to spotify");
-                        // push to correct spotify page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PlayerSpotify(widget.mapper: widget.mapper, cardNumber: cardNumber, widget.gameMode: widget.gameMode,)),
-                        );
-                      }
-      
-                      
+              Icon(Icons.no_photography, size: 64, color: Colors.grey),
+              
+              SizedBox(height: 16),
+              
+              // Error Message
+              Text(message, textAlign: TextAlign.center, style: TextStyle(color: Colors.redAccent)),
+              
+              SizedBox(height: 32),
+              
+              // TextField
+              TextField(
+                focusNode: _manualFocus,
+                controller: _textController,
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: "Kartennummer",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              SizedBox(height: 20),
+              
+              // Submit Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: FilledButton.icon(
+                  onPressed: () {
+                    final p = int.tryParse(_textController.text);
+                    if (p != null) {
+                      _handleCard(p);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Bitte eine gültige Nummer eingeben")),
+                      );
                     }
-                  } 
-                }
-              }
-             ),
-          
-            Center(
-              child: Container(
-                width: boxSize,
-                height: boxSize,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 3),
-                  borderRadius: BorderRadius.circular(0),
+                  },
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: const Text("Weiter"),
                 ),
               ),
-            ),
-      
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  singularSong ? "Noch ${widget.mapper.remainingSongCount.toString()} Lied übrig." : "Noch ${widget.mapper.remainingSongCount.toString()} Lieder übrig.",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
-*/
