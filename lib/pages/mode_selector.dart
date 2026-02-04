@@ -33,7 +33,6 @@ class ModeSelector extends StatelessWidget {
                 foregroundColor: Colors.black
                 ),
               onPressed: () {
-                // TODO: Spotify Game Mode
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const playlistInput()),

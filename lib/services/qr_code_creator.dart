@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
@@ -77,12 +78,13 @@ class QrPdfGenerator {
       }
 
       final downloadFile = File("${downloadsDir.path}/$fileName");
-      print(downloadFile);
+      debugPrint(downloadFile.toString());
       await downloadFile.writeAsBytes(bytes);
-      print("----- saved in Download dir");
+      debugPrint("----- saved in Download dir");
     }
 
-    await Share.shareXFiles([XFile(file.path)]);
+    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)],),
+    );
   }
 
   static Future<_RasterPage> _raster(Uint8List pdf, int page) async {
@@ -240,14 +242,13 @@ class QrPdfGenerator {
       }
 
       final downloadFile = File("${downloadsDir.path}/$fileName");
-      print(downloadFile);
+      debugPrint(downloadFile.toString());
       await downloadFile.writeAsBytes(bytes);
-      print("----- saved in Download dir");
+      debugPrint("----- saved in Download dir");
     }
 
-    await Share.shareXFiles([XFile(file.path)]);
+    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)],),); 
   }
-
 }
 
 class _RasterPage {

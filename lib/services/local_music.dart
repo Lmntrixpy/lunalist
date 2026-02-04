@@ -18,7 +18,6 @@ class LocalMusic {
     }
     return result.paths.whereType<String>().toList();
   }
-  // TODO: add play functionality
 }
 
 class GetMetadata {

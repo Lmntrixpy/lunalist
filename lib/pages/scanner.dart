@@ -57,7 +57,7 @@ class _ScannerPageState extends State<ScannerPage> {
     final textController = TextEditingController();
     int cardNumber = 0;
     bool singularSong = widget.mapper.remainingSongCount == 1;
-    print("-------- is only one song left? $singularSong");
+    debugPrint("-------- is only one song left? $singularSong");
 
     debugPrint("----------- Count Songs ${widget.mapper.remainingSongCount.toString()}");
 
@@ -186,7 +186,7 @@ class ScannerPage extends StatelessWidget {
     final textController = TextEditingController();
     int cardNumber = 0;
     bool singularSong = widget.mapper.remainingSongCount == 1;
-    print("-------- is only one song left? $singularSong");
+    debugPrint("-------- is only one song left? $singularSong");
 
     debugPrint("----------- Count Songs ${widget.mapper.remainingSongCount.toString()}");
 

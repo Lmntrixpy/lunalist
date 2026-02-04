@@ -5,7 +5,6 @@ import 'package:hitster_2/pages/about.dart';
 import 'package:hitster_2/pages/game_instructions.dart';
 import 'package:hitster_2/services/rankings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hitster_2/services/qr_code_creator.dart';
 
 enum BrightnessModes{light, dark, system}
 
@@ -150,6 +149,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                 try {
                                   final rankingStorage = RankingStorage();
                                   await rankingStorage.importRanking(merge: true);
+
+                                  if (!context.mounted) return;
+
                                   setState(() {});
                                 } on InvalidRankingImport catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(

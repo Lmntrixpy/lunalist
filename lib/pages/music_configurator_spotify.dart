@@ -47,33 +47,37 @@ class _playlistInputState extends State<playlistInput> {
 
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
+
           SpotifyInterface().authorize();
 
           final Map<String, HitsterTrack> allTracks = {};
 
           for (var i = 0; i < playlistCount; i++) {
             final url = controllers[i].text.trim();
-            print("Controller: $i -> $url");
+            debugPrint("Controller: $i -> $url");
             if (url.isEmpty) continue;
 
+
             final tracks = await SpotifyInterface.getPlaylistTracks(url);
+            
 
             for (final track in tracks) {
               allTracks[track.id] = track;
-              print(track.name);
+              debugPrint(track.name);
             }
           }
 
+          if (!context.mounted) return;
+
           final List<HitsterTrack> uniqueTracks = allTracks.values.toList();
-          print("Tracks ges: ${uniqueTracks.length}");
-          print(uniqueTracks.toString());
+          debugPrint("Tracks ges: ${uniqueTracks.length}");
+          debugPrint(uniqueTracks.toString());
 
           final mapper = CardSongMapper(uniqueTracks);
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ScannerPage(mapper: mapper, gameMode: gameMode))
-            );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ScannerPage(mapper: mapper, gameMode: gameMode))
+          );
         },
         label: Text("Weiter"),
         icon: Icon(Icons.arrow_right_alt_rounded)

@@ -30,8 +30,8 @@ class _TempSpotifyApiPageState extends State<TempSpotifyApiPage> {
               onPressed: () async {
                 final tracks = await SpotifyInterface.getPlaylistTracks("https://open.spotify.com/playlist/45bK1ooBB4dbG524i5cDaR?si=8916287399c04720");
                 for (final t in tracks) {
-                  print(t.artist);
-                  print(t.year);
+                  debugPrint(t.artist);
+                  debugPrint(t.year.toString());
                 }
               },
               child: Text("playlistgetter")),

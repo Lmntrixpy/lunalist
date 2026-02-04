@@ -1,4 +1,5 @@
-// ignore: file_names
+// ignore_for_file: file_names
+
 import 'package:flutter/foundation.dart';
 import 'package:spotify/spotify.dart';
 import 'package:hitster_2/config.dart';
@@ -38,7 +39,7 @@ class SpotifyInterface {
         playlistTracks = await spotify.playlists.getPlaylistTracks(urlToId(url)).all();
 
       } on ApiRateException catch (e) {
-        print('Rate limit reached: ${e.message}');
+        debugPrint('Rate limit reached: ${e.message}');
       }
 
       return playlistTracks
@@ -64,9 +65,10 @@ class SpotifyInterface {
           .toList();
   }
 
+  // not working
   static Future<bool> testConnection() async {
     try {
-      await spotify.search.get("Lady Gaga").first;
+      spotify.search.get("Lady Gaga").first;
       return true;
     } catch (_) {
       return false;

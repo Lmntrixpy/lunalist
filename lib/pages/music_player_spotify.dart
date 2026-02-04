@@ -59,8 +59,6 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _error = e.toString());
-    } finally {
-      if (!mounted) return;
     }
   }
 
@@ -158,6 +156,7 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
               ),
               
               Spacer(flex: 1),
+              
               Center(
                 child: Text(
                   textAlign: TextAlign.center,

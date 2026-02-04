@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:hitster_2/pages/end_screen.dart';
 import 'package:hitster_2/pages/scanner.dart';
@@ -253,6 +252,7 @@ class _SongTextBlock extends StatelessWidget {
     required this.yearFontSize,
     required this.titleFontSize,
     required this.align,
+    // ignore: unused_element_parameter
     this.albumArt,
   });
 
