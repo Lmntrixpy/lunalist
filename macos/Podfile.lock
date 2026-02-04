@@ -1,8 +1,12 @@
 PODS:
+  - audio_session (0.0.1):
+    - FlutterMacOS
   - audioplayers_darwin (0.0.1):
     - Flutter
     - FlutterMacOS
   - desktop_webview_window (0.0.1):
+    - FlutterMacOS
+  - dynamic_color (0.0.2):
     - FlutterMacOS
   - file_picker (0.0.1):
     - FlutterMacOS
@@ -11,17 +15,20 @@ PODS:
   - flutter_web_auth_2 (3.0.0):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
+  - just_audio (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - mobile_scanner (7.0.0):
     - Flutter
     - FlutterMacOS
   - package_info_plus (0.0.1):
     - FlutterMacOS
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
   - printing (1.0.0):
     - FlutterMacOS
   - share_plus (0.0.1):
+    - FlutterMacOS
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
     - FlutterMacOS
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
@@ -29,25 +36,32 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - audio_session (from `Flutter/ephemeral/.symlinks/plugins/audio_session/macos`)
   - audioplayers_darwin (from `Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/darwin`)
   - desktop_webview_window (from `Flutter/ephemeral/.symlinks/plugins/desktop_webview_window/macos`)
+  - dynamic_color (from `Flutter/ephemeral/.symlinks/plugins/dynamic_color/macos`)
   - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - flutter_media_metadata (from `Flutter/ephemeral/.symlinks/plugins/flutter_media_metadata/macos`)
   - flutter_web_auth_2 (from `Flutter/ephemeral/.symlinks/plugins/flutter_web_auth_2/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - just_audio (from `Flutter/ephemeral/.symlinks/plugins/just_audio/darwin`)
   - mobile_scanner (from `Flutter/ephemeral/.symlinks/plugins/mobile_scanner/darwin`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
-  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - printing (from `Flutter/ephemeral/.symlinks/plugins/printing/macos`)
   - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
+  - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
   - window_to_front (from `Flutter/ephemeral/.symlinks/plugins/window_to_front/macos`)
 
 EXTERNAL SOURCES:
+  audio_session:
+    :path: Flutter/ephemeral/.symlinks/plugins/audio_session/macos
   audioplayers_darwin:
     :path: Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/darwin
   desktop_webview_window:
     :path: Flutter/ephemeral/.symlinks/plugins/desktop_webview_window/macos
+  dynamic_color:
+    :path: Flutter/ephemeral/.symlinks/plugins/dynamic_color/macos
   file_picker:
     :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
   flutter_media_metadata:
@@ -56,33 +70,38 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_web_auth_2/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
+  just_audio:
+    :path: Flutter/ephemeral/.symlinks/plugins/just_audio/darwin
   mobile_scanner:
     :path: Flutter/ephemeral/.symlinks/plugins/mobile_scanner/darwin
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
-  path_provider_foundation:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
   printing:
     :path: Flutter/ephemeral/.symlinks/plugins/printing/macos
   share_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/share_plus/macos
+  shared_preferences_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
   url_launcher_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
   window_to_front:
     :path: Flutter/ephemeral/.symlinks/plugins/window_to_front/macos
 
 SPEC CHECKSUMS:
+  audio_session: 728ae3823d914f809c485d390274861a24b0904e
   audioplayers_darwin: 4027b33a8f471d996c13f71cb77f0b1583b5d923
   desktop_webview_window: d4365e71bcd4e1aa0c14cf0377aa24db0c16a7e2
+  dynamic_color: 5fdff3953fb3457311091863f72914fc76ea3209
   file_picker: e716a70a9fe5fd9e09ebc922d7541464289443af
   flutter_media_metadata: 00f65949432e3e92b101a5d606c73428bd923057
   flutter_web_auth_2: 2e1dc2d2139973e4723c5286ce247dd590390d70
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  just_audio: a42c63806f16995daf5b219ae1d679deb76e6a79
   mobile_scanner: 77265f3dc8d580810e91849d4a0811a90467ed5e
   package_info_plus: 12f1c5c2cfe8727ca46cbd0b26677728972d9a5b
-  path_provider_foundation: 0b743cbb62d8e47eab856f09262bb8c1ddcfe6ba
   printing: 1dd6a1fce2209ec240698e2439a4adbb9b427637
   share_plus: 1fa619de8392a4398bfaf176d441853922614e89
+  shared_preferences_foundation: 5086985c1d43c5ba4d5e69a4e8083a389e2909e6
   url_launcher_macos: 175a54c831f4375a6cf895875f716ee5af3888ce
   window_to_front: 4cdc24ddd8461ad1a55fa06286d6a79d8b29e8d8
 

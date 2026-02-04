@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hitster_2/pages/song_info_spotify.dart';
+import 'package:hitster_2/pages/song_info.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:hitster_2/config.dart';
@@ -20,10 +20,9 @@ class PlayerSpotify extends StatefulWidget {
 
 class _PlayerSpotifyState extends State<PlayerSpotify> {
   bool isPlaying = true;
-  ({String artist, String artwork, String id, String name, int year})? currentTrack;
+  late ({String artist, String artwork, String id, String name, int year}) currentTrack;
 
   bool isReady = false;
-  bool _initializing = true;
   String? _error;
 
   @override
@@ -36,7 +35,6 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
 
   Future<void> _init() async {
     setState(() {
-      _initializing = true;
       _error = null;
       isReady = false;
     });
@@ -47,8 +45,8 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
 
       if (!mounted) return;
       setState(() => isReady = true);
-    } on PlatformException catch (e) {
-      // Nutzer hat Login abgebrochen oder Spotify nicht verfügbar
+    } on PlatformException catch (_) {
+      // User cancel on spotify authorizazion
       if (!mounted) return;
       setState(() {
         _error = "Spotify-Anmeldung abgebrochen oder fehlgeschlagen. Bitte erneut versuchen.";
@@ -63,7 +61,6 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
       setState(() => _error = e.toString());
     } finally {
       if (!mounted) return;
-      setState(() => _initializing = false); // ENTSPERREN, egal was passiert
     }
   }
 
@@ -143,7 +140,7 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
             SpotifySdk.pause();
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => SongInfo(mapper: widget.mapper, currentTrack: currentTrack!, gameMode: widget.gameMode))
+              MaterialPageRoute(builder: (context) => SongInfo(mapper: widget.mapper, currentTrack: currentTrack, gameMode: widget.gameMode))
             );
           }, 
           label: Text("Karte aufdecken"),

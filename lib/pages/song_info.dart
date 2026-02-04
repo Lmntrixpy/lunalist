@@ -1,44 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:hitster_2/pages/end_screen.dart';
 import 'package:hitster_2/pages/scanner.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:hitster_2/services/local_music.dart';
+// ignore: depend_on_referenced_packages
+import 'package:http/http.dart' as http;
 
-class SongInfoLocal extends StatefulWidget {
-  final String currentTrack;
+class SongInfo extends StatefulWidget {
+  final ({String artist, String artwork, String id, String name, int year}) currentTrack;
   final CardSongMapper mapper;
   final String gameMode;
 
-  const SongInfoLocal({super.key, required this.currentTrack, required this.mapper, required this.gameMode});
+  const SongInfo({super.key, required this.currentTrack, required this.mapper, required this.gameMode});
 
   @override
-  State<SongInfoLocal> createState() => _SongInfoLocalState();
+  State<SongInfo> createState() => _SongInfoLocalState();
 }
 
-class _SongInfoLocalState extends State<SongInfoLocal> {
+class _SongInfoLocalState extends State<SongInfo> {
   GetMetadata trackData = GetMetadata();
   String songName = "";
-  List<String> artist = [];
+  String artist = "";
   Uint8List albumArt = Uint8List(0);
   int releaseYear = 0;
 
-   @override
+  @override
   void initState() {
   super.initState();
-   
-  _getTrackData();
+  if (widget.gameMode == "local") {
+    _getTrackData();
+  } else {
+    _load();
+    songName = widget.currentTrack.name;
+    artist = widget.currentTrack.artist;
+    releaseYear = widget.currentTrack.year;
+  }
+
+  }
+
+  Future<void> _load() async {
+    albumArt = await getSpotifyArtwork(widget.currentTrack.artwork);
+    setState(() {});
+  }
+
+  Future<Uint8List> getSpotifyArtwork(String url) async {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode != 200) {
+      throw Exception('Image download failed: ${response.statusCode}');
+    }
+    return response.bodyBytes;
   }
 
   Future<void> _getTrackData() async {
-    await GetMetadata.load(widget.currentTrack);
+    await GetMetadata.load(widget.currentTrack.id);
 
     if (!mounted) return;
     
     setState(() {
       songName = GetMetadata.trackName;
-      artist = GetMetadata.trackArtistNames;
+      artist = GetMetadata.trackArtistNames.first;
       albumArt = GetMetadata.albumArt;
       releaseYear = GetMetadata.releaseYear;  
     });
@@ -155,7 +178,7 @@ class _SongInfoLocalState extends State<SongInfoLocal> {
                             style: TextStyle(fontSize: titleSize, fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(height: 8),
-                          Text(artist.isNotEmpty ? artist.first : "Unbekannter Interpret"),
+                          Text(artist.isNotEmpty ? artist : "Unbekannter Interpret"),
                         ],
                       );
                     }
@@ -214,7 +237,7 @@ class _SongTextBlock extends StatelessWidget {
   final String gameMode;
   final int releaseYear;
   final String songName;
-  final List<String> artist;
+  final String artist;
 
   final double yearFontSize;
   final double titleFontSize;
@@ -265,7 +288,7 @@ class _SongTextBlock extends StatelessWidget {
         ),
         const SizedBox(height: 8),
 
-        Text(artist.isNotEmpty ? artist.first : "Unbekannter Interpret", textAlign: align),
+        Text(artist.isNotEmpty ? artist : "Unbekannter Interpret", textAlign: align),
       ],
     );
   }

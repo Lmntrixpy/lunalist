@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/song_info_local.dart';
+import 'package:hitster_2/pages/song_info.dart';
 import 'package:hitster_2/services/card_mapper.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -17,7 +17,7 @@ class ControlMusicState extends StatefulWidget {
 class _ControlMusicStateState extends State<ControlMusicState> {
   late final AudioPlayer player;
   bool isPlaying = true;
-  late final String currentTrack;
+  late final ({String artist, String artwork, String id, String name, int year}) currentTrack;
   
   @override
   void initState() {
@@ -33,9 +33,9 @@ class _ControlMusicStateState extends State<ControlMusicState> {
   }
 
   Future<void> _playTrack() async {
-    currentTrack = widget.mapper.scanCard(widget.cardNumber).id;
+    currentTrack = widget.mapper.scanCard(widget.cardNumber);
     await player.setFilePath(
-      currentTrack,
+      currentTrack.id,
     );
     await player.play();
 
@@ -67,10 +67,9 @@ class _ControlMusicStateState extends State<ControlMusicState> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.pop(context);
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => SongInfoLocal(currentTrack: currentTrack, mapper: widget.mapper, gameMode: widget.gameMode,))
+              MaterialPageRoute(builder: (context) => SongInfo(currentTrack: currentTrack, mapper: widget.mapper, gameMode: widget.gameMode,))
               );
           },
           
