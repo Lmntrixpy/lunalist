@@ -159,7 +159,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     setState(() => isGenerating = true);
 
                                                     try {
-                                                      await QrPdfGenerator.generateQrOnly(value);
+                                                      await QrPdfGenerator.generateQrOnly(value, context: dialogContext);
                                                       if (dialogContext.mounted) {
                                                         Navigator.of(dialogContext).pop();
                                                       }
@@ -192,7 +192,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     setState(() => isGenerating = true);
 
                                                     try {
-                                                      await QrPdfGenerator.generate(value);
+                                                      await QrPdfGenerator.generate(value, context: dialogContext);
                                                       if (dialogContext.mounted) {
                                                         Navigator.of(dialogContext).pop();
                                                       }

@@ -23,7 +23,12 @@ class QrPdfGenerator {
     }
 }
 
-  static Future<void> generate(int count) async {
+  static Future<void> generate(int count, {required BuildContext context}) async {
+    final box = context.findRenderObject() as RenderBox?;
+    final origin = (box != null)
+        ? (box.localToGlobal(Offset.zero) & box.size)
+        : const Rect.fromLTWH(0, 0, 1, 1);
+
     final templateData = await rootBundle.load(
       'assets/templates/Karten-Vorlage.pdf',
     );
@@ -37,7 +42,7 @@ class QrPdfGenerator {
     int index = 0;
 
     while (remaining > 0) {
-      // Seite 1
+      // page 1
       final page1 = await _raster(templateData.buffer.asUint8List(), 0);
       pdf.addPage(
         pw.Page(
@@ -47,7 +52,7 @@ class QrPdfGenerator {
         ),
       );
 
-      // Seite 2
+      // page 2
       final page2 = await _raster(templateData.buffer.asUint8List(), 1);
       final codes = remaining > 20 ? 20 : remaining;
       final indexSet = index;
@@ -64,7 +69,7 @@ class QrPdfGenerator {
               pw.Positioned.fill(
                 child: pw.Image(
                   page2.image,
-                  fit: pw.BoxFit.fill, // hier ok, weil Bildformat == pageFormat
+                  fit: pw.BoxFit.fill,
                 ),
               ),
               _buildQrGrid(codes, indexSet),
@@ -98,7 +103,7 @@ class QrPdfGenerator {
       debugPrint("----- saved in Download dir");
     }
 
-    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)],),
+    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)], sharePositionOrigin: origin),
     );
   }
 
@@ -198,13 +203,18 @@ class QrPdfGenerator {
     );
   } 
 
-    static Future<void> generateQrOnly(int count) async {
+  static Future<void> generateQrOnly(int count, {required BuildContext context}) async {
+    final box = context.findRenderObject() as RenderBox?;
+    final origin = (box != null)
+        ? (box.localToGlobal(Offset.zero) & box.size)
+        : const Rect.fromLTWH(0, 0, 1, 1);
+
     final templateData = await rootBundle.load(
       'assets/templates/Karten-Vorlage.pdf',
     );
     final templateBytes = templateData.buffer.asUint8List();
 
-    // immer auf 20er-Blöcke aufrunden
+    // round to 20 row
     final roundedCount = ((count + 19) ~/ 20) * 20;
     if (roundedCount <= 0) return;
 
@@ -214,7 +224,7 @@ class QrPdfGenerator {
     int index = 0;
 
     while (remaining > 0) {
-      // Nur QR-Seite (Vorlage Seite 2 -> pageNumber 1)
+      // only qr page
       final page2 = await _raster(templateBytes, 1);
       final codes = remaining > 20 ? 20 : remaining;
 
@@ -262,7 +272,7 @@ class QrPdfGenerator {
       debugPrint("----- saved in Download dir");
     }
 
-    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)],),); 
+    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)], sharePositionOrigin: origin),); 
   }
 }
 
