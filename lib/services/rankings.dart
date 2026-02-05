@@ -8,6 +8,22 @@ import 'package:file_picker/file_picker.dart';
 class RankingStorage {
   static const _fileName = 'ranking.json';
 
+  Future<void> deleteRankingsFile() async {
+    // clears temp folder
+    final file = await _getFile();
+
+    if (!await file.exists()) {
+      throw Exception("Keine Rangliste vorhanden");
+    }
+
+    try {
+      file.delete(recursive: false);
+    } 
+    catch (_) {
+      throw Exception("Datei konnte nicht gelöscht werden");
+    }  
+}
+
   Future<File> _getFile() async {
     final dir = await getApplicationDocumentsDirectory();
     return File('${dir.path}/$_fileName');
