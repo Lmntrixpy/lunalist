@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lunalist/api/spotify-auth.dart';
+import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/config.dart';
 import 'package:lunalist/pages/about.dart';
 import 'package:lunalist/pages/game_instructions.dart';
@@ -229,8 +229,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         Center(
                           child: FilledButton.tonalIcon(
                             onPressed: () async {
-                              SpotifyInterface().authorize();
-                              connectionSucces = await SpotifyInterface.testConnection();
+                              final spotifyHttp = SpotifyHttp(
+                                clientId: AppConfig.clientId,
+                                clientSecret: AppConfig.clientSecret,
+                              );
+
+                              connectionSucces = await spotifyHttp.testConnection(market: "DE");
 
                               setState(() {
                                 infoText = connectionSucces

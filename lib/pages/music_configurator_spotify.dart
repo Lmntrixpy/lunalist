@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lunalist/api/spotify-auth.dart';
+import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
+import 'package:lunalist/config.dart';
 
 typedef LunalistTrack = ({
   String id,
@@ -27,6 +28,9 @@ class _playlistInputState extends State<playlistInput> {
   final List<String> playlists = [];
   final gameMode = "spotify";
 
+  String? _errorText;
+  bool _loading = false;
+
   
 
   @override
@@ -46,41 +50,98 @@ class _playlistInputState extends State<playlistInput> {
       ),
 
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
+        onPressed: _loading
+            ? null
+            : () async {
+                setState(() {
+                  _errorText = null;
+                  _loading = true;
+                });
 
-          SpotifyInterface().authorize();
+                try {
+                  final spotifyHttp = SpotifyHttp(
+                    clientId: AppConfig.clientId,
+                    clientSecret: AppConfig.clientSecret,
+                  );
 
-          final Map<String, LunalistTrack> allTracks = {};
+                  final Map<String, LunalistTrack> allTracks = {};
+                  final Set<String> seenPlaylistIds = {};
 
-          for (var i = 0; i < playlistCount; i++) {
-            final url = controllers[i].text.trim();
-            debugPrint("Controller: $i -> $url");
-            if (url.isEmpty) continue;
+                  for (var i = 0; i < playlistCount; i++) {
+                    final url = controllers[i].text.trim();
+                    final idx = i + 1; // for ui
 
+                    // if empty still continue
+                    if (url.isEmpty) continue;
 
-            final tracks = await SpotifyInterface.getPlaylistTracks(url);
-            
+                    String playlistId;
+                    try {
+                      playlistId = SpotifyHttp.playlistUrlToId(url);
+                    } on FormatException catch (e) {
+                      setState(() => _errorText = "Playlist $idx: ${e.message}");
+                      return;
+                    }
 
-            for (final track in tracks) {
-              allTracks[track.id] = track;
-              debugPrint(track.name);
-            }
-          }
+                    // if playlist is a duplicate, skip
+                    if (!seenPlaylistIds.add(playlistId)) {
+                      continue;
+                    }
 
-          if (!context.mounted) return;
+                    try {
+                      final tracks = await spotifyHttp.getPlaylistTracks(
+                        playlistUrl: url,
+                        market: "DE",
+                      );
 
-          final List<LunalistTrack> uniqueTracks = allTracks.values.toList();
-          debugPrint("Tracks ges: ${uniqueTracks.length}");
-          debugPrint(uniqueTracks.toString());
+                      if (tracks.isEmpty) {
+                        setState(() => _errorText = "Playlist $idx: Keine Songs gefunden.");
+                        return;
+                      }
 
-          final mapper = CardSongMapper(uniqueTracks);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => ScannerPage(mapper: mapper, gameMode: gameMode))
-          );
-        },
-        label: Text("Weiter"),
-        icon: Icon(Icons.arrow_right_alt_rounded)
+                      for (final track in tracks) {
+                        allTracks[track.id] = track;
+                      }
+                    } catch (e) {
+                      final msg = e.toString();
+                      final pretty = msg.contains("404")
+                          ? "Playlist $idx nicht gefunden (404). Prüfe Link / Playlist öffentlich?"
+                          : "Playlist $idx: Spotify-Request fehlgeschlagen: $msg";
+
+                      setState(() => _errorText = pretty);
+                      return;
+                    }
+                  }
+
+                  if (!context.mounted) return;
+
+                  if (allTracks.isEmpty) {
+                    setState(() => _errorText = "Keine Songs gefunden. Prüfe deine Playlist-Links.");
+                    return;
+                  }
+
+                  final mapper = CardSongMapper(allTracks.values.toList());
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ScannerPage(mapper: mapper, gameMode: gameMode),
+                    ),
+                  );
+                } catch (e) {
+                  if (!mounted) return;
+
+                  final msg = e.toString();
+                  final pretty = msg.contains("404")
+                      ? "Playlist nicht gefunden (404). Prüfe Link / Playlist öffentlich?"
+                      : "Spotify-Request fehlgeschlagen: $msg";
+
+                  setState(() => _errorText = pretty);
+                } finally {
+                  if (mounted) setState(() => _loading = false);
+                }
+              },
+        label: Text(_loading ? "Lade..." : "Weiter"),
+        icon: const Icon(Icons.arrow_right_alt_rounded),
       ),
 
       body: Column(
@@ -89,6 +150,19 @@ class _playlistInputState extends State<playlistInput> {
             Text(
               "Gib deine Playlisten ein.",
             ),
+
+            if (_errorText != null) 
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                child: Text(
+                  _errorText!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
 
             Row(
             mainAxisAlignment: MainAxisAlignment.center,
