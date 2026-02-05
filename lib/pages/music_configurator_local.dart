@@ -51,12 +51,25 @@ class _LocalMusicConfiguratorState extends State<LocalMusicConfigurator> {
         icon: Icon(musicLoadstatus ? Icons.start_rounded : Icons.music_note_rounded),
       ),
       
-      body: Padding(
-        padding: const EdgeInsets.all(48.0),
-        child: Text(
-          "Das ist der Offline Musik Modus. Es kann mit bereits vorhandenen Musikdateien (mp3) gespielt werden.\nBitte wähle deine gewünschten Songs aus deinen Dateien aus.",
-          style: TextStyle(fontSize: 20),
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(48.0),
+              child: Text(
+                "Das ist der Offline Musik Modus. Es kann mit bereits vorhandenen Musikdateien (mp3) gespielt werden.\n"
+                "Bitte wähle deine gewünschten Songs aus deinen Dateien aus.",
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Text(
+            "Du hast ${tracks.length} Lieder ausgewählt.",
+            style: TextStyle(fontSize: 20),
+            )
+        ],
       ),
     );
   }
