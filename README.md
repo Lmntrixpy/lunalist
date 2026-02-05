@@ -22,8 +22,8 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
 ## App Building
 ### android
 ```
-gh repo clone Lmntrixpy/hitster_final # pull repo via github-cli
-cd hitster-final
+gh repo clone Lmntrixpy/lunalist # pull repo via github-cli
+cd lunalist
 
 flutter pub get # get dependencies
 
@@ -33,8 +33,8 @@ flutter build apk --relase # build apk for android
 
 ### iOS / iPadOS
 ```
-gh repo clone Lmntrixpy/hitster_final # pull repo via github-cli
-cd hitster-final
+gh repo clone Lmntrixpy/lunalist # pull repo via github-cli
+cd lunalist
 
 flutter pub get # get dependencies
 
@@ -45,8 +45,8 @@ flutter build ipa --relase --no-codesign # build xcarchive
 
 ### MacOS
 ```
-gh repo clone Lmntrixpy/hitster_final # pull repo via github-cli
-cd hitster-final
+gh repo clone Lmntrixpy/lunalist # pull repo via github-cli
+cd lunalist
 
 flutter pub get # get dependencies
 

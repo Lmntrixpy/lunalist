@@ -1,6 +1,6 @@
 import 'dart:math';
 
-typedef HitsterTrack = ({
+typedef LunalistTrack = ({
   String id,
   String name,
   String artist,
@@ -9,15 +9,15 @@ typedef HitsterTrack = ({
 });
 
 class CardSongMapper {
-  final List<HitsterTrack> _playlist;
-  final Map<int, HitsterTrack> _cardToSong = {}; // scanned cards
+  final List<LunalistTrack> _playlist;
+  final Map<int, LunalistTrack> _cardToSong = {}; // scanned cards
   final Random _rng;
 
-  CardSongMapper(List<HitsterTrack> playlist, [int? seed])
+  CardSongMapper(List<LunalistTrack> playlist, [int? seed])
       : _playlist = List.from(playlist),
         _rng = seed != null ? Random(seed) : Random();
 
-  // convert List<String> to List<Hitstertrack>
+  // convert List<String> to List<LunalistTrack>
   factory CardSongMapper.fromStringList(List<String> songs, [int? seed]) {
     final tracks = songs
         .map((s) => (id: s, name: "", artist: "", artwork: "", year: 0))
@@ -26,7 +26,7 @@ class CardSongMapper {
   }
 
   // scanCard
-  HitsterTrack scanCard(int cardNumber) {
+  LunalistTrack scanCard(int cardNumber) {
     if (_cardToSong.containsKey(cardNumber)) {
       return _cardToSong[cardNumber]!;
     }
@@ -44,10 +44,10 @@ class CardSongMapper {
   }
 
   // get remainingSongs
-  List<HitsterTrack> get remainingSongs =>
+  List<LunalistTrack> get remainingSongs =>
       List.unmodifiable(_playlist.where((t) => !_cardToSong.containsValue(t)));
 
   int get remainingSongCount => remainingSongs.length;
 
-  Map<int, HitsterTrack> getAllMappings() => Map.from(_cardToSong);
+  Map<int, LunalistTrack> getAllMappings() => Map.from(_cardToSong);
 }

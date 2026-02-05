@@ -3,7 +3,7 @@ import 'package:lunalist/api/spotify-auth.dart';
 import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
 
-typedef HitsterTrack = ({
+typedef LunalistTrack = ({
   String id,
   String name,
   String artist,
@@ -50,7 +50,7 @@ class _playlistInputState extends State<playlistInput> {
 
           SpotifyInterface().authorize();
 
-          final Map<String, HitsterTrack> allTracks = {};
+          final Map<String, LunalistTrack> allTracks = {};
 
           for (var i = 0; i < playlistCount; i++) {
             final url = controllers[i].text.trim();
@@ -69,7 +69,7 @@ class _playlistInputState extends State<playlistInput> {
 
           if (!context.mounted) return;
 
-          final List<HitsterTrack> uniqueTracks = allTracks.values.toList();
+          final List<LunalistTrack> uniqueTracks = allTracks.values.toList();
           debugPrint("Tracks ges: ${uniqueTracks.length}");
           debugPrint(uniqueTracks.toString());
 

@@ -1,6 +1,6 @@
 {
-    "name": "hitster_2",
-    "short_name": "hitster_2",
+    "name": "lunalist",
+    "short_name": "lunalist",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
