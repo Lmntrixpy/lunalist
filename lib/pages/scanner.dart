@@ -102,7 +102,6 @@ final _manualFocus = FocusNode();
           final showFab = state.error == null && state.isInitialized;
 
           return Scaffold(
-            backgroundColor: Colors.black,
             appBar: AppBar(
               title: const Text("Karte erfassen"),
               centerTitle: true,
@@ -201,7 +200,7 @@ final _manualFocus = FocusNode();
               width: 250,
               height: 250,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+                border: Border.all(color: Colors.white.withAlpha(200), width: 2),
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
