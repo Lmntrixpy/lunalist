@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/api/spotify-auth.dart';
-import 'package:hitster_2/pages/scanner.dart';
-import 'package:hitster_2/services/card_mapper.dart';
+import 'package:lunalist/api/spotify-auth.dart';
+import 'package:lunalist/pages/scanner.dart';
+import 'package:lunalist/services/card_mapper.dart';
 
 typedef HitsterTrack = ({
   String id,

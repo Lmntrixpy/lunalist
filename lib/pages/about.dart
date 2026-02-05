@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/config.dart';
+import 'package:lunalist/config.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});

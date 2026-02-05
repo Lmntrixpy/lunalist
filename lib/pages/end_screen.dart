@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/leaderboard.dart';
-import 'package:hitster_2/services/rankings.dart';
+import 'package:lunalist/pages/leaderboard.dart';
+import 'package:lunalist/services/rankings.dart';
 
 class EndScreen extends StatefulWidget {
   const EndScreen({super.key});

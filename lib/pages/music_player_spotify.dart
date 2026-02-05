@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hitster_2/pages/song_info.dart';
-import 'package:hitster_2/services/card_mapper.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
-import 'package:hitster_2/config.dart';
+import 'package:lunalist/pages/song_info.dart';
+import 'package:lunalist/services/card_mapper.dart';
+import 'package:lunalist/config.dart';
 
 class PlayerSpotify extends StatefulWidget {
   final CardSongMapper mapper;
@@ -66,14 +66,14 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
     if (Platform.isAndroid) {
       await SpotifySdk.getAccessToken(
         clientId: AppConfig.clientId,
-        redirectUrl: 'hitster://android-callback',
+        redirectUrl: 'lunalist://android-callback',
         scope: 'app-remote-control streaming',
       );
     }
 
     final connected = await SpotifySdk.connectToSpotifyRemote(
       clientId: AppConfig.clientId,
-      redirectUrl: "hitster://android-callback",
+      redirectUrl: "lunalist://android-callback",
     );
 
     if (connected != true) {

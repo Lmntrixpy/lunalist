@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/song_info.dart';
-import 'package:hitster_2/services/card_mapper.dart';
+import 'package:lunalist/pages/song_info.dart';
+import 'package:lunalist/services/card_mapper.dart';
 import 'package:just_audio/just_audio.dart';
 
 class ControlMusicState extends StatefulWidget {

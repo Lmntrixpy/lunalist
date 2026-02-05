@@ -1,4 +1,4 @@
-package com.example.hitster_2
+package de.jeremyfroeb.lunalist
 
 import android.content.Context
 import android.media.AudioManager

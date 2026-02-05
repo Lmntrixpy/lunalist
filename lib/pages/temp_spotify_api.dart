@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/api/spotify-auth.dart';
+import 'package:lunalist/api/spotify-auth.dart';
 
 class TempSpotifyApiPage extends StatefulWidget {
   const TempSpotifyApiPage({super.key});

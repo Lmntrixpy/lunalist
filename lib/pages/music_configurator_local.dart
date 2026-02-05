@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/scanner.dart';
-import 'package:hitster_2/services/card_mapper.dart';
-import 'package:hitster_2/services/local_music.dart';
+import 'package:lunalist/pages/scanner.dart';
+import 'package:lunalist/services/card_mapper.dart';
+import 'package:lunalist/services/local_music.dart';
 
 
 class LocalMusicConfigurator extends StatefulWidget {

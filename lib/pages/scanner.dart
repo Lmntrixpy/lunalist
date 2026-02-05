@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lunalist/services/card_mapper.dart';
 import 'dart:io' show Platform;
-import 'package:hitster_2/pages/music_player_local.dart';
-import 'package:hitster_2/pages/music_player_spotify.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:lunalist/pages/music_player_local.dart';
+import 'package:lunalist/pages/music_player_spotify.dart';
 
 class ScannerPage extends StatefulWidget {
-  final dynamic mapper;
+  final CardSongMapper mapper;
   final String gameMode;
 
   const ScannerPage({super.key, required this.mapper, required this.gameMode});

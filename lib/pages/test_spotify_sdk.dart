@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
-import 'package:hitster_2/config.dart';
+import 'package:lunalist/config.dart';
 
 class TestSpotifySdkPage extends StatefulWidget {
   const TestSpotifySdkPage({super.key});

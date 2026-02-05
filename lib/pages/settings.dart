@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/api/spotify-auth.dart';
-import 'package:hitster_2/config.dart';
-import 'package:hitster_2/pages/about.dart';
-import 'package:hitster_2/pages/game_instructions.dart';
-import 'package:hitster_2/services/qr_code_creator.dart';
-import 'package:hitster_2/services/rankings.dart';
+import 'package:lunalist/api/spotify-auth.dart';
+import 'package:lunalist/config.dart';
+import 'package:lunalist/pages/about.dart';
+import 'package:lunalist/pages/game_instructions.dart';
+import 'package:lunalist/services/qr_code_creator.dart';
+import 'package:lunalist/services/rankings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum BrightnessModes{light, dark, system}

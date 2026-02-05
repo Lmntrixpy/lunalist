@@ -6,7 +6,7 @@
         android:maxSdkVersion="28"/>
 
     <application
-        android:label="hitster_2"
+        android:label="lunalist"
         android:name="${applicationName}"
         android:theme="@style/NormalTheme"
         android:icon="@mipmap/ic_launcher">
@@ -36,7 +36,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="hitster" android:host="callback"/>
+                <data android:scheme="lunalist" android:host="callback"/>
             </intent-filter>
 
         </activity>

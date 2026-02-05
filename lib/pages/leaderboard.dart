@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/home.dart';
-import 'package:hitster_2/services/rankings.dart';
+import 'package:lunalist/pages/home.dart';
+import 'package:lunalist/services/rankings.dart';
 
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key});

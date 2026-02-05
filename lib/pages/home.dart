@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hitster_2/pages/leaderboard.dart';
-import 'package:hitster_2/pages/mode_selector.dart';
-import 'package:hitster_2/pages/settings.dart';
+import 'package:lunalist/pages/leaderboard.dart';
+import 'package:lunalist/pages/mode_selector.dart';
+import 'package:lunalist/pages/settings.dart';
 
 class HomePage extends StatelessWidget {
   final Function(ThemeMode)? setThemeMode;
@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40.0),
             child: Text(
-              "Willkommen bei APPNAME!\nFalls du noch nie gespielt hast, findest du in den Einstellungen eine Anleitung. Falls doch, drücke einfach auf Start",
+              "Willkommen bei lunalist!\nFalls du noch nie gespielt hast, findest du in den Einstellungen eine Anleitung. Falls doch, drücke einfach auf Start",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 24),
 
@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
   AppBar appBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: Text("APPNAME"),
+      title: Text("lunalist"),
       centerTitle: true,
       actions: [
         IconButton(

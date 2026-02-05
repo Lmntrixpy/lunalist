@@ -2,7 +2,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hitster_2/pages/home.dart';
+import 'package:lunalist/pages/home.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'config.dart';
@@ -40,9 +40,8 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends State<MyApp> {
   late ThemeMode _themeMode;
-  int _dynamicKey = 0;
 
   ColorScheme? _cachedLight;
   ColorScheme? _cachedDark;
@@ -51,39 +50,21 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _themeMode = widget.initialThemeMode;
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      setState(() => _dynamicKey++);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
-      key: ValueKey(_dynamicKey),
       builder: (lightDynamic, darkDynamic) {
-        // update cache of current colorscheme
         if (lightDynamic != null) _cachedLight = lightDynamic;
         if (darkDynamic != null) _cachedDark = darkDynamic;
 
         final lightScheme =
             _cachedLight ??
-            lightDynamic ??
             ColorScheme.fromSeed(seedColor: Colors.purple, brightness: Brightness.light);
 
         final darkScheme =
             _cachedDark ??
-            darkDynamic ??
             ColorScheme.fromSeed(seedColor: Colors.purple, brightness: Brightness.dark);
 
         ThemeData makeTheme(ColorScheme scheme) {

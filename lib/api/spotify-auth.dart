@@ -2,7 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:spotify/spotify.dart';
-import 'package:hitster_2/config.dart';
+import 'package:lunalist/config.dart';
 
 late SpotifyApi spotify;
 
