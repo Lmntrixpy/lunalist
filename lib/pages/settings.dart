@@ -237,49 +237,85 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ? "Die Verbindung war erfolgreich"
                                     : "Die Verbindung ist fehlgeschlagen";
                               });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(infoText))
+                              );
                             },
                             icon: const Icon(Icons.private_connectivity_rounded),
                             label: const Text("Teste Verbindung zu Spotify"),
                           ),
                         ),
+                        
+                        const SizedBox(height: 12),
+
+                        Center(
+                          child: FilledButton.tonalIcon(
+                            onPressed: () {
+                              QrPdfGenerator.clearTempCache();
+                              
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Temporäre Dateien gelöscht.")),
+                              );
+                            },
+                            label: Text("Cache leeren"),
+                            icon: Icon(Icons.delete_forever_rounded),
+                          ),
+                        ),
+
                         const SizedBox(height: 8),
 
-                        Center(child: Text(infoText, style: const TextStyle(fontSize: 12))),
-                        const SizedBox(height: 24),
+                        
 
                         const Text("Rangliste", style: TextStyle(fontSize: 20)),
                         const SizedBox(height: 8),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            FilledButton.tonalIcon(
-                              onPressed: () async {
-                                try {
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              FilledButton.tonalIcon(
+                                onPressed: () async {
+                                  try {
+                                    final rankingStorage = RankingStorage();
+                                    await rankingStorage.importRanking(merge: true);
+                          
+                                    if (!context.mounted) return;
+                          
+                                    setState(() {});
+                                  } on InvalidRankingImport catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.toString())),
+                                    );
+                                  }
+                                },
+                                label: const Text("Importieren"),
+                                icon: const Icon(Icons.download_rounded),
+                              ),
+                              FilledButton.tonalIcon(
+                                onPressed: () async {
                                   final rankingStorage = RankingStorage();
-                                  await rankingStorage.importRanking(merge: true);
+                                  await rankingStorage.exportRanking();
+                                },
+                                label: const Text("Exportieren"),
+                                icon: const Icon(Icons.upload_rounded),
+                              ),
+                          
+                              FilledButton.tonalIcon(
+                                onPressed: () async {
+                                  final rankingStorage = RankingStorage();
+                                  await rankingStorage.deleteRankingsFile();
 
-                                  if (!context.mounted) return;
-
-                                  setState(() {});
-                                } on InvalidRankingImport catch (e) {
+                                  if(!context.mounted) return;
+                                  
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(e.toString())),
+                                    SnackBar(content: Text("Die Rangliste wurde zurückgesetzt"))
                                   );
-                                }
-                              },
-                              label: const Text("Importieren"),
-                              icon: const Icon(Icons.download_rounded),
-                            ),
-                            FilledButton.tonalIcon(
-                              onPressed: () async {
-                                final rankingStorage = RankingStorage();
-                                await rankingStorage.exportRanking();
-                              },
-                              label: const Text("Exportieren"),
-                              icon: const Icon(Icons.upload_rounded),
-                            ),
-                          ],
+                                },
+                                label: Text("Zurücksetzen"),
+                                icon: Icon(Icons.delete_forever_rounded),
+                                ),
+                            ],
+                          ),
                         ),
 
                         const SizedBox(height: 24),

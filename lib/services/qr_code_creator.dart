@@ -8,6 +8,21 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class QrPdfGenerator {
+  static Future<void> clearTempCache() async {
+    // clears temp folder
+    final dir = await getTemporaryDirectory();
+
+    if (!dir.existsSync()) return;
+
+    for (final entity in dir.listSync()) {
+      try {
+        entity.deleteSync(recursive: true);
+      } catch (_) {
+        // ignore file (maybe in use)
+      }
+    }
+}
+
   static Future<void> generate(int count) async {
     final templateData = await rootBundle.load(
       'assets/templates/Karten-Vorlage.pdf',
