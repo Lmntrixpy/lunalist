@@ -124,10 +124,10 @@ class QrPdfGenerator {
 
   static pw.Widget _buildQrGrid(int count, int startIndex) {
     const double cardSizeCm = 4.5;
-    const double verticalSpacingCm = 1.0;
+    const double verticalSpacingCm = 0.5;
 
-    const double firstCenterXCm = 1.35;
-    const double firstCenterYCm = 2.0;
+    const double firstCenterXCm = 0.75;
+    const double firstCenterYCm = 2.6;
 
     const int columns = 4;
 
@@ -138,7 +138,7 @@ class QrPdfGenerator {
         final row = i ~/ columns;
         final col = i % columns;
 
-        final centerXcm = firstCenterXCm + col * cardSizeCm;
+        final centerXcm = firstCenterXCm + col * cardSizeCm + 0.5 * col;
         final centerYcm = firstCenterYCm + row * (cardSizeCm + verticalSpacingCm);
 
         final left = (centerXcm) * PdfPageFormat.cm;
