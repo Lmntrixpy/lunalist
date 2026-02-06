@@ -241,6 +241,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ? "Die Verbindung war erfolgreich"
                                     : "Die Verbindung ist fehlgeschlagen";
                               });
+                              
+                              if(!context.mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(infoText))
                               );
