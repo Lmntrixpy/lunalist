@@ -105,6 +105,33 @@ class _SongInfoLocalState extends State<SongInfo> {
                 "Spielmodus: ${widget.gameMode}"
               ),
 
+              FilledButton.tonalIcon(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Spiel beenden"),
+                      content: Text("Möchtest du das Spiel wirklich beenden?"),
+                      actions: [
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => EndScreen())
+                            );          
+                          },
+                          label: Text("Weiter"),
+                          icon: Icon(Icons.arrow_right_alt_rounded),
+                          )
+                      ],
+                    )
+                  );
+
+                  
+                },
+                label: Text("Spiel beenden")
+              ),
+
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
