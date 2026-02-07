@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lunalist/pages/song_info.dart';
 import 'package:lunalist/services/card_mapper.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 
 class ControlMusicState extends StatefulWidget {
   final CardSongMapper mapper;
@@ -22,6 +23,12 @@ class _ControlMusicStateState extends State<ControlMusicState> {
   @override
   void initState() {
   super.initState();
+  JustAudioMediaKit.ensureInitialized(); // for linux / windows
+  JustAudioMediaKit.bufferSize = 32 * 1024 * 1024; // 8mb
+  JustAudioMediaKit.title = "lunalist";
+  JustAudioMediaKit.protocolWhitelist = ["file"];
+  
+
   player = AudioPlayer();
 
   player.playerStateStream.listen((state) {

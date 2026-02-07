@@ -39,6 +39,7 @@ dependencies:
   flutter_web_auth_2: ^4.1.0
   file_picker: ^10.3.7
   just_audio: ^0.10.5
+  just_audio_media_kit: ^2.1.0
   flutter_dotenv: ^6.0.0
   package_info_plus: ^9.0.0
   audio_metadata_reader: ^1.4.2
@@ -57,6 +58,14 @@ dependencies:
   flutter_media_metadata:
     git:
       url: https://github.com/Lmntrixpy/flutter_media_metadata.git
+
+  media_kit_libs_linux: any
+  media_kit_libs_windows_audio: any
+
+  window_size:
+      git:
+        url: https://github.com/google/flutter-desktop-embedding
+        path: plugins/window_size
 
 
 dev_dependencies:

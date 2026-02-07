@@ -7,9 +7,11 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
   dynamic_color
   flutter_media_metadata
+  media_kit_libs_windows_audio
   printing
   share_plus
   url_launcher_windows
+  window_size
   window_to_front
 )
 

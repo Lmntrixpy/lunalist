@@ -297,6 +297,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                 label: const Text("Importieren"),
                                 icon: const Icon(Icons.download_rounded),
                               ),
+
+                              SizedBox(height: 8,),
+
                               FilledButton.tonalIcon(
                                 onPressed: () async {
                                   final rankingStorage = RankingStorage();
@@ -305,6 +308,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                 label: const Text("Exportieren"),
                                 icon: const Icon(Icons.upload_rounded),
                               ),
+
+                              SizedBox(height: 8,),
                           
                               FilledButton.tonalIcon(
                                 onPressed: () async {
