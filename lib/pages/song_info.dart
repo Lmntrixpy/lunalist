@@ -113,6 +113,13 @@ class _SongInfoLocalState extends State<SongInfo> {
                       title: Text("Spiel beenden"),
                       content: Text("Möchtest du das Spiel wirklich beenden?"),
                       actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Abbrechen")
+                        ),
+
                         TextButton.icon(
                           onPressed: () {
                             Navigator.pushReplacement(
