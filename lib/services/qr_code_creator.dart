@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -24,10 +25,6 @@ class QrPdfGenerator {
 }
 
   static Future<void> generate(int count, {required BuildContext context}) async {
-    final box = context.findRenderObject() as RenderBox?;
-    final origin = (box != null)
-        ? (box.localToGlobal(Offset.zero) & box.size)
-        : const Rect.fromLTWH(0, 0, 1, 1);
 
     final templateData = await rootBundle.load(
       'assets/templates/Karten-Vorlage.pdf',
@@ -85,26 +82,11 @@ class QrPdfGenerator {
 
     final bytes = await pdf.save();
     final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/APPNAME_Karten.pdf');
+    final file = File('${dir.path}/lunalist_Karten.pdf');
     await file.writeAsBytes(bytes);
 
-
-    if (Platform.isAndroid) {
-      final fileName = "APPNAME_Karten${DateTime.now().millisecondsSinceEpoch}.pdf";
-      final downloadsDir = Directory("/storage/emulated/0/Download");
-
-      if (!await downloadsDir.exists()) {
-        await downloadsDir.create(recursive: true);
-      }
-
-      final downloadFile = File("${downloadsDir.path}/$fileName");
-      debugPrint(downloadFile.toString());
-      await downloadFile.writeAsBytes(bytes);
-      debugPrint("----- saved in Download dir");
-    }
-
-    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)], sharePositionOrigin: origin),
-    );
+    if (!context.mounted) return;
+    await _shareFile(file, context, roundedCount);
   }
 
   static Future<_RasterPage> _raster(Uint8List pdf, int page) async {
@@ -255,24 +237,37 @@ class QrPdfGenerator {
 
     final bytes = await pdf.save();
     final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/APPNAME_Karten_nur_Vorderseite.pdf');
+    final file = File('${dir.path}/lunalist_Karten_nur_Vorderseite.pdf');
     await file.writeAsBytes(bytes);
 
-    if (Platform.isAndroid) {
-      final fileName = "APPNAME_Karten_nur_Vorderseite${DateTime.now().millisecondsSinceEpoch}.pdf";
-      final downloadsDir = Directory("/storage/emulated/0/Download");
+    if (!context.mounted) return;
+    await _shareFile(file, context, roundedCount);
 
-      if (!await downloadsDir.exists()) {
-        await downloadsDir.create(recursive: true);
+  }
+
+  static _shareFile(File file, BuildContext context, int roundedCount) async {
+    final String fileName = "lunalist_Karten_$roundedCount.pdf";
+
+    final box = context.findRenderObject() as RenderBox?;
+    final origin = (box != null)
+        ? (box.localToGlobal(Offset.zero) & box.size)
+        : const Rect.fromLTWH(0, 0, 1, 1);
+
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows || Platform.isAndroid) {
+      String? outputFile = await FilePicker.platform.saveFile(
+        dialogTitle: "Suche einen Ausgabeordner aus:",
+        fileName: fileName,
+        bytes: file.readAsBytesSync()
+        
+      );
+      if (outputFile == null) {
+        debugPrint("User cancelled");
       }
-
-      final downloadFile = File("${downloadsDir.path}/$fileName");
-      debugPrint(downloadFile.toString());
-      await downloadFile.writeAsBytes(bytes);
-      debugPrint("----- saved in Download dir");
     }
 
-    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)], sharePositionOrigin: origin),); 
+    if (Platform.isIOS) {
+      await SharePlus.instance.share(ShareParams(files: [XFile(file.path)], sharePositionOrigin: origin),);  
+    }
   }
 }
 

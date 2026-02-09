@@ -14,16 +14,19 @@ class HomePage extends StatelessWidget {
       appBar: appBar(context),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0),
-            child: Text(
-              "Willkommen bei lunalist!\nFalls du noch nie gespielt hast, findest du in den Einstellungen eine Anleitung. Falls doch, drücke einfach auf Start",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24),
-
-              ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: Text(
+                "Willkommen bei lunalist!\nFalls du noch nie gespielt hast, findest du in den Einstellungen eine Anleitung. Falls doch, drücke einfach auf Start",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24),
+            
+                ),
+            ),
           ),
       
           Column(
