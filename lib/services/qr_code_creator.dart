@@ -245,7 +245,7 @@ class QrPdfGenerator {
 
   }
 
-  static _shareFile(File file, BuildContext context, int roundedCount) async {
+  static Future _shareFile(File file, BuildContext context, int roundedCount) async {
     final String fileName = "lunalist_Karten_$roundedCount.pdf";
 
     final box = context.findRenderObject() as RenderBox?;

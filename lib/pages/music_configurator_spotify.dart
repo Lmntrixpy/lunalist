@@ -3,6 +3,7 @@ import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
 import 'package:lunalist/config.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 typedef LunalistTrack = ({
   String id,
@@ -149,6 +150,43 @@ class _playlistInputState extends State<playlistInput> {
         children: [
             Text(
               "Gib deine Playlisten ein.",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+
+            TextButton.icon(
+              onPressed: () async {
+                showDialog(
+                  context: context, 
+                  builder: (dialogContext) {
+                    return AlertDialog(
+                      title: const Text("Lieblingssongs"),
+                      content: Text("Wenn du mit deinen Lieblingssongs spielen möchtest musst du sie vorher in eine Playlist konvertieren. Um das zu tun kannst du Listify nehmen."),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Abbrechen")
+                        ),
+                        TextButton.icon(
+                          onPressed: () async {
+                            final String url = "https://listify.rar-home.cloud";
+                            final uri = Uri.parse(url);
+                            
+                            if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+                              throw Exception('URL konnte nicht geöffnet werden: $url');
+                            }
+                          },
+                          label: Text("Listify öffnen"),
+                          icon: Icon(Icons.link_rounded),
+                        )
+                      ],
+                    );
+                  }
+                );
+              },
+              label: Text("Möchtest du mit deinen Lieblingssongs spielen?"),
+              icon: Icon(Icons.info_outline_rounded),
             ),
 
             if (_errorText != null) 
