@@ -1,0 +1,36 @@
+{
+  "fill" : {
+    "solid" : "display-p3:0.13609,0.20753,0.44369,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "Unbenanntes_Projekt.png",
+          "name" : "Unbenanntes_Projekt",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}
