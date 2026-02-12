@@ -1,16 +1,59 @@
 {
   "fill" : {
-    "solid" : "display-p3:0.13609,0.20753,0.44369,1.00000"
+    "solid" : "display-p3:0.47764,0.63553,0.89264,1.00000"
   },
   "groups" : [
     {
+      "hidden" : false,
       "layers" : [
         {
-          "glass" : true,
+          "image-name" : "L.png",
+          "name" : "L",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
           "hidden" : false,
-          "image-name" : "Unbenanntes_Projekt.png",
-          "name" : "Unbenanntes_Projekt",
-          "opacity" : 1,
+          "image-name" : "Mond.png",
+          "name" : "Mond",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "image-name" : "Stern 1.png",
+          "name" : "Stern 1",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "image-name" : "Stern 2.png",
+          "name" : "Stern 2",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "image-name" : "Stern 3.png",
+          "name" : "Stern 3",
           "position" : {
             "scale" : 0.25,
             "translation-in-points" : [

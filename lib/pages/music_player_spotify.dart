@@ -65,14 +65,14 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
   Future<void> ensureSpotifyConnection() async {
     if (Platform.isAndroid) {
       await SpotifySdk.getAccessToken(
-        clientId: AppConfig.clientId,
+        clientId: AppConfig.SpotifyClientId,
         redirectUrl: 'lunalist://android-callback',
         scope: 'app-remote-control streaming',
       );
     }
 
     final connected = await SpotifySdk.connectToSpotifyRemote(
-      clientId: AppConfig.clientId,
+      clientId: AppConfig.SpotifyClientId,
       redirectUrl: "lunalist://android-callback",
     );
 

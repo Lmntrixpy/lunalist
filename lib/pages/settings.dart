@@ -230,8 +230,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: FilledButton.tonalIcon(
                             onPressed: () async {
                               final spotifyHttp = SpotifyHttp(
-                                clientId: AppConfig.clientId,
-                                clientSecret: AppConfig.clientSecret,
+                                clientId: AppConfig.SpotifyClientId,
+                                clientSecret: AppConfig.SpotifyClientSecret,
                               );
 
                               connectionSucces = await spotifyHttp.testConnection(market: "DE");
