@@ -1,0 +1,24 @@
+# flutter pub run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/icons/lunalist_icon_android.png"
+
+  android: true
+  image_path_android: "assets/icons/lunalist_icon_android.png"
+  min_sdk_android: 29 # android min sdk min:16, default 21 | 29 is android 10
+  adaptive_icon_background: "#6EA3E9"
+  adaptive_icon_foreground: "assets/icons/lunalist_icon_android.png"
+  adaptive_icon_foreground_inset: 16
+  adaptive_icon_monochrome: "assets/icons/lunalist_icon_android.png"
+
+  ios: false
+
+  web:
+    generate: false
+
+  windows:
+    generate: true
+    image_path: "assets/icons/lunalist_icon_android.png"
+    icon_size: 256 # min:48, max:256, default: 48
+
+  macos:
+    generate: false
