@@ -17,7 +17,7 @@ flutter_launcher_icons:
 
   windows:
     generate: true
-    image_path: "assets/icons/lunalist_icon_android.png"
+    image_path: "assets/icons/lunalist_icon_windows.png"
     icon_size: 256 # min:48, max:256, default: 48
 
   macos:
