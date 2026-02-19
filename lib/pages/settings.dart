@@ -3,6 +3,8 @@ import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/config.dart';
 import 'package:lunalist/pages/about.dart';
 import 'package:lunalist/pages/game_instructions.dart';
+import 'package:lunalist/pages/playlist_edit.dart';
+import 'package:lunalist/services/preloaded_playlists.dart';
 import 'package:lunalist/services/qr_code_creator.dart';
 import 'package:lunalist/services/rankings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,11 +73,11 @@ class _SettingsPageState extends State<SettingsPage> {
             final isTablet = width >= 500 && width < 1400;
             final isDesktop = width >= 1400;
 
-            final maxContentWidth =
-                isDesktop ? 900.0 : (isTablet ? 750.0 : double.infinity);
+            final maxContentWidth = isDesktop ? 900.0 : (isTablet ? 750.0 : double.infinity);
 
-            final padding =
-                isDesktop ? 48.0 : (isTablet ? 32.0 : 20.0);
+            final padding = isDesktop ? 48.0 : (isTablet ? 32.0 : 20.0);
+
+            final String playlistAssetPath = "assets/playlists.csv";
 
             return Center(
               child: ConstrainedBox(
@@ -298,7 +300,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 icon: const Icon(Icons.download_rounded),
                               ),
 
-                              SizedBox(height: 8,),
+                              SizedBox(height: 8),
 
                               FilledButton.tonalIcon(
                                 onPressed: () async {
@@ -328,6 +330,89 @@ class _SettingsPageState extends State<SettingsPage> {
                             ],
                           ),
                         ),
+
+                        const SizedBox(height: 24),
+                        Text("Packs", style: TextStyle(fontSize: 20)),
+                        const SizedBox(height: 8),
+
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Edit
+                              FilledButton.tonalIcon(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => PlaylistCsvEditorPage(
+                                        store: PlaylistCsvStore(assetPath: 'assets/playlists.csv'),
+                                        title: 'Packs verwalten',
+                                      ),
+                                    ),
+                                  );
+                                },
+                                label: Text("Bearbeiten"),
+                                icon: Icon(Icons.edit_rounded),
+                              ),
+
+                              SizedBox(height: 8),
+                              
+                              // Import
+                              FilledButton.tonalIcon(
+                                onPressed: () async {
+                                  final store = PlaylistCsvStore(assetPath: playlistAssetPath);
+
+                                  try {
+                                    await store.importFromPicker();
+
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("Importieren erfolgreich"))
+                                    );
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("Importieren fehlgeschlagen!"))
+                                    );
+                                  }
+                                },
+                                label: Text("Importieren"),
+                                icon: Icon(Icons.download_rounded),
+                              ),
+
+                              SizedBox(height: 8),
+                              
+                              // Export
+                              FilledButton.tonalIcon(
+                                onPressed: () async {
+                                  final store = PlaylistCsvStore(assetPath: playlistAssetPath);
+                                  await store.load();
+
+                                  if (!context.mounted) return;
+                                  await store.exportAndShare(context);
+                                },
+                                label: Text("Exportieren"),
+                                icon: Icon(Icons.upload_rounded),
+                              ),
+
+                              SizedBox(height: 8),
+
+                              // Reset
+                              FilledButton.tonalIcon(
+                                onPressed: () async {
+                                  final store = PlaylistCsvStore(assetPath: playlistAssetPath);
+                                  await store.resetFromAssets();
+                                  debugPrint("file deleted");
+                                },
+                                label: Text("Zurücksetzen"),
+                                icon: Icon(Icons.delete_forever_rounded),
+                              ),
+
+                              SizedBox(height: 8),
+                            ],
+                          ),
+                        ),
+
 
                         const SizedBox(height: 24),
                         const Text("Erscheinungsbild", style: TextStyle(fontSize: 20)),

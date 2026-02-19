@@ -99,6 +99,7 @@ flutter:
     - assets/fonts/
     - assets/templates/
     - assets/images/
+    - assets/playlists.csv
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

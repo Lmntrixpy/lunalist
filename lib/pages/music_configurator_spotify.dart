@@ -3,6 +3,7 @@ import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
 import 'package:lunalist/config.dart';
+import 'package:lunalist/services/preloaded_playlists.dart';
 
 typedef LunalistTrack = ({
   String id,
@@ -31,7 +32,9 @@ class _playlistInputState extends State<playlistInput> {
   String? _errorText;
   bool _loading = false;
 
-  
+  final PlaylistCsvStore _csvStore = PlaylistCsvStore(assetPath: 'assets/playlists.csv');
+
+  bool _csvLoaded = false;
 
   @override
   void dispose() {
@@ -39,16 +42,86 @@ class _playlistInputState extends State<playlistInput> {
       c.dispose();
     }
     super.dispose();
+  }
+
+  Future<void> _ensureCsvLoaded() async {
+    if (_csvLoaded) return;
+    await _csvStore.load();
+    _csvLoaded = true;
+  }
+
+  Future<void> _pickFromCsvIntoField(int fieldIndex) async {
+    await _ensureCsvLoaded();
+
+    if (!mounted) return;
+
+    final selected = await showModalBottomSheet<PlaylistEntry>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) {
+        final items = _csvStore.entries;
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                child: Text(
+                  'Playlist auswählen',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+              if (items.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('Keine Playlists in der CSV.'),
+                )
+              else
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: items.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (_, i) {
+                      final e = items[i];
+                      return ListTile(
+                        title: Text(e.name),
+                        subtitle: Text(
+                          e.url,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        onTap: () => Navigator.pop(ctx, e),
+                      );
+                    },
+                  ),
+                ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (selected == null) return;
+
+    while (controllers.length <= fieldIndex) {
+      controllers.add(TextEditingController());
     }
-  
+
+    setState(() {
+      controllers[fieldIndex].text = selected.url;
+      _errorText = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Spotify"),
+        title: const Text("Spotify"),
         centerTitle: true,
       ),
-
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _loading
             ? null
@@ -69,9 +142,8 @@ class _playlistInputState extends State<playlistInput> {
 
                   for (var i = 0; i < playlistCount; i++) {
                     final url = controllers[i].text.trim();
-                    final idx = i + 1; // for ui
+                    final idx = i + 1;
 
-                    // if empty still continue
                     if (url.isEmpty) continue;
 
                     String playlistId;
@@ -82,10 +154,7 @@ class _playlistInputState extends State<playlistInput> {
                       return;
                     }
 
-                    // if playlist is a duplicate, skip
-                    if (!seenPlaylistIds.add(playlistId)) {
-                      continue;
-                    }
+                    if (!seenPlaylistIds.add(playlistId)) continue;
 
                     try {
                       final tracks = await spotifyHttp.getPlaylistTracks(
@@ -143,45 +212,40 @@ class _playlistInputState extends State<playlistInput> {
         label: Text(_loading ? "Lade..." : "Weiter"),
         icon: const Icon(Icons.arrow_right_alt_rounded),
       ),
-
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-            Text(
-              "Gib deine Playlisten ein.",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-
-            if (_errorText != null) 
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                child: Text(
-                  _errorText!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
+          const Text(
+            "Gib deine Playlisten ein.",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          if (_errorText != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: Text(
+                _errorText!,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                  fontWeight: FontWeight.w600,
                 ),
+                textAlign: TextAlign.center,
               ),
-
-            Row(
+            ),
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: Icon(Icons.remove),
+                icon: const Icon(Icons.remove),
                 onPressed: () {
                   if (playlistCount > 1) {
                     setState(() => playlistCount--);
                   }
                 },
               ),
-
               Text(
                 "$playlistCount ${playlistCount == 1 ? 'Playlist' : 'Playlists'}",
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
-
               IconButton(
                 onPressed: () {
                   if (playlistCount < 10) {
@@ -191,16 +255,15 @@ class _playlistInputState extends State<playlistInput> {
                     ..clear()
                     ..addAll(
                       controllers
-                        .take(playlistCount)
-                        .map((c) => c.text)
-                        .where((t) => t.isNotEmpty),
+                          .take(playlistCount)
+                          .map((c) => c.text)
+                          .where((t) => t.isNotEmpty),
                     );
                 },
-                icon: Icon(Icons.add_rounded),
+                icon: const Icon(Icons.add_rounded),
               ),
             ],
           ),
-
           Expanded(
             child: ListView(
               children: List.generate(
@@ -212,12 +275,24 @@ class _playlistInputState extends State<playlistInput> {
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: TextField(
-                      controller: controllers[i],
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Playlist ${i + 1}",
-                      ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: controllers[i],
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: "Playlist ${i + 1}",
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          tooltip: 'Aus CSV auswählen',
+                          onPressed: _loading ? null : () => _pickFromCsvIntoField(i),
+                          icon: const Icon(Icons.playlist_add_rounded),
+                        ),
+                      ],
                     ),
                   );
                 },

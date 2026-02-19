@@ -69,11 +69,11 @@ class _MyAppState extends State<MyApp> {
 
         final lightScheme =
             _cachedLight ??
-            ColorScheme.fromSeed(seedColor: Colors.purple, brightness: Brightness.light);
+            ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.light);
 
         final darkScheme =
             _cachedDark ??
-            ColorScheme.fromSeed(seedColor: Colors.purple, brightness: Brightness.dark);
+            ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark);
 
         ThemeData makeTheme(ColorScheme scheme) {
           final base = ThemeData(useMaterial3: true, colorScheme: scheme);
