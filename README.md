@@ -1,4 +1,6 @@
 # lunalist
+![lunalist App icon & Logo](https://github.com/Lmntrixpy/lunalist/blob/main/lunalist-icon-light.png)
+
 Lunalist is a music-based party game inspired by timeline guessing mechanics. 
 Use it with Spotify or your own mp3 files!
 
@@ -58,4 +60,5 @@ flutter build mac --relase  # build app for MacOS
 
 ## Disclaimer
 This project was created with the help of Ai while debugging. Not for code generation. 
+
 
