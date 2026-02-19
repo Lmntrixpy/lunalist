@@ -21,6 +21,11 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
   - ... via [Trollstore](https://github.com/opa334/TrollStore) (iOS 15.X or any other supported iOS Version)
   - ... via [Impactor](https://github.com/khcrysalis/Impactor), [AltServer](https://faq.altstore.io/altstore-classic/altserver), [Sideloadly](https://sideloadly.io) or any other Sideloading Software (iOS 16+)
 
+### macOS
+- ensure your device is running macOS 10.15 (Catalina) or newer
+- download latest dmg file on [releases](https://github.com/Lmntrixpy/Lunalist/releases/latest) page.
+- open dmg and drag and drop lunalist into the applications folder.
+
 ## App Building
 ### android
 ```
@@ -60,5 +65,6 @@ flutter build mac --relase  # build app for MacOS
 
 ## Disclaimer
 This project was created with the help of Ai while debugging. Not for code generation. 
+
 
 
