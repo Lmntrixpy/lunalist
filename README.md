@@ -25,6 +25,7 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
 - ensure your device is running macOS 10.15 (Catalina) or newer
 - download latest dmg file on [releases](https://github.com/Lmntrixpy/Lunalist/releases/latest) page.
 - open dmg and drag and drop lunalist into the applications folder.
+- if you get a message about that the file cannot be opened because it contains a harmful software, open system settings, go to **Data Privacy & Security**, scroll down and click **open**.
 
 ## App Building
 ### android
@@ -65,6 +66,7 @@ flutter build mac --relase  # build app for MacOS
 
 ## Disclaimer
 This project was created with the help of Ai while debugging. Not for code generation. 
+
 
 
 
