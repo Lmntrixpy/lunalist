@@ -32,8 +32,9 @@ def main():
         print("Usage: python build.py [ios|macos|windows|android|linux]")
         sys.exit(1)
 
-    for i in range(1, len(sys.argv)):
+    for i in range(1, len(sys.argv) - 1):
         target = sys.argv[i].lower()
+        version_number = sys.argv[len(sys.argv) - 1]
 
         host_os = platform.system()
         print(f"Host OS: {host_os}")
@@ -41,7 +42,7 @@ def main():
 
         if target == "android":
             run_command(["flutter", "build", "apk", "--release"])
-            destination = os.path.expanduser("~/Downloads/lunalist-1-xx-x.apk ")
+            destination = os.path.expanduser(f"~/Downloads/lunalist-{version_number}.apk ")
             run_command(["cp",  "build/app/outputs/flutter-apk/app-release.apk", destination])
 
         elif target == "ios":
@@ -50,7 +51,7 @@ def main():
                 sys.exit(1)
             run_command(["flutter", "build", "ipa", "--no-codesign"])
 
-            destination = os.path.expanduser("~/Downloads/lunalist-1-xx-x.xcarchive")
+            destination = os.path.expanduser(f"~/Downloads/lunalist-{version_number}.xcarchive")
 
             run_command(["cp", "-r", "build/ios/archive/Runner.xcarchive", destination])
 
