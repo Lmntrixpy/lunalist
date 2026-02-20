@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lunalist/pages/music_player_soundcloud.dart';
 import 'package:lunalist/services/card_mapper.dart';
 import 'dart:io' show Platform;
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -57,10 +58,17 @@ final _manualFocus = FocusNode();
 
     _controller?.stop();
 
-    final nextPage = widget.gameMode == "local"
-        ? ControlMusicState(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode)
-        : PlayerSpotify(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);
+    final nextPage;
 
+    if (widget.gameMode == "spotify") {
+      nextPage = PlayerSpotify(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);  
+    } else if (widget.gameMode == "soundcloud") {
+      nextPage = PlayerSoundCloud(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);
+    } else {
+      nextPage = ControlMusicState(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);
+    }
+
+    
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => nextPage),
     );

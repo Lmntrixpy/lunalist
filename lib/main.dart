@@ -29,6 +29,10 @@ Future<void> main() async {
     await prefs.setString("brightnessMode", "system");
   }
 
+  if (prefs.getBool("experimentalMode") == null) {
+    await prefs.setBool("experimentalMode", false);
+  }
+
   runApp(MyApp(initialThemeMode: await _getSavedThemeMode()));
 }
 

@@ -133,8 +133,8 @@ class _playlistInputState extends State<playlistInput> {
 
                 try {
                   final spotifyHttp = SpotifyHttp(
-                    clientId: AppConfig.SpotifyClientId,
-                    clientSecret: AppConfig.SpotifyClientSecret,
+                    clientId: AppConfig.spotifyClientId,
+                    clientSecret: AppConfig.spotifyClientSecret,
                   );
 
                   final Map<String, LunalistTrack> allTracks = {};

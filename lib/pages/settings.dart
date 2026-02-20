@@ -27,6 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   TextEditingController textController = TextEditingController();
   int cardCount = 0;
   bool isGenerating = false;
+  bool experimentalMode = false;
 
   Set<BrightnessModes> _selected = {BrightnessModes.system}; // Default
 
@@ -34,6 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     _loadBrightnessMode();
+    _loadExperimentalMode();
   }
 
   Future<void> _loadBrightnessMode() async {
@@ -54,6 +56,23 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _saveBrightnessMode(BrightnessModes mode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('brightnessMode', mode.name);
+  }
+
+  Future<void> _loadExperimentalMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getBool("experimentalMode");
+    setState(() {
+      if (saved != null) {
+        debugPrint(experimentalMode.toString());
+        experimentalMode = saved;
+      }
+    });
+  }
+
+  Future<void> _saveExperimentalMode(bool experimentalMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("experimentalMode", experimentalMode);
+    debugPrint(experimentalMode.toString());
   }
 
 
@@ -232,8 +251,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: FilledButton.tonalIcon(
                             onPressed: () async {
                               final spotifyHttp = SpotifyHttp(
-                                clientId: AppConfig.SpotifyClientId,
-                                clientSecret: AppConfig.SpotifyClientSecret,
+                                clientId: AppConfig.spotifyClientId,
+                                clientSecret: AppConfig.spotifyClientSecret,
                               );
 
                               connectionSucces = await spotifyHttp.testConnection(market: "DE");
@@ -453,6 +472,23 @@ class _SettingsPageState extends State<SettingsPage> {
                               _saveBrightnessMode(mode);
                             },
                           ),
+                        ),
+
+                        const SizedBox(height: 24),
+                        const Text("Entwickleroptionen", style: TextStyle(fontSize: 20)),
+                        const SizedBox(height: 8),
+
+                        SwitchListTile(
+                          value: experimentalMode, 
+                          onChanged: (bool newValue) async {
+                            setState(() {
+                              experimentalMode = newValue;
+                              _saveExperimentalMode(experimentalMode);
+                              
+                            });
+                            
+                          },
+                          title: Text("Experimentiermodus"),
                         ),
 
                         const SizedBox(height: 28),
