@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lunalist/pages/scanner.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:lunalist/pages/song_info.dart';
 import 'package:lunalist/services/card_mapper.dart';
@@ -121,6 +122,20 @@ class _PlayerSpotifyState extends State<PlayerSpotify> {
                 icon: Icon(Icons.restart_alt_rounded),
                 onPressed: _init,
                 label: const Text("Erneut versuchen")),
+              const SizedBox(height: 8),
+
+              OutlinedButton.icon(
+                onPressed: () {
+                  SpotifySdk.pause();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ScannerPage(mapper: widget.mapper, gameMode: widget.gameMode))
+                  );
+                },
+                label: Text("Nächste Karte"),
+                icon: Icon(Icons.arrow_right_alt_rounded),
+              ),
+              
               const SizedBox(height: 8),
             ],
           ),
