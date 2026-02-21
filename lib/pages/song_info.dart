@@ -7,6 +7,7 @@ import 'package:lunalist/services/card_mapper.dart';
 import 'package:lunalist/services/local_music.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class SongInfo extends StatefulWidget {
   final ({String artist, String artwork, String id, String name, int year}) currentTrack;
@@ -67,6 +68,8 @@ class _SongInfoLocalState extends State<SongInfo> {
     
     debugPrint("--------- $songName");
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +195,7 @@ class _SongInfoLocalState extends State<SongInfo> {
                             style: TextStyle(fontSize: yearSize, fontWeight: FontWeight.w600),
                             textAlign: TextAlign.center,
                           ),
+
                           const SizedBox(height: 16),
 
                           // Artwork kleiner + weniger Radius
@@ -212,6 +216,23 @@ class _SongInfoLocalState extends State<SongInfo> {
                           ),
                           const SizedBox(height: 8),
                           Text(artist.isNotEmpty ? artist : "Unbekannter Interpret"),
+
+                          const SizedBox(height: 8,),
+
+                          TextButton.icon(
+                            onPressed: () async {
+                              final query = "$songName - $artist Erscheinungsjahr";
+                              final encodedQuery = Uri.encodeComponent(query);
+                              final url = Uri.parse("https://www.google.com/search?q=$encodedQuery");
+
+                              await launchUrl(
+                                url,
+                                mode: LaunchMode.inAppBrowserView, // öffnet In-App
+                              );
+                            },
+                            label: Text("falsches Jahr?"),
+                            icon: Icon(Icons.link_rounded),
+                          ),
                         ],
                       );
                     }
@@ -304,6 +325,7 @@ class _SongTextBlock extends StatelessWidget {
           style: TextStyle(fontSize: yearFontSize, fontWeight: FontWeight.w600),
           textAlign: align,
         ),
+
         const SizedBox(height: 24),
 
         if (albumArt != null) ...[
@@ -323,6 +345,23 @@ class _SongTextBlock extends StatelessWidget {
         const SizedBox(height: 8),
 
         Text(artist.isNotEmpty ? artist : "Unbekannter Interpret", textAlign: align),
+
+        const SizedBox(height: 16,),
+
+        TextButton.icon(
+          onPressed: () async {
+            final query = "$songName - $artist Erscheinungsjahr";
+            final encodedQuery = Uri.encodeComponent(query);
+            final url = Uri.parse("https://www.google.com/search?q=$encodedQuery");
+
+            await launchUrl(
+              url,
+              mode: LaunchMode.inAppBrowserView, // öffnet In-App
+            );
+          },
+          label: Text("falsches Jahr?"),
+          icon: Icon(Icons.link_rounded),
+        ),
       ],
     );
   }
