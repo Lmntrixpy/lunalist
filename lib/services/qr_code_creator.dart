@@ -115,7 +115,7 @@ class QrPdfGenerator {
 
     return pw.Stack(
       children: List.generate(count, (i) {
-        final double yOffset = Platform.isAndroid ? (3.0 * PdfPageFormat.mm) : 0.0;
+        final double yOffset = Platform.isAndroid ? (3.0 * PdfPageFormat.mm) : (Platform.isWindows ? (3.0* PdfPageFormat.mm) : 0.0);
         
         final row = i ~/ columns;
         final col = i % columns;
