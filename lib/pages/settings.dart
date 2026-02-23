@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lunalist/api/spotify_http.dart';
+import 'package:lunalist/api/update_service_http.dart';
 import 'package:lunalist/config.dart';
 import 'package:lunalist/pages/about.dart';
 import 'package:lunalist/pages/game_instructions.dart';
@@ -28,6 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   int cardCount = 0;
   bool isGenerating = false;
   bool experimentalMode = false;
+  bool checkUpdateOnStartup = true;
 
   Set<BrightnessModes> _selected = {BrightnessModes.system}; // Default
 
@@ -36,6 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     _loadBrightnessMode();
     _loadExperimentalMode();
+    _loadUpdateOnStartup();
   }
 
   Future<void> _loadBrightnessMode() async {
@@ -74,6 +77,25 @@ class _SettingsPageState extends State<SettingsPage> {
     await prefs.setBool("experimentalMode", experimentalMode);
     debugPrint(experimentalMode.toString());
   }
+
+  Future<void> _loadUpdateOnStartup() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getBool("checkUpdateOnStartup");
+    setState(() {
+      if (saved != null) {
+        debugPrint(checkUpdateOnStartup.toString());
+        checkUpdateOnStartup = saved;
+      }
+    });
+  }
+
+  Future<void> _saveUpdateOnStartup(bool checkUpdateOnStartup) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("checkUpdateOnStartup", checkUpdateOnStartup);
+    debugPrint(checkUpdateOnStartup.toString());
+  }
+
+  
 
 
   @override
@@ -270,6 +292,27 @@ class _SettingsPageState extends State<SettingsPage> {
                             },
                             icon: const Icon(Icons.private_connectivity_rounded),
                             label: const Text("Teste Verbindung zu Spotify"),
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        Center(
+                          child: FilledButton.tonalIcon(
+                            onPressed: () async {
+                              final versionApi = LunalistVersionApi();
+                              final check = await versionApi.check(current: AppConfig.version);
+                              final String updateText = check.updateAvailable
+                                ? "Ein Update ist verfügabr: ${check.latest}\nDeine Version: ${AppConfig.version}"
+                                : "Du bist auf der neusten Version: ${AppConfig.version}";
+                              
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(updateText))
+                              );
+                            },
+                            label: Text("Nach Updates suchen"),
+                            icon: Icon(Icons.update_rounded),
                           ),
                         ),
                         
@@ -486,9 +529,21 @@ class _SettingsPageState extends State<SettingsPage> {
                               _saveExperimentalMode(experimentalMode);
                               
                             });
-                            
                           },
                           title: Text("Experimentiermodus"),
+                        ),
+
+                        const SizedBox(height: 8,),
+
+                        SwitchListTile(
+                          value: checkUpdateOnStartup, 
+                          onChanged: (bool newValue) async {
+                            setState(() {
+                              checkUpdateOnStartup = newValue;
+                              _saveUpdateOnStartup(checkUpdateOnStartup);  
+                            });
+                          },
+                          title: Text("Automatisch nach Updates suchen"),
                         ),
 
                         const SizedBox(height: 28),

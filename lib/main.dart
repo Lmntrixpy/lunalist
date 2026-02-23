@@ -33,6 +33,10 @@ Future<void> main() async {
     await prefs.setBool("experimentalMode", false);
   }
 
+  if (prefs.getBool("checkUpdateOnStartup") == null) {
+    await prefs.setBool("checkUpdateOnStartup", true);
+  }
+
   runApp(MyApp(initialThemeMode: await _getSavedThemeMode()));
 }
 
