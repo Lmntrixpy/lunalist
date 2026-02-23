@@ -19,7 +19,7 @@ Future<void> main() async {
   }
 
   await dotenv.load(fileName: '.env');
-  AppConfig.load();
+  await AppConfig.load();
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 

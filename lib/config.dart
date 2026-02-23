@@ -1,4 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
 
 class AppConfig {
   static late final String spotifyClientId;
@@ -7,9 +9,11 @@ class AppConfig {
   static late final String soundcloudClientId;
   static late final String soundcloudClientSecret;
 
-  static void load() {
+  static Future<void> load() async {
     // General
-    version = dotenv.env['version']!;
+    final packageInfo = await PackageInfo.fromPlatform();
+    version = "${packageInfo.version}+${packageInfo.buildNumber}";
+    
 
     // Spotify
     spotifyClientId = dotenv.env['SpotifyClientId']!;
