@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/api/update_service_http.dart';
 import 'package:lunalist/config.dart';
@@ -301,14 +302,32 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: FilledButton.tonalIcon(
                             onPressed: () async {
                               final versionApi = LunalistVersionApi();
-                              final check = await versionApi.check(current: AppConfig.version);
+                              late final dynamic check;
+
+                              try {
+                                check = await versionApi.check(current: AppConfig.version);
+                              } on LunalistApiException catch (e) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Fehler bei Suche nach Updates\nFehler: ${e.toString()}",
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (check == null) return;
+
                               final String updateText = check.updateAvailable
-                                ? "Ein Update ist verfügabr: ${check.latest}\nDeine Version: ${AppConfig.version}"
-                                : "Du bist auf der neusten Version: ${AppConfig.version}";
-                              
+                                  ? "Ein Update ist verfügbar: ${check.latest}\nDeine Version: ${AppConfig.version}"
+                                  : "Du bist auf der neuesten Version: ${AppConfig.version}";
+
                               if (!context.mounted) return;
+
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(updateText))
+                                SnackBar(content: Text(updateText)),
                               );
                             },
                             label: Text("Nach Updates suchen"),
