@@ -133,7 +133,7 @@ class _PlayerSoundCloudState extends State<PlayerSoundCloud> {
               ? null
               : () async {
                   await _player.pause();
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/api/update_service_http.dart';
 import 'package:lunalist/config.dart';

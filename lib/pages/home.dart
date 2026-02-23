@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       try {
         check = await versionApi.check(current: AppConfig.version);
       } on LunalistApiException catch (e) {
-        if (!context.mounted) return;
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
           ? "Ein Update ist verfügbar: ${check.latest}\nDeine Version: ${AppConfig.version}"
           : "Du bist auf der neuesten Version: ${AppConfig.version}";
 
-      if (!context.mounted) return;
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(updateText)),

@@ -81,7 +81,7 @@ class _playlistInputState extends State<playlistInput> {
                   child: ListView.separated(
                     shrinkWrap: true,
                     itemCount: items.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    separatorBuilder: (_, _) => const Divider(height: 1),
                     itemBuilder: (_, i) {
                       final e = items[i];
                       return ListTile(

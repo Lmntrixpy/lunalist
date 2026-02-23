@@ -58,7 +58,7 @@ final _manualFocus = FocusNode();
 
     _controller?.stop();
 
-    final nextPage;
+    final dynamic nextPage;
 
     if (widget.gameMode == "spotify") {
       nextPage = PlayerSpotify(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);  
