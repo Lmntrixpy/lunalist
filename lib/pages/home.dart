@@ -1,12 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:lunalist/api/update_service_http.dart';
+import 'package:lunalist/config.dart';
 import 'package:lunalist/pages/leaderboard.dart';
 import 'package:lunalist/pages/mode_selector.dart';
 import 'package:lunalist/pages/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatelessWidget {
+
+class HomePage extends StatefulWidget {
   final Function(ThemeMode)? setThemeMode;
 
   const HomePage({super.key, this.setThemeMode});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    _checkversion();
+  }
+
+  Future<void> _checkversion() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool("checkUpdateOnStartup") == true) {
+      final versionApi = LunalistVersionApi();
+      late final dynamic check;
+
+      try {
+        check = await versionApi.check(current: AppConfig.version);
+      } on LunalistApiException catch (e) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Fehler bei Suche nach Updates\nFehler: ${e.toString()}",
+            ),
+          ),
+        );
+        return;
+      }
+
+      if (check == null) return;
+
+      final String updateText = check.updateAvailable
+          ? "Ein Update ist verfügbar: ${check.latest}\nDeine Version: ${AppConfig.version}"
+          : "Du bist auf der neuesten Version: ${AppConfig.version}";
+
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(updateText)),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +128,7 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SettingsPage(setThemeMode: setThemeMode)),
+              MaterialPageRoute(builder: (context) => SettingsPage(setThemeMode: widget.setThemeMode)),
             );
           },
           icon: Icon(Icons.settings),
