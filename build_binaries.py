@@ -4,6 +4,7 @@ import platform
 import subprocess
 import sys
 import os
+import yaml
 
 
 def run_command(command: list[str]):
@@ -27,14 +28,21 @@ def is_linux() -> bool:
     return platform.system() == "Linux"
 
 
+def get_version():
+    yml_path = "pubspec.yaml"
+    with open(yml_path, "r") as f:
+        data = yaml.full_load(f)
+        version = data.get("version")
+    return version
+
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python build.py [ios|macos|windows|android|linux]")
+        print("Usage: python build.py [ios|macos|windows|android|linux & version]")
         sys.exit(1)
 
-    for i in range(1, len(sys.argv) - 1):
+    for i in range(1, len(sys.argv)):
         target = sys.argv[i].lower()
-        version_number = sys.argv[len(sys.argv) - 1]
+        version_number = get_version()
 
         host_os = platform.system()
         print(f"Host OS: {host_os}")
@@ -62,6 +70,8 @@ def main():
             run_command(["flutter", "build", "macos", "--release"])
             destination = os.path.expanduser("~/Downloads")
             run_command(["cp", "-r", "build/macos/Build/Products/Release/lunalist.app", destination])
+            run_command(["create-dmg", f"{destination}/lunalist.app", destination])
+            run_command(["rm", "-r", f"{destination}/lunalist.app"])
 
         elif target == "windows":
             if not is_windows():
