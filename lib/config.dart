@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -8,6 +9,7 @@ class AppConfig {
   static late final String version;
   static late final String soundcloudClientId;
   static late final String soundcloudClientSecret;
+  static late final String appleMusicDeveloperToken;
 
   static Future<void> load() async {
     // General
@@ -22,5 +24,8 @@ class AppConfig {
     // SoundCloud
     soundcloudClientId = dotenv.env["SoundcloudClientId"]!;
     soundcloudClientSecret = dotenv.env["SoundcloudClientSecret"]!;
+
+    // Apple Music
+    appleMusicDeveloperToken = dotenv.env["AppleMusicDeveloperToken"]!;
   }
 }

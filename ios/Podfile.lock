@@ -49,6 +49,9 @@ PODS:
   - mobile_scanner (7.0.0):
     - Flutter
     - FlutterMacOS
+  - music_kit_darwin (1.3.0):
+    - Flutter
+    - FlutterMacOS
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -79,6 +82,7 @@ DEPENDENCIES:
   - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/darwin`)
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/darwin`)
+  - music_kit_darwin (from `.symlinks/plugins/music_kit_darwin/darwin`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - printing (from `.symlinks/plugins/printing/ios`)
@@ -111,6 +115,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/just_audio/darwin"
   mobile_scanner:
     :path: ".symlinks/plugins/mobile_scanner/darwin"
+  music_kit_darwin:
+    :path: ".symlinks/plugins/music_kit_darwin/darwin"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -137,6 +143,7 @@ SPEC CHECKSUMS:
   flutter_web_auth_2: 06d500582775790a0d4c323222fcb6d7990f9603
   just_audio: a42c63806f16995daf5b219ae1d679deb76e6a79
   mobile_scanner: 77265f3dc8d580810e91849d4a0811a90467ed5e
+  music_kit_darwin: 2b352e6b1e7434882773337bd2287d83bdf585ae
   package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
   path_provider_foundation: 0b743cbb62d8e47eab856f09262bb8c1ddcfe6ba
   printing: 233e1b73bd1f4a05615548e9b5a324c98588640b

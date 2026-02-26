@@ -41,6 +41,8 @@
 	<array>
 		<string>spotify</string>
 	</array>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Wir benötigen Zugriff auf deine Musik-Mediathek um Lieder von Apple Music wiederzugeben</string>
 	<key>NSCameraUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

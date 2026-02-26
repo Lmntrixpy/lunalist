@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lunalist/pages/music_configurator_apple_music.dart';
 import 'package:lunalist/pages/music_configurator_local.dart';
 import 'package:lunalist/pages/music_configurator_soundcloud.dart';
 import 'package:lunalist/pages/music_configurator_spotify.dart';
@@ -73,6 +74,27 @@ class _ModeSelectorState extends State<ModeSelector> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const playlistInput()),
+                  );
+                },
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: FilledButton.icon(
+                label: const Text(
+                  "Online - Apple Music",
+                  style: TextStyle(color: Colors.black, fontSize: 24),
+                ),
+                icon: const Icon(Icons.wifi_rounded),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AppleMusicPlaylistInput()),
                   );
                 },
               ),

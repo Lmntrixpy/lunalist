@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lunalist/pages/music_player_apple_music.dart';
 import 'package:lunalist/pages/music_player_soundcloud.dart';
 import 'package:lunalist/services/card_mapper.dart';
 import 'dart:io' show Platform;
@@ -64,6 +65,8 @@ final _manualFocus = FocusNode();
       nextPage = PlayerSpotify(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);  
     } else if (widget.gameMode == "soundcloud") {
       nextPage = PlayerSoundCloud(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);
+    } else if (widget.gameMode == "apple music"){
+      nextPage = PlayerAppleMusic(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode,);
     } else {
       nextPage = ControlMusicState(mapper: widget.mapper, cardNumber: cardNumber, gameMode: widget.gameMode);
     }
