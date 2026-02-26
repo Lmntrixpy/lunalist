@@ -8,6 +8,11 @@ Use it with Spotify or your own mp3 files!
 This project was created to offer a song guessing game where players are free to choose their own music, without being limited by a large corporation’s curated song selection.
 Lunalist was developed as a project for our 12th grade informatics class, where each student is required to design and implement an independent software project.
 
+## Compatability
+| iOS / iPadOS  | Android       | macOS         | Windows | 
+| ------------- | ------------- | ------------  | ------- |
+| 15.0+         | 10+           | 14+ (Sequoia) | 10+     |
+
 ## Installing
 ### Android
 - ensure your device is running android 10 or newer
@@ -66,6 +71,7 @@ flutter build mac --relase  # build app for MacOS
 
 ## Disclaimer
 This project was created with the help of Ai while debugging. Not for code generation. 
+
 
 
 
