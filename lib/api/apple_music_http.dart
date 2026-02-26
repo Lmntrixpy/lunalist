@@ -31,7 +31,7 @@ class AppleMusicHttp {
   Future<String> _getDeveloperToken() async {
     if (_developerTokenProvider != null) {
       try {
-        _developerToken = await _developerTokenProvider!();
+        _developerToken = await _developerTokenProvider();
       } catch (_) {
         // keep existing token if provider fails
       }

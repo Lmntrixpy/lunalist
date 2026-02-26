@@ -80,8 +80,7 @@ class _PlayerAppleMusicState extends State<PlayerAppleMusic> {
     } on TimeoutException {
       if (!mounted) return;
       setState(() {
-        _error =
-            "Apple Music Verbindung dauert zu lange. Apple Music öffnen und erneut versuchen.";
+        _error = "Apple Music Verbindung dauert zu lange. Apple Music öffnen und erneut versuchen.";
       });
     } catch (e) {
       if (!mounted) return;
@@ -90,8 +89,8 @@ class _PlayerAppleMusicState extends State<PlayerAppleMusic> {
   }
 
   Future<void> ensureAppleMusicConnection() async {
-    final status =
-        await _musicKit.requestAuthorizationStatus().timeout(const Duration(seconds: 12));
+
+    final status = await _musicKit.requestAuthorizationStatus().timeout(const Duration(seconds: 12));
 
     if (status is! MusicAuthorizationStatusAuthorized) {
       throw PlatformException(

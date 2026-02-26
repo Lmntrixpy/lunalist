@@ -28,5 +28,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Lunalist benötigt Zugriff auf Apple Music, um Songs/Playlists abzuspielen und Metadaten anzuzeigen.</string>
 </dict>
 </plist>
