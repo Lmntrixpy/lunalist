@@ -48,3 +48,4 @@ app.*.map.json
 *.env
 /assets/music/*
 assets/playlists-error.csv
+/windows_certificates
