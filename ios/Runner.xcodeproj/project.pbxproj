@@ -10,8 +10,8 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		3F02B8F32F4DD17300A01C61 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F02B8F22F4DD17300A01C61 /* Launch Screen.storyboard */; };
 		3F02B8F52F4DD2E300A01C61 /* lunalist_storyboard_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F02B8F42F4DD2E300A01C61 /* lunalist_storyboard_icon.png */; };
+		3F12FDEB2F56226900CA982A /* Launch-Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F12FDEA2F56226900CA982A /* Launch-Screen.storyboard */; };
 		3F8D079B2F3DFBE500B80D38 /* lunalist-iOS_MacOS.icon in Resources */ = {isa = PBXBuildFile; fileRef = 3F8D079A2F3DFBE500B80D38 /* lunalist-iOS_MacOS.icon */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -51,8 +51,8 @@
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		3F02B8F22F4DD17300A01C61 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		3F02B8F42F4DD2E300A01C61 /* lunalist_storyboard_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lunalist_storyboard_icon.png; sourceTree = "<group>"; };
+		3F12FDEA2F56226900CA982A /* Launch-Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch-Screen.storyboard"; sourceTree = "<group>"; };
 		3F8D079A2F3DFBE500B80D38 /* lunalist-iOS_MacOS.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "lunalist-iOS_MacOS.icon"; sourceTree = "<group>"; };
 		453879041FDA8234262325C9 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		496A56045499522C5C13E1C7 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
-				3F02B8F22F4DD17300A01C61 /* Launch Screen.storyboard */,
+				3F12FDEA2F56226900CA982A /* Launch-Screen.storyboard */,
 				3F02B8F42F4DD2E300A01C61 /* lunalist_storyboard_icon.png */,
 			);
 			path = Runner;
@@ -269,8 +269,8 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				3F8D079B2F3DFBE500B80D38 /* lunalist-iOS_MacOS.icon in Resources */,
 				3F02B8F52F4DD2E300A01C61 /* lunalist_storyboard_icon.png in Resources */,
-				3F02B8F32F4DD17300A01C61 /* Launch Screen.storyboard in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				3F12FDEB2F56226900CA982A /* Launch-Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +476,7 @@
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = lunalist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.card-games";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -663,7 +663,7 @@
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = lunalist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.card-games";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -690,7 +690,7 @@
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = lunalist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.card-games";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

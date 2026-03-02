@@ -44,7 +44,7 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Wir benötigen Zugriff auf deine Musik-Mediathek um Lieder von Apple Music wiederzugeben</string>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>Wir benötigen Zugriff auf deine Kamera um Karten zu scannen.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Wir benötigen Zugriff auf deine Fotos, um PDFs zu speichern</string>
 	<key>NSPhotoLibraryUsageDescription</key>
