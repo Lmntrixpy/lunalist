@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
   dynamic_color
   flutter_media_metadata
+  flutter_secure_storage_windows
   media_kit_libs_windows_audio
   printing
   share_plus

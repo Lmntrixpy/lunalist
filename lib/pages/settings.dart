@@ -8,6 +8,7 @@ import 'package:lunalist/pages/playlist_edit.dart';
 import 'package:lunalist/services/preloaded_playlists.dart';
 import 'package:lunalist/services/qr_code_creator.dart';
 import 'package:lunalist/services/rankings.dart';
+import 'package:lunalist/services/secure_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum BrightnessModes{light, dark, system}
@@ -31,6 +32,10 @@ class _SettingsPageState extends State<SettingsPage> {
   bool experimentalMode = false;
   bool checkUpdateOnStartup = true;
   bool cameraAccess = true;
+  bool useUserSpotifyTokens = false;
+
+  late String userSpotifyId;
+  late String userSpotifySecret;
 
   Set<BrightnessModes> _selected = {BrightnessModes.system}; // Default
 
@@ -41,6 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _loadExperimentalMode();
     _loadUpdateOnStartup();
     _loadCameraAcess();
+    _loadUseUserSpotifyTokens();
   }
 
   Future<void> _loadBrightnessMode() async {
@@ -97,7 +103,8 @@ class _SettingsPageState extends State<SettingsPage> {
     debugPrint(checkUpdateOnStartup.toString());
   }
 
-  Future<void> _saveCameraAccess(bool experimentalMode) async {
+  // Camera Acess
+  Future<void> _saveCameraAccess(bool cameraAccess) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool("cameraAccess", cameraAccess);
     debugPrint(cameraAccess.toString());
@@ -111,6 +118,34 @@ class _SettingsPageState extends State<SettingsPage> {
         debugPrint(cameraAccess.toString());
         cameraAccess = saved;
       }
+    });
+  }
+
+  // Use user Spotify Tokens
+  Future<void> _saveUseUserSpotifyTokens(bool useUserSpotifyTokens) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("useUserSpotifyTokens", cameraAccess);
+    debugPrint(cameraAccess.toString());
+  }
+
+  Future<void> _loadUseUserSpotifyTokens() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getBool("useUserSpotifyTokens");
+    setState(() {
+      if (saved != null) {
+        debugPrint(useUserSpotifyTokens.toString());
+        useUserSpotifyTokens = saved;
+      }
+    });
+  }
+
+  // get Spotify Credentials
+  Future<void> _loadUserSpotifyTokens() async {
+    final userSpotifyIdLocal = await SecureStorageService.instance.getId("spotify");
+    final userSpotifySecretLocal = await SecureStorageService.instance.getSecret("spotify");
+    setState(() {
+      userSpotifyId = userSpotifyIdLocal;
+      userSpotifySecret = userSpotifySecretLocal;
     });
   }
 
@@ -135,6 +170,9 @@ class _SettingsPageState extends State<SettingsPage> {
             final padding = isDesktop ? 48.0 : (isTablet ? 32.0 : 20.0);
 
             final String playlistAssetPath = "assets/playlists.csv";
+
+            final clientIdController = TextEditingController();
+            final clientSecretController = TextEditingController();
 
             return Center(
               child: ConstrainedBox(
@@ -288,9 +326,21 @@ class _SettingsPageState extends State<SettingsPage> {
                         Center(
                           child: FilledButton.tonalIcon(
                             onPressed: () async {
+                              late final String clientId;
+                              late final String clientSecret;
+                              if (useUserSpotifyTokens) {
+                                debugPrint("uses user stuff");
+                                await _loadUserSpotifyTokens();
+                                clientId = userSpotifyId;
+                                clientSecret = userSpotifySecret;
+                              } else {
+                                clientId = AppConfig.spotifyClientId;
+                                clientSecret = AppConfig.spotifyClientSecret;
+                              }
+                              
                               final spotifyHttp = SpotifyHttp(
-                                clientId: AppConfig.spotifyClientId,
-                                clientSecret: AppConfig.spotifyClientSecret,
+                                clientId: clientId,
+                                clientSecret: clientSecret
                               );
 
                               connectionSucces = await spotifyHttp.testConnection(market: "DE");
@@ -592,6 +642,106 @@ class _SettingsPageState extends State<SettingsPage> {
                           },
                           title: Text("Kamera zum Scannen nutzen"),
                         ),
+
+                        const SizedBox(height: 8),
+
+                        SwitchListTile(
+                          value: useUserSpotifyTokens,
+                          onChanged: (bool newValue) async {
+                            setState(() {
+                              useUserSpotifyTokens = newValue;
+                              _saveUseUserSpotifyTokens(useUserSpotifyTokens);
+                            });
+                          },
+                          title: Text("Eigene Spotify Tokens verwenden"),
+                        ),
+
+                        if (useUserSpotifyTokens)
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                FilledButton.tonalIcon(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: Text("Spotify Access Tokens"),
+                                        content: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextField(
+                                              controller: clientIdController,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText: "Client Id",
+                                                labelText: "Spotfiy Client Id" 
+                                              )
+                                            ),
+                                            
+                                            SizedBox(height: 12,),
+                                
+                                            TextField(
+                                              controller: clientSecretController,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText: "Client Secret",
+                                                labelText: "Spotify Client Secret"
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            }, 
+                                            child: Text("Abbrechen")
+                                            ),
+                                
+                                          TextButton(
+                                            onPressed: () async {
+                                              await SecureStorageService.instance.saveId("spotify", clientIdController.text.trim()); // save spotify client id
+                                              await SecureStorageService.instance.saveSecret("spotify", clientSecretController.text.trim()); // save spotify client secret
+                                              debugPrint("Gespeichert");
+                                              if (!context.mounted) return;
+                                              Navigator.pop(context);
+                                            }, 
+                                            child: Text("Speichern")
+                                          )
+                                        ], 
+                                      )
+                                    );
+                                  },
+                                  label: Text("Spotify Access Tokens"),
+                                  icon: Icon(Icons.security_rounded),
+                                ),
+
+                                FilledButton.tonalIcon(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context, 
+                                      builder: (context) => AlertDialog(
+                                        title: Text("Spotify Tokens"),
+                                        content: Text("Um eigene Spotify-Zugangsdaten zu verwenden, erstelle im Spotify Developer Dashboard eine neue App und aktiviere bei den verwendeten APIs die Web API."),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            }, 
+                                            child: Text("Schließen"))
+                                        ],
+                                      )
+                                    );
+                                  },
+                                  label: Text("Info"),
+                                  icon:  Icon(Icons.info_rounded),
+                                )
+                              ],
+                            )
+                          ),                        
 
                         const SizedBox(height: 28),
 

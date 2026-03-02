@@ -41,6 +41,10 @@ Future<void> main() async {
     await prefs.setBool("cameraAccess", true);
   }
 
+  if (prefs.getBool("useUserSpotifyTokens") == null) {
+    await prefs.setBool("useUserSpotifyTokens", false);
+  }
+
   runApp(MyApp(initialThemeMode: await _getSavedThemeMode()));
 }
 

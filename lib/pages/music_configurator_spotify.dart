@@ -4,6 +4,8 @@ import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
 import 'package:lunalist/config.dart';
 import 'package:lunalist/services/preloaded_playlists.dart';
+import 'package:lunalist/services/secure_storage_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 typedef LunalistTrack = ({
   String id,
@@ -29,12 +31,43 @@ class _playlistInputState extends State<playlistInput> {
   final List<String> playlists = [];
   final gameMode = "spotify";
 
+  bool useUserSpotifyTokens = false;
+  late String userSpotifyId;
+  late String userSpotifySecret;
+
   String? _errorText;
   bool _loading = false;
 
   final PlaylistCsvStore _csvStore = PlaylistCsvStore(assetPath: 'assets/playlists.csv');
 
   bool _csvLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUseUserSpotifyTokens();
+  }
+
+  Future<void> _loadUseUserSpotifyTokens() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getBool("useUserSpotifyTokens");
+    setState(() {
+      if (saved != null) {
+        debugPrint(useUserSpotifyTokens.toString());
+        useUserSpotifyTokens = saved;
+      }
+    });
+  }
+
+  // get Spotify Credentials
+  Future<void> _loadUserSpotifyTokens() async {
+    final userSpotifyIdLocal = await SecureStorageService.instance.getId("spotify");
+    final userSpotifySecretLocal = await SecureStorageService.instance.getSecret("spotify");
+    setState(() {
+      userSpotifyId = userSpotifyIdLocal;
+      userSpotifySecret = userSpotifySecretLocal;
+    });
+  }
 
   @override
   void dispose() {
@@ -132,9 +165,22 @@ class _playlistInputState extends State<playlistInput> {
                 });
 
                 try {
+                  late final String clientId;
+                  late final String clientSecret;
+
+                  if (useUserSpotifyTokens) {
+                    debugPrint("uses user stuff");
+                    await _loadUserSpotifyTokens();
+                    clientId = userSpotifyId;
+                    clientSecret = userSpotifySecret;
+                  } else {
+                    clientId = AppConfig.spotifyClientId;
+                    clientSecret = AppConfig.spotifyClientSecret;
+                  }
+                  
                   final spotifyHttp = SpotifyHttp(
-                    clientId: AppConfig.spotifyClientId,
-                    clientSecret: AppConfig.spotifyClientSecret,
+                    clientId: clientId,
+                    clientSecret: clientSecret
                   );
 
                   final Map<String, LunalistTrack> allTracks = {};
