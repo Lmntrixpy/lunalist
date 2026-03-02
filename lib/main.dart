@@ -37,6 +37,10 @@ Future<void> main() async {
     await prefs.setBool("checkUpdateOnStartup", true);
   }
 
+  if (prefs.getBool("cameraAccess") == null) {
+    await prefs.setBool("cameraAccess", true);
+  }
+
   runApp(MyApp(initialThemeMode: await _getSavedThemeMode()));
 }
 

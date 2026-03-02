@@ -30,6 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
   bool isGenerating = false;
   bool experimentalMode = false;
   bool checkUpdateOnStartup = true;
+  bool cameraAccess = true;
 
   Set<BrightnessModes> _selected = {BrightnessModes.system}; // Default
 
@@ -39,6 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _loadBrightnessMode();
     _loadExperimentalMode();
     _loadUpdateOnStartup();
+    _loadCameraAcess();
   }
 
   Future<void> _loadBrightnessMode() async {
@@ -95,8 +97,22 @@ class _SettingsPageState extends State<SettingsPage> {
     debugPrint(checkUpdateOnStartup.toString());
   }
 
-  
+  Future<void> _saveCameraAccess(bool experimentalMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("cameraAccess", cameraAccess);
+    debugPrint(cameraAccess.toString());
+  }
 
+  Future<void> _loadCameraAcess() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getBool("cameraAccess");
+    setState(() {
+      if (saved != null) {
+        debugPrint(cameraAccess.toString());
+        cameraAccess = saved;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {    
@@ -562,6 +578,19 @@ class _SettingsPageState extends State<SettingsPage> {
                             });
                           },
                           title: Text("Automatisch nach Updates suchen"),
+                        ),
+
+                        const SizedBox(height: 8,),
+
+                        SwitchListTile(
+                          value: cameraAccess, 
+                          onChanged: (bool newValue) async {
+                            setState(() {
+                              cameraAccess = newValue;
+                              _saveCameraAccess(cameraAccess);  
+                            });
+                          },
+                          title: Text("Kamera zum Scannen nutzen"),
                         ),
 
                         const SizedBox(height: 28),

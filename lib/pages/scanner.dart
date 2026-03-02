@@ -6,6 +6,7 @@ import 'dart:io' show Platform;
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:lunalist/pages/music_player_local.dart';
 import 'package:lunalist/pages/music_player_spotify.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScannerPage extends StatefulWidget {
   final CardSongMapper mapper;
@@ -25,25 +26,42 @@ class _ScannerPageState extends State<ScannerPage> {
   // Camera only on iOS and android
   bool get _isMobileDevice => Platform.isAndroid || Platform.isIOS;
 
-final _manualFocus = FocusNode();
+  final _manualFocus = FocusNode();
+  bool cameraAccess = false;
+  bool _cameraAccessLoaded = false;
 
   @override
   void initState() {
     super.initState();
+    _changeMode();
+  }
 
-    if (_isMobileDevice) {
+  Future<void> _loadCameraAccess() async {
+  final prefs = await SharedPreferences.getInstance();
+  final saved = prefs.getBool("cameraAccess");
+  if (!mounted) return;
+  setState(() {
+    cameraAccess = saved ?? false;
+    _cameraAccessLoaded = true;
+  });
+}
+
+  Future<void> _changeMode() async {
+    await _loadCameraAccess();
+
+    if (_isMobileDevice && cameraAccess) {
       _controller = MobileScannerController(
         detectionSpeed: DetectionSpeed.noDuplicates,
         facing: CameraFacing.back,
         autoStart: true,
       );
+      if (mounted) setState(() {});
     } else {
-      // autofocus Textfield
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _manualFocus.requestFocus();
       });
     }
-  }
+}
 
   @override
   void dispose() {
@@ -84,8 +102,14 @@ final _manualFocus = FocusNode();
         ? "Noch ${widget.mapper.remainingSongCount} Lied übrig."
         : "Noch ${widget.mapper.remainingSongCount} Lieder übrig.";
 
-    // Desktop Ui
-    if (!_isMobileDevice) {
+    // Mobile Ui
+    if (!_cameraAccessLoaded) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (!cameraAccess || _controller == null) {
       return PopScope(
         canPop: false,
         child: Scaffold(
@@ -95,14 +119,13 @@ final _manualFocus = FocusNode();
             automaticallyImplyLeading: false,
           ),
           body: _buildManualOnlyView(
-            message: "Scanner nicht verfügbar",
+            message: "Scanner deaktiviert",
             statusText: statusText,
           ),
         ),
       );
     }
 
-    // Mobile Ui
     final controller = _controller!;
 
     return PopScope(
@@ -183,7 +206,6 @@ final _manualFocus = FocusNode();
             }
           },
         ),
-          // Statustext
         SafeArea(
           child: Align(
             alignment: Alignment.topCenter,
