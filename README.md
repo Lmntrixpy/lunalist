@@ -13,6 +13,17 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
 | ------------- | ------------- | ------------  | ------- |
 | 15.0+         | 10+           | 14+ (Sequoia) | 10+     |
 
+## Supported Features
+| Funktion                | iOS | iPadOS | Android | Windows | macOS |
+|-------------------------|-----|--------|---------|---------|-------|
+| Camera (scan Cards)     | ✓   | ✓      | ✓       | ✗       | ✗     |
+| Spotify Integration     | ✓   | ✓      | ✓       | ✗       | ✗     |
+| Apple Music Integration | ✓   | ✓      | ✗       | ✗       | ✓     |
+| Soundcloud Integration  | ⚠   | ⚠      | ⚠       | ⚠       | ⚠     |
+| Local Music Playback    | ✓   | ✓      | ✓       | ✓       | ✓     |
+| Leaderboard             | ✓   | ✓      | ✓       | ✓       | ✓     |
+| Packs                   | ✓   | ✓      | ✓       | ✗       | ✗     |
+
 ## Installing
 ### Android
 - ensure your device is running android 10 or newer
@@ -71,6 +82,7 @@ flutter build mac --relase  # build app for MacOS
 
 ## Disclaimer
 This project was created with the help of Ai while debugging. Not for code generation. 
+
 
 
 
