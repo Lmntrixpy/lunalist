@@ -1,4 +1,5 @@
 import os
+import sys
 
 def count_lines_in_directory(directory):
     total_lines = 0
@@ -17,6 +18,6 @@ def count_lines_in_directory(directory):
 
 
 if __name__ == "__main__":
-    folder_path = input("Pfad zum Ordner: ")
+    folder_path = sys.argv[1]
     total = count_lines_in_directory(folder_path)
     print(f"Gesamtanzahl der Zeilen: {total}")
