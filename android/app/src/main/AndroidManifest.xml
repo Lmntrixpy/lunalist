@@ -49,7 +49,7 @@
 
        <meta-data android:name="music_kit.teamId" android:value="TDKHM942RF" />
        <meta-data android:name="music_kit.keyId"  android:value="UXZC2KZ3F8" />
-       <meta-data android:name="music_kit.key"    android:value="LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR1RBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJIa3dkd0lCQVFRZ3ErTFVYOU1lZFkxUWZ6Rk4KbDZsbE1uK3pXQWdudkpISUEyaVhVZUxwT1ZlZ0NnWUlLb1pJemowREFRZWhSQU5DQUFUVVpndWtYV1RKSDhvQwoxQ1hDR211QXpjMzd1ZEVNa1VKVjFQU2h3OVROenZnSk1MWUppNjAwRXBYZE5WUXcya1JEY3hJc05Md2hqbVM2CldIa2pISjFVCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0="/>
+       <meta-data android:name="music_kit.key"    android:value="MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgq+LUX9MedY1QfzFNl6llMn+zWAgnvJHIA2iXUeLpOVegCgYIKoZIzj0DAQehRANCAATUZgukXWTJH8oC1CXCGmuAzc37udEMkUJV1PShw9TNzvgJMLYJi600EpXdNVQw2kRDcxIsNLwhjmS6WHkjHJ1U"/>
         
     </application>
     <!-- Required to query activities that can process text, see:

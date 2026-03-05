@@ -79,7 +79,7 @@ class _ModeSelectorState extends State<ModeSelector> {
               ),
             ),
 
-          //if (Platform.isAndroid || Platform.isIOS)
+          if (Platform.isMacOS || Platform.isIOS)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: FilledButton.icon(
