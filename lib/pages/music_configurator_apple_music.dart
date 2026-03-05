@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lunalist/api/apple_music_http.dart';
-import 'package:lunalist/api/soundcloud_http.dart';
 import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
 import 'package:lunalist/config.dart';
