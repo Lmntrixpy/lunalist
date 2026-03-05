@@ -38,7 +38,7 @@ class _playlistInputState extends State<playlistInput> {
   String? _errorText;
   bool _loading = false;
 
-  final PlaylistCsvStore _csvStore = PlaylistCsvStore(assetPath: 'assets/playlists.csv');
+  final PlaylistCsvStore _csvStore = PlaylistCsvStore(assetPath: 'assets/packs/playlists_Spotify.csv');
 
   bool _csvLoaded = false;
 

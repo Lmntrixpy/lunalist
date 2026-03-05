@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lunalist/api/apple_music_http.dart';
+import 'package:lunalist/api/soundcloud_http.dart';
 import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
 import 'package:lunalist/config.dart';
-import 'package:lunalist/services/preloaded_playlists.dart';
 
 typedef LunalistTrack = ({
   String id,
@@ -13,6 +13,7 @@ typedef LunalistTrack = ({
   int year,
 });
 
+// ignore: camel_case_types
 class AppleMusicPlaylistInput extends StatefulWidget {
   const AppleMusicPlaylistInput({super.key});
 
@@ -30,9 +31,7 @@ class _AppleMusicPlaylistInputState extends State<AppleMusicPlaylistInput> {
   String? _errorText;
   bool _loading = false;
 
-  final PlaylistCsvStore _csvStore = PlaylistCsvStore(assetPath: 'assets/playlists.csv');
-
-  bool _csvLoaded = false;
+  
 
   @override
   void dispose() {
@@ -40,79 +39,8 @@ class _AppleMusicPlaylistInputState extends State<AppleMusicPlaylistInput> {
       c.dispose();
     }
     super.dispose();
-  }
-
-  Future<void> _ensureCsvLoaded() async {
-    if (_csvLoaded) return;
-    await _csvStore.load();
-    _csvLoaded = true;
-  }
-
-  Future<void> _pickFromCsvIntoField(int fieldIndex) async {
-    await _ensureCsvLoaded();
-
-    if (!mounted) return;
-
-    final selected = await showModalBottomSheet<PlaylistEntry>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) {
-        final items = _csvStore.entries;
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
-                child: Text(
-                  'Playlist auswählen',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-              ),
-              if (items.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text('Keine Playlists in der CSV.'),
-                )
-              else
-                Flexible(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: items.length,
-                    separatorBuilder: (_, _) => const Divider(height: 1),
-                    itemBuilder: (_, i) {
-                      final e = items[i];
-                      return ListTile(
-                        title: Text(e.name),
-                        subtitle: Text(
-                          e.url,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onTap: () => Navigator.pop(ctx, e),
-                      );
-                    },
-                  ),
-                ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (selected == null) return;
-
-    while (controllers.length <= fieldIndex) {
-      controllers.add(TextEditingController());
     }
-
-    setState(() {
-      controllers[fieldIndex].text = selected.url;
-      _errorText = null;
-    });
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,40 +137,45 @@ class _AppleMusicPlaylistInputState extends State<AppleMusicPlaylistInput> {
         label: Text(_loading ? "Lade..." : "Weiter"),
         icon: const Icon(Icons.arrow_right_alt_rounded),
       ),
+
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Text(
-            "Gib deine Playlisten ein.",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          if (_errorText != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Text(
-                _errorText!,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
+            Text(
+              "Gib deine Playlisten ein.",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-          Row(
+
+            if (_errorText != null) 
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                child: Text(
+                  _errorText!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+            Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: const Icon(Icons.remove),
+                icon: Icon(Icons.remove),
                 onPressed: () {
                   if (playlistCount > 1) {
                     setState(() => playlistCount--);
                   }
                 },
               ),
+
               Text(
                 "$playlistCount ${playlistCount == 1 ? 'Playlist' : 'Playlists'}",
-                style: const TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18),
               ),
+
               IconButton(
                 onPressed: () {
                   if (playlistCount < 10) {
@@ -252,15 +185,16 @@ class _AppleMusicPlaylistInputState extends State<AppleMusicPlaylistInput> {
                     ..clear()
                     ..addAll(
                       controllers
-                          .take(playlistCount)
-                          .map((c) => c.text)
-                          .where((t) => t.isNotEmpty),
+                        .take(playlistCount)
+                        .map((c) => c.text)
+                        .where((t) => t.isNotEmpty),
                     );
                 },
-                icon: const Icon(Icons.add_rounded),
+                icon: Icon(Icons.add_rounded),
               ),
             ],
           ),
+
           Expanded(
             child: ListView(
               children: List.generate(
@@ -272,24 +206,12 @@ class _AppleMusicPlaylistInputState extends State<AppleMusicPlaylistInput> {
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: controllers[i],
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              labelText: "Playlist ${i + 1}",
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        IconButton(
-                          tooltip: 'Aus CSV auswählen',
-                          onPressed: _loading ? null : () => _pickFromCsvIntoField(i),
-                          icon: const Icon(Icons.playlist_add_rounded),
-                        ),
-                      ],
+                    child: TextField(
+                      controller: controllers[i],
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Playlist ${i + 1}",
+                      ),
                     ),
                   );
                 },

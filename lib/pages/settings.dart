@@ -169,7 +169,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
             final padding = isDesktop ? 48.0 : (isTablet ? 32.0 : 20.0);
 
-            final String playlistAssetPath = "assets/playlists.csv";
+            final String playlistAssetPath = "assets/packs/playlists_Spotify.csv";
 
             final clientIdController = TextEditingController();
             final clientSecretController = TextEditingController();
