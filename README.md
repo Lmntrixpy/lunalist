@@ -31,6 +31,11 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
 - install apk by clicking on it (you may need to allow the installation of unknown sources)
 
 ### iOS / iPadOS
+#### Testflight
+- Download [Testflight](https://apps.apple.com/us/app/testflight/id899247664) from the App Store
+- Accept [invite](https://testflight.apple.com/join/cw4ADdrd)
+
+#### Self-Signing
 - ensure your device is running iOS 15.0 or newer
 - download latest ipa file on [releases](https://github.com/Lmntrixpy/Lunalist/releases/latest) page.
 - install it ...
@@ -82,6 +87,7 @@ flutter build mac --relase  # build app for MacOS
 
 ## Disclaimer
 This project was created with the help of Ai while debugging. Not for code generation. 
+
 
 
 
