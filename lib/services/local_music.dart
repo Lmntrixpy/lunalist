@@ -9,14 +9,35 @@ import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 class LocalMusic {
   Future<List<String>> load() async {
     final result = await FilePicker.platform.pickFiles(
-    allowMultiple: true,
-    type: FileType.custom,
-    allowedExtensions: ["mp3"]);
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ["mp3"],
+    );
 
     if (result == null) {
       return <String>[];
     }
-    return result.paths.whereType<String>().toList();
+
+    final validTracks = <String>[];
+
+    for (final path in result.paths.whereType<String>()) {
+      try {
+        final retriever = await MetadataRetriever.fromFile(File(path));
+        final meta = readMetadata(File(path), getImage: false);
+
+        final trackName = retriever.trackName ?? "";
+        final releaseYear = meta.year?.year ?? 0;
+        final artists = retriever.trackArtistNames ?? [];
+
+        if (trackName.isNotEmpty && releaseYear > 0 && artists.isNotEmpty) {
+          validTracks.add(path);
+        }
+      } catch (_) {
+        // skip track if not enough metadata
+      }
+    }
+
+    return validTracks;
   }
 }
 
