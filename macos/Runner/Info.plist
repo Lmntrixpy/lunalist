@@ -32,5 +32,7 @@
 	<string>Lunalist benötigt Zugriff auf Apple Music, um Songs/Playlists abzuspielen und Metadaten anzuzeigen.</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.music</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>
