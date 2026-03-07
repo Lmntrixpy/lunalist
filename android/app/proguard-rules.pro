@@ -3,3 +3,5 @@
 
 -keep class com.fasterxml.jackson.** { *; }
 -dontwarn com.fasterxml.jackson.**
+
+-dontwarn org.apache.maven.plugins.annotations.**

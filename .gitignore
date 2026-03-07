@@ -49,3 +49,6 @@ app.*.map.json
 /assets/music/*
 assets/playlists-error.csv
 /windows_certificates
+
+# Python
+venv
