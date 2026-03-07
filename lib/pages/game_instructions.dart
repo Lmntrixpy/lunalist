@@ -25,9 +25,9 @@ class GameInstructions extends StatelessWidget {
               child: Center(child: Text("Materialien", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700))),
             ),
             Text(
-              "-beliebig viele Spielkarten (zu finden in den Einstellungen)\n"
-              "-Spielchips\n"
-              "-ein Mobiltelefon mit Spotify ODER heruntergeladenen mp3-Dateien",
+              "- beliebig viele Spielkarten (zu finden in den Einstellungen)\n"
+              "- Spielchips\n"
+              "- ein Gerät mit Spotify, Apple Music ODER heruntergeladenen mp3-Dateien",
               style: TextStyle(fontSize: 16),
             ),
             
@@ -40,7 +40,7 @@ class GameInstructions extends StatelessWidget {
             Text(
               "Jeder Spieler kann seine Spotify-Playlist einfügen. Alternativ können auch die Audio-Dateien eingefügt werden.\n"
               "Aus den vorgegebenen Liedern wird zufällig eins ausgewählt, das die Gruppe dann erkennen muss.\n"
-              "Jeder Spieler bekommt zu Anfang des Spiels eine Karte. Der QR-Code wird gescannt, das Lied muss noch nicht erkannt werden, sondern wird gleich angezeigt. Das Jahr und der Titel werden auf die Karte geschrieben. Das ist die Startkarte. An ihr richtet sich der Rest des Spiels aus.\n"
+              "Jeder Spieler bekommt zu Anfang des Spiels eine Karte. Der QR-Code wird gescannt, das Lied muss noch nicht erkannt werden, sondern wird gleich angezeigt. Das Jahr wird auf die Karte geschrieben. Das ist die Startkarte. An ihr richtet sich der Rest des Spiels aus.\n"
               "Jeder bekommt drei Spielchips.",
               style: TextStyle(fontSize: 16),
             ),

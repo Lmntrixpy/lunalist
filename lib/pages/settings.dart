@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/api/update_service_http.dart';
@@ -632,6 +634,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
                         const SizedBox(height: 8,),
 
+
+                        if (Platform.isAndroid || Platform.isIOS)
                         SwitchListTile(
                           value: cameraAccess, 
                           onChanged: (bool newValue) async {
@@ -645,6 +649,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                         const SizedBox(height: 8),
 
+                        if (Platform.isAndroid || Platform.isIOS)
                         SwitchListTile(
                           value: useUserSpotifyTokens,
                           onChanged: (bool newValue) async {
@@ -658,88 +663,91 @@ class _SettingsPageState extends State<SettingsPage> {
 
                         if (useUserSpotifyTokens)
                           Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                FilledButton.tonalIcon(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: Text("Spotify Access Tokens"),
-                                        content: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextField(
-                                              controller: clientIdController,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                hintText: "Client Id",
-                                                labelText: "Spotfiy Client Id" 
-                                              )
-                                            ),
-                                            
-                                            SizedBox(height: 12,),
-                                
-                                            TextField(
-                                              controller: clientSecretController,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                hintText: "Client Secret",
-                                                labelText: "Spotify Client Secret"
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  FilledButton.tonalIcon(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text("Spotify Access Tokens"),
+                                          content: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextField(
+                                                controller: clientIdController,
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  hintText: "Client Id",
+                                                  labelText: "Spotfiy Client Id" 
+                                                )
                                               ),
+                                              
+                                              SizedBox(height: 12,),
+                                  
+                                              TextField(
+                                                controller: clientSecretController,
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  hintText: "Client Secret",
+                                                  labelText: "Spotify Client Secret"
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                  
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              }, 
+                                              child: Text("Abbrechen")
+                                              ),
+                                  
+                                            TextButton(
+                                              onPressed: () async {
+                                                await SecureStorageService.instance.saveId("spotify", clientIdController.text.trim()); // save spotify client id
+                                                await SecureStorageService.instance.saveSecret("spotify", clientSecretController.text.trim()); // save spotify client secret
+                                                debugPrint("Gespeichert");
+                                                if (!context.mounted) return;
+                                                Navigator.pop(context);
+                                              }, 
+                                              child: Text("Speichern")
                                             )
+                                          ], 
+                                        )
+                                      );
+                                    },
+                                    label: Text("Spotify Access Tokens"),
+                                    icon: Icon(Icons.security_rounded),
+                                  ),
+                              
+                                  FilledButton.tonalIcon(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context, 
+                                        builder: (context) => AlertDialog(
+                                          title: Text("Spotify Tokens"),
+                                          content: Text("Um eigene Spotify-Zugangsdaten zu verwenden, erstelle im Spotify Developer Dashboard eine neue App und aktiviere bei den verwendeten APIs die Web API."),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              }, 
+                                              child: Text("Schließen"))
                                           ],
-                                        ),
-                                
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            }, 
-                                            child: Text("Abbrechen")
-                                            ),
-                                
-                                          TextButton(
-                                            onPressed: () async {
-                                              await SecureStorageService.instance.saveId("spotify", clientIdController.text.trim()); // save spotify client id
-                                              await SecureStorageService.instance.saveSecret("spotify", clientSecretController.text.trim()); // save spotify client secret
-                                              debugPrint("Gespeichert");
-                                              if (!context.mounted) return;
-                                              Navigator.pop(context);
-                                            }, 
-                                            child: Text("Speichern")
-                                          )
-                                        ], 
-                                      )
-                                    );
-                                  },
-                                  label: Text("Spotify Access Tokens"),
-                                  icon: Icon(Icons.security_rounded),
-                                ),
-
-                                FilledButton.tonalIcon(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context, 
-                                      builder: (context) => AlertDialog(
-                                        title: Text("Spotify Tokens"),
-                                        content: Text("Um eigene Spotify-Zugangsdaten zu verwenden, erstelle im Spotify Developer Dashboard eine neue App und aktiviere bei den verwendeten APIs die Web API."),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            }, 
-                                            child: Text("Schließen"))
-                                        ],
-                                      )
-                                    );
-                                  },
-                                  label: Text("Info"),
-                                  icon:  Icon(Icons.info_rounded),
-                                )
-                              ],
+                                        )
+                                      );
+                                    },
+                                    label: Text("Info"),
+                                    icon:  Icon(Icons.info_rounded),
+                                  )
+                                ],
+                              ),
                             )
                           ),                        
 
