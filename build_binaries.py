@@ -5,12 +5,21 @@ import subprocess
 import sys
 import os
 import yaml
+import shutil
 
 
 def run_command(command: list[str]):
     try:
-        print(f"Running: {' '.join(command)}")
-        subprocess.run(command, check=True)
+        executable = shutil.which(command[0])
+
+        if executable is None:
+            print(f"Command not found: {command[0]}")
+            sys.exit(1)
+
+        resolved_command = [executable, *command[1:]]
+
+        print(f"Running: {' '.join(resolved_command)}")
+        subprocess.run(resolved_command, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Build failed with exit code {e.returncode}")
         sys.exit(e.returncode)
@@ -77,7 +86,31 @@ def main():
             if not is_windows():
                 print("Windows builds are only supported on Windows.")
                 sys.exit(1)
-            run_command(["flutter", "build", "windows", "--release"])
+
+            run_command(["dart", "run", "inno_bundle"])
+
+            from pathlib import Path
+            import shutil
+
+            build_dir = Path(r"build\windows\x64\installer\Release")
+            downloads = Path.home() / "Downloads"
+
+            exe_files = sorted(
+                build_dir.glob("*.exe"),
+                key=lambda f: f.stat().st_mtime,
+                reverse=True
+            )
+
+            if not exe_files:
+                print("No installer EXE found.")
+                sys.exit(1)
+
+            installer = exe_files[0]
+            destination = downloads / installer.name
+
+            shutil.copy2(installer, destination)
+
+            print(f"Copied installer to: {destination}")
 
         elif target == "linux":
             if not is_linux():
