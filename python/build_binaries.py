@@ -6,6 +6,7 @@ import sys
 import os
 import yaml
 import shutil
+from pathlib import Path
 
 
 def run_command(command: list[str]):
@@ -87,12 +88,42 @@ def main():
                 print("Windows builds are only supported on Windows.")
                 sys.exit(1)
 
-            run_command(["dart", "run", "inno_bundle"])
+            project_root = Path(__file__).resolve().parent.parent
+            env_file = project_root / ".env"
+            windows_env = project_root / ".env.windows"
+            backup_env = project_root / ".env.backup"
 
-            from pathlib import Path
-            import shutil
+            if not windows_env.exists():
+                print(f"Windows env file not found: {windows_env}")
+                sys.exit(1)
 
-            build_dir = Path(r"build\windows\x64\installer\Release")
+            had_original_env = env_file.exists()
+
+            try:
+                if had_original_env:
+                    if backup_env.exists():
+                        backup_env.unlink()
+                    os.replace(env_file, backup_env)
+
+                shutil.copy2(windows_env, env_file)
+                print(f"Using Windows env: {windows_env}")
+
+                run_command(["dart", "run", "inno_bundle"])
+
+            finally:
+                try:
+                    if env_file.exists():
+                        env_file.unlink()
+                except PermissionError:
+                    print(f"Could not remove temporary env file: {env_file}")
+
+                if backup_env.exists():
+                    os.replace(backup_env, env_file)
+                    print("Original .env restored")
+                elif not had_original_env:
+                    print("Temporary .env removed")
+
+            build_dir = project_root / "build" / "windows" / "x64" / "installer" / "Release"
             downloads = Path.home() / "Downloads"
 
             exe_files = sorted(
@@ -109,7 +140,6 @@ def main():
             destination = downloads / installer.name
 
             shutil.copy2(installer, destination)
-
             print(f"Copied installer to: {destination}")
 
         elif target == "linux":
