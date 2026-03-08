@@ -325,6 +325,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         const Text("Einstellungen", style: TextStyle(fontSize: 24)),
                         const SizedBox(height: 12),
 
+                        if (Platform.isAndroid || Platform.isIOS)
                         Center(
                           child: FilledButton.tonalIcon(
                             onPressed: () async {
