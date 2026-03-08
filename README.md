@@ -48,6 +48,11 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
 - open dmg and drag and drop lunalist into the applications folder.
 - if you get a message about that the file cannot be opened because it contains a harmful software, open system settings, go to **Data Privacy & Security**, scroll down and click **open**.
 
+### Windows
+- ensure your device is running Windows 10 or newer
+- download latest exe file on [releases](https://github.com/Lmntrixpy/Lunalist/releases/latest) page.
+- install via the setup.
+
 ## App Building
 ### android
 ```
@@ -84,9 +89,34 @@ flutter build mac --relase  # build app for MacOS
 ```
 
 ### Windows
+Recommended
+```
+gh repo clone Lmntrixpy/lunalist # pull repo via github-cli
+cd lunalist
+
+flutter pub get # get dependencies
+
+flutter clean # clean build cache
+
+pip install -r python/requirements.txt
+python python/build_binaries.py windows
+```
+or 
+```
+gh repo clone Lmntrixpy/lunalist # pull repo via github-cli
+cd lunalist
+
+flutter pub get # get dependencies
+
+flutter clean # clean build cache
+dart run inno_bundle
+```
 
 ## Disclaimer
-This project was created with the help of Ai while debugging. Not for code generation. 
+This project was created with the help of Ai while debugging. Not for code generation.
+
+API Keys are currently not stored securely on the device!
+
 
 
 
