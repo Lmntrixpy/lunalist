@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
@@ -16,6 +18,26 @@ class _LocalMusicConfiguratorState extends State<LocalMusicConfigurator> {
   bool musicLoadstatus = false;
   final gameMode = "local";
 
+  Future<void> _showInvalidFolderDialog(List<String> invalidFolders) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Ordnername nicht unterstützt"),
+        content: Text(
+          "Einige Songs konnten nicht geladen werden, weil ein Ordner im Pfad Sonderzeichen enthält.\n\n"
+          "Betroffene Ordner:\n${invalidFolders.join("\n")}\n\n"
+          "Bitte benenne diese Ordner um und versuche es erneut.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +50,15 @@ class _LocalMusicConfiguratorState extends State<LocalMusicConfigurator> {
         onPressed: () async {
           if (musicLoadstatus != true) {
             final music = LocalMusic();
-            tracks = await music.load();
+            final result = await music.load();
+
+            tracks = result.validTracks;
+
+
+            if (result.invalidFolders.isNotEmpty && context.mounted) {
+              await _showInvalidFolderDialog(result.invalidFolders);
+            }
+
             setState(() {
               if (tracks.isEmpty) {
                 debugPrint("-------- Selection is empty, cant go forward");

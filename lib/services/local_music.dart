@@ -4,10 +4,20 @@ import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
+import 'package:path/path.dart' as p;
 
+class LocalMusicResult {
+  final List<String> validTracks;
+  final List<String> invalidFolders;
+
+  const LocalMusicResult({
+    required this.validTracks,
+    required this.invalidFolders,
+  });
+}
 
 class LocalMusic {
-  Future<List<String>> load() async {
+  Future<LocalMusicResult> load() async {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
@@ -15,12 +25,27 @@ class LocalMusic {
     );
 
     if (result == null) {
-      return <String>[];
+      return const LocalMusicResult(
+        validTracks: [],
+        invalidFolders: [],
+      );
     }
 
     final validTracks = <String>[];
+    final invalidFolders = <String>[];
 
     for (final path in result.paths.whereType<String>()) {
+      final invalidFolder = getInvalidFolder(path);
+
+      if (invalidFolder != null) {
+        debugPrint("Ordnername enthält nicht unterstützte Zeichen: $invalidFolder");
+
+        if (!invalidFolders.contains(invalidFolder)) {
+          invalidFolders.add(invalidFolder);
+        }
+        continue;
+      }
+
       try {
         final retriever = await MetadataRetriever.fromFile(File(path));
         final meta = readMetadata(File(path), getImage: false);
@@ -37,7 +62,27 @@ class LocalMusic {
       }
     }
 
-    return validTracks;
+    return LocalMusicResult(
+      validTracks: validTracks,
+      invalidFolders: invalidFolders,
+    );
+  }
+
+  String? getInvalidFolder(String path) {
+    if (!Platform.isWindows) {
+      return null;
+    }
+
+    final parts = p.split(path);
+    final folders = parts.take(parts.length - 1);
+
+    for (final folder in folders) {
+      if (!RegExp(r'^[\x00-\x7F]+$').hasMatch(folder)) {
+        return folder;
+      }
+    }
+
+    return null;
   }
 }
 
