@@ -144,6 +144,7 @@ inno_bundle:
   description: Lunalist is a music-based party game inspired by timeline guessing mechanics. Use it with your own mp3 files!
   installer_icon: inno\lunalist_icon_windows.ico
   license_file: LICENCE
+  admin: nonAdmin
   languages:
     - german
   
