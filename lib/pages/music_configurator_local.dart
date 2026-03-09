@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:lunalist/pages/scanner.dart';
 import 'package:lunalist/services/card_mapper.dart';
