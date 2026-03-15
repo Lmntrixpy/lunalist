@@ -54,7 +54,7 @@ class AboutPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     Text(
-                      "Herr Hofmann: für seine tatkräftige Unterstützung bei diesem Projekt\n\nJorid Langheinrich: für ihre konstruktive Kritik und Verbesserungsvorschläge\n\nAn alle Spielerinnen & Spieler die diese App getestet haben,",
+                      "Herr Hofmann: für seine tatkräftige Unterstützung bei diesem Projekt\n\nJorid: für ihre konstruktive Kritik und Verbesserungsvorschläge\n\nAn alle Spielerinnen & Spieler die diese App getestet haben,",
                       style: textTheme.bodyLarge?.copyWith(fontSize: bodyFontSize),
                       textAlign: TextAlign.center,
                     ),
