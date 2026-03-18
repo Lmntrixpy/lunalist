@@ -453,8 +453,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
                               FilledButton.tonalIcon(
                                 onPressed: () async {
-                                  final rankingStorage = RankingStorage();
-                                  await rankingStorage.exportRanking();
+                                  final RankingStorage rankingStorage = RankingStorage();
+                                  await rankingStorage.exportRanking(context);
                                 },
                                 label: const Text("Exportieren"),
                                 icon: const Icon(Icons.upload_rounded),
