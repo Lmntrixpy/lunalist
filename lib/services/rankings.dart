@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
@@ -74,18 +75,57 @@ class RankingStorage {
     return list;
   }
 
-  Future<void> exportRanking() async {
+  Future<void> exportRanking(BuildContext context) async {
     final file = await _getFile();
 
     if (!await file.exists()) {
       throw Exception('Keine Rangliste vorhanden');
     }
 
-    await SharePlus.instance.share(
-      ShareParams(
-        files: [XFile(file.path)],
-      ),
-    );
+    if (!context.mounted) return;
+    await _shareRankingFile(file, context);
+  }
+
+  static Future<void> _shareRankingFile(File file, BuildContext context) async {
+    const String fileName = "lunalist_ranking.csv";
+
+    final box = context.findRenderObject() as RenderBox?;
+    final origin = (box != null)
+        ? (box.localToGlobal(Offset.zero) & box.size)
+        : const Rect.fromLTWH(0, 0, 1, 1);
+
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows || Platform.isAndroid) {
+      final bytes = await file.readAsBytes();
+
+      final String? outputFile = await FilePicker.platform.saveFile(
+        dialogTitle: "Speicherort auswählen:",
+        fileName: fileName,
+        bytes: bytes,
+      );
+
+      if (outputFile == null) {
+        debugPrint("User cancelled");
+      }
+      return;
+    }
+
+    if (Platform.isIOS) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [
+            XFile(
+              file.path,
+              mimeType: 'application/json',
+              name: fileName,
+            ),
+          ],
+          sharePositionOrigin: origin,
+        ),
+      );
+      return;
+    }
+
+    debugPrint("Export/Share nicht unterstützt auf dieser Plattform.");
   }
 
   Future<void> importRanking({bool merge = false}) async {

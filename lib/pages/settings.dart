@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/api/update_service_http.dart';
@@ -7,6 +6,7 @@ import 'package:lunalist/config.dart';
 import 'package:lunalist/pages/about.dart';
 import 'package:lunalist/pages/game_instructions.dart';
 import 'package:lunalist/pages/playlist_edit.dart';
+import 'package:lunalist/services/chips.dart';
 import 'package:lunalist/services/preloaded_playlists.dart';
 import 'package:lunalist/services/qr_code_creator.dart';
 import 'package:lunalist/services/rankings.dart';
@@ -126,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
   // Use user Spotify Tokens
   Future<void> _saveUseUserSpotifyTokens(bool useUserSpotifyTokens) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("useUserSpotifyTokens", cameraAccess);
+    await prefs.setBool("useUserSpotifyTokens", useUserSpotifyTokens);
     debugPrint(cameraAccess.toString());
   }
 
@@ -321,6 +321,40 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
 
+                        const SizedBox(height: 8,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            FilledButton.tonalIcon(
+                              onPressed: () {
+                                Chips.shareFile(context);
+                              }, 
+                              label: Text("Spielchips 3D-drucken"),
+                              icon: Icon(Icons.circle),
+                            ),
+
+                            FilledButton.tonalIcon(
+                              onPressed: () {
+                                showDialog(
+                                  context: context, 
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Spielchips"),
+                                    content: Text("Du kannst diese .3mf Datei verwenden um die Spielchips mit einem 3D-Drucker zu drucken. Falls du keinen hast kannst du auch einfach andere Dinge wie Nüsse, Münzen oder andere kleine Objekte nehmen."),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }, 
+                                        child: Text("Schließen"))
+                                    ],
+                                  )
+                                );
+                              }, 
+                              label: Text("Info"),
+                              icon: Icon(Icons.info_rounded))
+                          ],
+                        ),
+
                         const SizedBox(height: 28),
                         const Text("Einstellungen", style: TextStyle(fontSize: 24)),
                         const SizedBox(height: 12),
@@ -421,8 +455,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
                         const SizedBox(height: 8),
 
-                        
-
                         const Text("Rangliste", style: TextStyle(fontSize: 20)),
                         const SizedBox(height: 8),
 
@@ -453,8 +485,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
                               FilledButton.tonalIcon(
                                 onPressed: () async {
-                                  final rankingStorage = RankingStorage();
-                                  await rankingStorage.exportRanking();
+                                  final RankingStorage rankingStorage = RankingStorage();
+                                  await rankingStorage.exportRanking(context);
                                 },
                                 label: const Text("Exportieren"),
                                 icon: const Icon(Icons.upload_rounded),

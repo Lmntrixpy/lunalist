@@ -43,6 +43,11 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
   - ... via [Impactor](https://github.com/khcrysalis/Impactor), [AltServer](https://faq.altstore.io/altstore-classic/altserver), [Sideloadly](https://sideloadly.io) or any other Sideloading Software (iOS 16+)
 
 ### macOS
+#### Testflight
+- Download [Testflight](https://apps.apple.com/us/app/testflight/id899247664) from the App Store
+- Accept [invite](https://testflight.apple.com/join/cw4ADdrd)
+
+#### Manual Installation
 - ensure your device is running macOS 14.0 (Sequoia) or newer
 - download latest dmg file on [releases](https://github.com/Lmntrixpy/Lunalist/releases/latest) page.
 - open dmg and drag and drop lunalist into the applications folder.
@@ -85,7 +90,7 @@ cd lunalist
 flutter pub get # get dependencies
 
 flutter clean # clean build cache
-flutter build mac --relase  # build app for MacOS
+flutter build macos --relase  # build app for MacOS
 ```
 
 ### Windows
