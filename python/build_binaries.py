@@ -60,7 +60,7 @@ def main():
 
         if target == "android":
             run_command(["flutter", "build", "apk", "--release"])
-            destination = os.path.expanduser(f"~/Downloads/lunalist-{version_number}.apk ")
+            destination = os.path.expanduser(f"~/Downloads/lunalist-{version_number}.apk")
             run_command(["cp",  "build/app/outputs/flutter-apk/app-release.apk", destination])
 
         elif target == "ios":
