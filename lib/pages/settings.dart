@@ -12,6 +12,7 @@ import 'package:lunalist/services/qr_code_creator.dart';
 import 'package:lunalist/services/rankings.dart';
 import 'package:lunalist/services/secure_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum BrightnessModes{light, dark, system}
 
@@ -36,6 +37,10 @@ class _SettingsPageState extends State<SettingsPage> {
   bool cameraAccess = true;
   bool useUserSpotifyTokens = false;
 
+  bool updateAvailable = false;
+  bool _isDownloadingUpdate = false;
+  double _downloadProgress = 0;
+  
   late String userSpotifyId;
   late String userSpotifySecret;
 
@@ -421,6 +426,10 @@ class _SettingsPageState extends State<SettingsPage> {
                               }
 
                               if (check == null) return;
+                              
+                              setState(() {
+                                updateAvailable = check.updateAvailable;
+                              }); 
 
                               final String updateText = check.updateAvailable
                                   ? "Ein Update ist verfügbar: ${check.latest}\nDeine Version: ${AppConfig.version}"
@@ -434,6 +443,103 @@ class _SettingsPageState extends State<SettingsPage> {
                             },
                             label: Text("Nach Updates suchen"),
                             icon: Icon(Icons.update_rounded),
+                          ),
+                        ),
+
+                        if (updateAvailable && (Platform.isAndroid || Platform.isWindows))
+                        const SizedBox(height: 12),
+
+                        if (updateAvailable && (Platform.isAndroid || Platform.isWindows))
+                        Center(
+                          child: FilledButton.tonalIcon(
+                            onPressed: _isDownloadingUpdate
+                                ? null
+                                : () async {
+                                    setState(() {
+                                      _isDownloadingUpdate = true;
+                                      _downloadProgress = 0;
+                                    });
+
+                                    try {
+                                      final versionApi = LunalistVersionApi();
+                                      final os = Platform.isAndroid ? "android" : "windows";
+
+                                      final result = await versionApi.downloadLatestInstaller(
+                                        platform: os,
+                                        androidApplicationId: 'de.jeremyfroeb.lunalist',
+                                        downloadTimeout: const Duration(minutes: 5),
+                                        onProgress: (received, total) {
+                                          if (!mounted) return;
+
+                                          setState(() {
+                                            if (total != null && total > 0) {
+                                              _downloadProgress = received / total;
+                                            }
+                                          });
+                                        },
+                                      );
+
+                                      if (!mounted) return;
+
+                                      final text = Platform.isAndroid
+                                          ? 'Download abgeschlossen. Installer wurde gestartet.'
+                                          : 'Datei gespeichert unter: ${result.file.path}';
+
+                                      if (!context.mounted) return;
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(text)),
+                                      );
+                                    } catch (e) {
+                                      if (!mounted) return;
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Update fehlgeschlagen: $e')),
+                                      );
+                                    } finally {
+                                      if (mounted) {
+                                        setState(() {
+                                          _isDownloadingUpdate = false;
+                                        });
+                                      }
+                                    }
+                                  },
+                            icon: _isDownloadingUpdate
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      value: _downloadProgress > 0 ? _downloadProgress : null,
+                                    ),
+                                  )
+                                : const Icon(Icons.system_update_alt_rounded),
+                            label: Text(
+                              _isDownloadingUpdate
+                                  ? (_downloadProgress > 0
+                                      ? 'Lade ${( _downloadProgress * 100).toStringAsFixed(0)} %'
+                                      : 'Lade herunter...')
+                                  : 'Update installieren',
+                            ),
+                          ),
+                        ),
+
+                        if (updateAvailable && (Platform.isIOS || Platform.isMacOS))
+                        const SizedBox(height: 12),
+
+                        if (updateAvailable && (Platform.isIOS || Platform.isMacOS))
+                        Center(
+                          child: FilledButton.tonalIcon(
+                            onPressed: () async {
+                              final uri = Uri.parse(
+                                'https://testflight.apple.com/join/cw4ADdrd',
+                              );
+                              
+                              if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+                                throw 'Konnte TestFlight nicht öffnen';
+                              }
+
+                            },
+                            label: Text("Testflight öffnen"),
+                            icon: Icon(Icons.open_in_new_rounded),
                           ),
                         ),
                         
