@@ -160,10 +160,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {    
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        title: Text("Einstellungen & Spielregeln"),
-        centerTitle: true,
-      ),
+      appBar: appBar(context),
 
       body: SafeArea(
         child: LayoutBuilder(
@@ -213,115 +210,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             label: const Text("Spielkarten drucken"),
                             icon: const Icon(Icons.print_rounded),
                             onPressed: () async {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (dialogContext) {
-                                  bool isGeneratingDialog = false;
-
-                                  return StatefulBuilder(
-                                    builder: (dialogContext, setDialogState) {
-                                      return AlertDialog(
-                                        title: const Text("Kartenanzahl"),
-                                        content: TextField(
-                                          controller: textController,
-                                          autocorrect: false,
-                                          autofocus: true,
-                                          enabled: !isGeneratingDialog,
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            border: const OutlineInputBorder(),
-                                            label: const Text("Wie viele Karten brauchst du?"),
-                                            hintText: "Anzahl Karten",
-                                            suffix: IconButton(
-                                              onPressed: isGeneratingDialog ? null : () => textController.clear(),
-                                              icon: const Icon(Icons.clear_rounded),
-                                            ),
-                                          ),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: isGeneratingDialog
-                                                ? null
-                                                : () {
-                                                    Navigator.of(dialogContext).pop();
-                                                  },
-                                            child: Text("Abbrechen"),
-                                          ),
-                                          TextButton(
-                                            onPressed: isGeneratingDialog
-                                                ? null
-                                                : () async {
-                                                    
-                                                    if (isGeneratingDialog) return;
-
-                                                    final value = int.tryParse(textController.text);
-                                                    if (value == null || value <= 0) return;
-
-                                                    setDialogState(() => isGeneratingDialog = true);
-                                                    
-                                                    setState(() => isGenerating = true);
-
-                                                    try {
-                                                      await QrPdfGenerator.generateQrOnly(value, context: dialogContext);
-                                                      if (dialogContext.mounted) {
-                                                        Navigator.of(dialogContext).pop();
-                                                      }
-                                                    } finally {
-                                                      if (mounted) setState(() => isGenerating = false);
-                                                      if (dialogContext.mounted) {
-                                                        setDialogState(() => isGeneratingDialog = false);
-                                                      }
-                                                    }
-                                            },
-                                            child: isGeneratingDialog
-                                                ? const Text("")
-                                                : const Text("ohne Rückseite"),
-                                          ),
-
-                                          TextButton(
-                                            onPressed: isGeneratingDialog
-                                                ? null
-                                                : () async {
-                                                    
-                                                    if (isGeneratingDialog) return;
-
-                                                    final value = int.tryParse(textController.text);
-                                                    if (value == null || value <= 0) return;
-
-                                                    
-                                                    setDialogState(() => isGeneratingDialog = true);
-
-                                                    
-                                                    setState(() => isGenerating = true);
-
-                                                    try {
-                                                      await QrPdfGenerator.generate(value, context: dialogContext);
-                                                      if (dialogContext.mounted) {
-                                                        Navigator.of(dialogContext).pop();
-                                                      }
-                                                    } finally {
-                                                      if (mounted) setState(() => isGenerating = false);
-                                                      // quit if dialog is still open
-                                                      if (dialogContext.mounted) {
-                                                        setDialogState(() => isGeneratingDialog = false);
-                                                      }
-                                                    }
-                                                  },
-                                            child: isGeneratingDialog
-                                                ? const SizedBox(
-                                                    width: 18,
-                                                    height: 18,
-                                                    child: CircularProgressIndicator(strokeWidth: 2),
-                                                  )
-                                                : const Text("mit Rückseite"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              );
+                              showPrintCardsDialog(context);
                             },
                           ),
                         ),
@@ -340,20 +229,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                             FilledButton.tonalIcon(
                               onPressed: () {
-                                showDialog(
-                                  context: context, 
-                                  builder: (context) => AlertDialog(
-                                    title: Text("Spielchips"),
-                                    content: Text("Du kannst diese .3mf Datei verwenden um die Spielchips mit einem 3D-Drucker zu drucken. Falls du keinen hast kannst du auch einfach andere Dinge wie Nüsse, Münzen oder andere kleine Objekte nehmen."),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        }, 
-                                        child: Text("Schließen"))
-                                    ],
-                                  )
-                                );
+                                showPrintInfoDialog(context);
                               }, 
                               label: Text("Info"),
                               icon: Icon(Icons.info_rounded))
@@ -809,57 +685,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 children: [
                                   FilledButton.tonalIcon(
                                     onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: Text("Spotify Access Tokens"),
-                                          content: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              TextField(
-                                                controller: clientIdController,
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                  hintText: "Client Id",
-                                                  labelText: "Spotfiy Client Id" 
-                                                )
-                                              ),
-                                              
-                                              SizedBox(height: 12,),
-                                  
-                                              TextField(
-                                                controller: clientSecretController,
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                  hintText: "Client Secret",
-                                                  labelText: "Spotify Client Secret"
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                  
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              }, 
-                                              child: Text("Abbrechen")
-                                              ),
-                                  
-                                            TextButton(
-                                              onPressed: () async {
-                                                await SecureStorageService.instance.saveId("spotify", clientIdController.text.trim()); // save spotify client id
-                                                await SecureStorageService.instance.saveSecret("spotify", clientSecretController.text.trim()); // save spotify client secret
-                                                debugPrint("Gespeichert");
-                                                if (!context.mounted) return;
-                                                Navigator.pop(context);
-                                              }, 
-                                              child: Text("Speichern")
-                                            )
-                                          ], 
-                                        )
-                                      );
+                                      showUserSpotifyCredentialsDialog(context, clientIdController, clientSecretController);
                                     },
                                     label: Text("Spotify Access Tokens"),
                                     icon: Icon(Icons.security_rounded),
@@ -867,20 +693,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               
                                   FilledButton.tonalIcon(
                                     onPressed: () {
-                                      showDialog(
-                                        context: context, 
-                                        builder: (context) => AlertDialog(
-                                          title: Text("Spotify Tokens"),
-                                          content: Text("Um eigene Spotify-Zugangsdaten zu verwenden, erstelle im Spotify Developer Dashboard eine neue App und aktiviere bei den verwendeten APIs die Web API."),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              }, 
-                                              child: Text("Schließen"))
-                                          ],
-                                        )
-                                      );
+                                      showSpotifyCredentialsInfoDialog(context);
                                     },
                                     label: Text("Info"),
                                     icon:  Icon(Icons.info_rounded),
@@ -921,6 +734,213 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
       ),
+    );
+  }
+
+  Future<dynamic> showSpotifyCredentialsInfoDialog(BuildContext context) {
+    return showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: Text("Spotify Tokens"),
+        content: Text("Um eigene Spotify-Zugangsdaten zu verwenden, erstelle im Spotify Developer Dashboard eine neue App und aktiviere bei den verwendeten APIs die Web API."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            }, 
+            child: Text("Schließen"))
+        ],
+      )
+    );
+  }
+
+  Future<dynamic> showUserSpotifyCredentialsDialog(BuildContext context, TextEditingController clientIdController, TextEditingController clientSecretController) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Spotify Access Tokens"),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: clientIdController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Client Id",
+                labelText: "Spotfiy Client Id" 
+              )
+            ),
+            
+            SizedBox(height: 12,),
+
+            TextField(
+              controller: clientSecretController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Client Secret",
+                labelText: "Spotify Client Secret"
+              ),
+            )
+          ],
+        ),
+
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            }, 
+            child: Text("Abbrechen")
+            ),
+
+          TextButton(
+            onPressed: () async {
+              await SecureStorageService.instance.saveId("spotify", clientIdController.text.trim()); // save spotify client id
+              await SecureStorageService.instance.saveSecret("spotify", clientSecretController.text.trim()); // save spotify client secret
+              debugPrint("Gespeichert");
+              if (!context.mounted) return;
+              Navigator.pop(context);
+            }, 
+            child: Text("Speichern")
+          )
+        ], 
+      )
+    );
+  }
+
+  Future<dynamic> showPrintInfoDialog(BuildContext context) {
+    return showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: Text("Spielchips"),
+        content: Text("Du kannst diese .3mf Datei verwenden um die Spielchips mit einem 3D-Drucker zu drucken. Falls du keinen hast kannst du auch einfach andere Dinge wie Nüsse, Münzen oder andere kleine Objekte nehmen."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            }, 
+            child: Text("Schließen"))
+        ],
+      )
+    );
+  }
+
+  Future<dynamic> showPrintCardsDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        bool isGeneratingDialog = false;
+
+        return StatefulBuilder(
+          builder: (dialogContext, setDialogState) {
+            return AlertDialog(
+              title: const Text("Kartenanzahl"),
+              content: TextField(
+                controller: textController,
+                autocorrect: false,
+                autofocus: true,
+                enabled: !isGeneratingDialog,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  label: const Text("Wie viele Karten brauchst du?"),
+                  hintText: "Anzahl Karten",
+                  suffix: IconButton(
+                    onPressed: isGeneratingDialog ? null : () => textController.clear(),
+                    icon: const Icon(Icons.clear_rounded),
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isGeneratingDialog
+                      ? null
+                      : () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                  child: Text("Abbrechen"),
+                ),
+                TextButton(
+                  onPressed: isGeneratingDialog
+                      ? null
+                      : () async {
+                          
+                          if (isGeneratingDialog) return;
+
+                          final value = int.tryParse(textController.text);
+                          if (value == null || value <= 0) return;
+
+                          setDialogState(() => isGeneratingDialog = true);
+                          
+                          setState(() => isGenerating = true);
+
+                          try {
+                            await QrPdfGenerator.generateQrOnly(value, context: dialogContext);
+                            if (dialogContext.mounted) {
+                              Navigator.of(dialogContext).pop();
+                            }
+                          } finally {
+                            if (mounted) setState(() => isGenerating = false);
+                            if (dialogContext.mounted) {
+                              setDialogState(() => isGeneratingDialog = false);
+                            }
+                          }
+                  },
+                  child: isGeneratingDialog
+                      ? const Text("")
+                      : const Text("ohne Rückseite"),
+                ),
+
+                TextButton(
+                  onPressed: isGeneratingDialog
+                      ? null
+                      : () async {
+                          
+                          if (isGeneratingDialog) return;
+
+                          final value = int.tryParse(textController.text);
+                          if (value == null || value <= 0) return;
+
+                          
+                          setDialogState(() => isGeneratingDialog = true);
+
+                          
+                          setState(() => isGenerating = true);
+
+                          try {
+                            await QrPdfGenerator.generate(value, context: dialogContext);
+                            if (dialogContext.mounted) {
+                              Navigator.of(dialogContext).pop();
+                            }
+                          } finally {
+                            if (mounted) setState(() => isGenerating = false);
+                            // quit if dialog is still open
+                            if (dialogContext.mounted) {
+                              setDialogState(() => isGeneratingDialog = false);
+                            }
+                          }
+                        },
+                  child: isGeneratingDialog
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text("mit Rückseite"),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    );
+  }
+
+  AppBar appBar(BuildContext context) {
+    return AppBar(
+      title: Text("Einstellungen & Spielregeln"),
+      centerTitle: true,
     );
   }
 }
