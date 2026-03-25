@@ -11,7 +11,7 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
 ## Compatability
 | iOS / iPadOS  | Android       | macOS         | Windows | 
 | ------------- | ------------- | ------------  | ------- |
-| 15.0+         | 10+           | 14+ (Sequoia) | 10+     |
+| 15.0+         | 10+           | 14+ (Sonoma) | 10+     |
 
 ## Supported Features
 | Funktion                | iOS | iPadOS | Android | Windows | macOS |
@@ -48,7 +48,7 @@ Lunalist was developed as a project for our 12th grade informatics class, where 
 - Accept [invite](https://testflight.apple.com/join/cw4ADdrd)
 
 #### Manual Installation
-- ensure your device is running macOS 14.0 (Sequoia) or newer
+- ensure your device is running macOS 14.0 (Sonoma) or newer
 - download latest dmg file on [releases](https://github.com/Lmntrixpy/Lunalist/releases/latest) page.
 - open dmg and drag and drop lunalist into the applications folder.
 - if you get a message about that the file cannot be opened because it contains a harmful software, open system settings, go to **Data Privacy & Security**, scroll down and click **open**.
