@@ -45,7 +45,11 @@ Future<void> main() async {
     await prefs.setBool("useUserSpotifyTokens", false);
   }
 
-  runApp(MyApp(initialThemeMode: await _getSavedThemeMode()));
+  if (prefs.getBool("enableSystemColorScheme") == null) {
+    await prefs.setBool("enableSystemColorScheme", false);
+  }
+
+  runApp(MyApp(initialThemeMode: await _getSavedThemeMode(), enableSystemColorScheme: await _getColorSchemeMode()));
 }
 
 Future<ThemeMode> _getSavedThemeMode() async {
@@ -56,9 +60,17 @@ Future<ThemeMode> _getSavedThemeMode() async {
   return ThemeMode.system;
 }
 
+Future<bool> _getColorSchemeMode() async {
+  final prefs = await SharedPreferences.getInstance();
+  final saved = prefs.getBool("enableSystemColorScheme");
+  if (saved == null) return false;
+  return saved;
+}
+
 class MyApp extends StatefulWidget {
   final ThemeMode initialThemeMode;
-  const MyApp({super.key, required this.initialThemeMode});
+  final bool enableSystemColorScheme;
+  const MyApp({super.key, required this.initialThemeMode, required this.enableSystemColorScheme});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -66,6 +78,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late ThemeMode _themeMode;
+  late bool _enableSystemColorScheme;
 
   ColorScheme? _cachedLight;
   ColorScheme? _cachedDark;
@@ -74,6 +87,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _themeMode = widget.initialThemeMode;
+    _enableSystemColorScheme = widget.enableSystemColorScheme;
+    
   }
 
   @override
@@ -83,14 +98,16 @@ class _MyAppState extends State<MyApp> {
         if (lightDynamic != null) _cachedLight = lightDynamic;
         if (darkDynamic != null) _cachedDark = darkDynamic;
 
-        final lightScheme =
-            _cachedLight ??
-            ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.light);
+       final lightScheme = _enableSystemColorScheme
+        ? (_cachedLight ??
+            ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.light))
+        : ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.light);
 
-        final darkScheme =
-            _cachedDark ??
-            ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark);
-
+      final darkScheme = _enableSystemColorScheme
+        ? (_cachedDark ??
+            ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark))
+        : ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark);
+      
         ThemeData makeTheme(ColorScheme scheme) {
           final base = ThemeData(useMaterial3: true, colorScheme: scheme);
           return base.copyWith(

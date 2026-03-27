@@ -36,6 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
   bool checkUpdateOnStartup = true;
   bool cameraAccess = true;
   bool useUserSpotifyTokens = false;
+  bool enableSystemColorScheme = false;
 
   bool updateAvailable = false;
   bool _isDownloadingUpdate = false;
@@ -54,6 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _loadUpdateOnStartup();
     _loadCameraAcess();
     _loadUseUserSpotifyTokens();
+    _loadColorSchemeMode();
   }
 
   Future<void> _loadBrightnessMode() async {
@@ -155,6 +157,25 @@ class _SettingsPageState extends State<SettingsPage> {
       userSpotifySecret = userSpotifySecretLocal;
     });
   }
+
+  // use System Color Scheme
+  Future<void> _saveColorSchemeMode(bool enableSystemColorScheme) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("enableSystemColorScheme", enableSystemColorScheme);
+    debugPrint(enableSystemColorScheme.toString());
+  }
+
+  Future<void> _loadColorSchemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getBool("enableSystemColorScheme");
+    setState(() {
+      if (saved != null) {
+        debugPrint(enableSystemColorScheme.toString());
+        enableSystemColorScheme = saved;
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {    
@@ -616,6 +637,32 @@ class _SettingsPageState extends State<SettingsPage> {
                               _saveBrightnessMode(mode);
                             },
                           ),
+                        ),
+
+                        if (!Platform.isIOS)
+                        const SizedBox(height: 8,),
+
+                        if (!Platform.isIOS)
+                        SwitchListTile(
+                          value: enableSystemColorScheme,
+                          onChanged: (bool newValue) async {
+                            setState(() {
+                              enableSystemColorScheme = newValue;
+                              _saveColorSchemeMode(enableSystemColorScheme);
+                            });
+                          },
+                          title: Text("Systemfarbschema verwenden"),
+                        ),
+
+                        if (!Platform.isIOS)
+                        const SizedBox(height: 4,),
+
+                        if (!Platform.isIOS)
+                        Center(
+                          child: Text(
+                            "Farbe ändert sich erst beim Neustart!",
+                            style: TextStyle(fontSize: 12,),
+                          ),  
                         ),
 
                         const SizedBox(height: 24),
