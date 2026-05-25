@@ -6,17 +6,24 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class Chips {
-  static Future<void> shareFile(BuildContext context) async {
-    const String fileName = "lunalist_Spielchips.3mf";
+  static Future<void> shareFile(BuildContext context, String fileType) async {
+    String fileName = "lunalist_Spielchips.stl";
 
     final box = context.findRenderObject() as RenderBox?;
     final origin = (box != null)
         ? (box.localToGlobal(Offset.zero) & box.size)
         : const Rect.fromLTWH(0, 0, 1, 1);
 
-    final byteData = await rootBundle.load('assets/chips/lunalist_Spielchip.3mf');
+  
+    if (fileType == "3mf") {
+      fileName = "lunalist_Spielchips.3mf";
+    } else {
+      fileName = "lunalist_Spielchips.stl";
+    }
+
+    final byteData = await rootBundle.load('assets/chips/lunalist_Spielchip.$fileType');
     final tempDir = await getTemporaryDirectory();
-    final file = File('${tempDir.path}/lunalist_Spielchip.3mf');
+    final file = File('${tempDir.path}/lunalist_Spielchip.$fileType');
     await file.writeAsBytes(byteData.buffer.asUint8List());
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows || Platform.isAndroid) {

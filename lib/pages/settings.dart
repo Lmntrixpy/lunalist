@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lunalist/api/spotify_http.dart';
 import 'package:lunalist/api/update_service_http.dart';
@@ -242,7 +243,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             FilledButton.tonalIcon(
                               onPressed: () {
-                                Chips.shareFile(context);
+                                show3dFileSelectorDialog(context);
                               }, 
                               label: Text("Spielchips 3D-drucken"),
                               icon: Icon(Icons.circle),
@@ -862,6 +863,37 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text("Spielchips"),
         content: Text("Du kannst diese .3mf Datei verwenden um die Spielchips mit einem 3D-Drucker zu drucken. Falls du keinen hast kannst du auch einfach andere Dinge wie Nüsse, Münzen oder andere kleine Objekte nehmen."),
         actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            }, 
+            child: Text("Schließen"))
+        ],
+      )
+    );
+  }
+
+  Future<dynamic> show3dFileSelectorDialog(BuildContext context) {
+    return showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: Text("Druckdateien"),
+        content: Text("Verwende die .3mf Druckdatei wenn du einen Bambulab Drucker hast hast. Nimm die .stl Datei für andere 3d-Drucker."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Chips.shareFile(context, "3mf");
+            },
+            child: Text("3mf")
+          ),
+
+          TextButton(
+            onPressed: () {
+              Chips.shareFile(context, "stl");
+            },
+            child: Text("stl")
+          ),
+
           TextButton(
             onPressed: () {
               Navigator.pop(context);
